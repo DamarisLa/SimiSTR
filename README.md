@@ -1,2 +1,2 @@
 # STRsimulator
-Manipulation and Simulation of STR
+Manipulation and Simulation of STR!!
