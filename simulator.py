@@ -4,15 +4,15 @@
 oldBedFile = "hs37_ver8.20short.bed"
 newBedFile = "hs37_ver8.20short.adapt.bed"
 newFastaFile = "InternshipFiles\FilteredViewed\\hs37d5.rand_adapt.fa"
-oldFastaFile = "InternshipFiles\FilteredViewed\\hs37d5.fa"
+oldFastaFile = "InternshipFiles\FilteredViewed\\hs37d5.chr22.fa"
 #refFile =""
 
 with open(newBedFile, 'w') as outBedfile:
-    with open(oldFastaFile, 'w') as outBamfile:
+    with open(newFastaFile, 'w') as outFastaFile:
         #with open(refFile, 'r') as inRefFile:
         with open(oldBedFile, 'r') as inBedFile:
-            with open(newFastaFile, 'r') as inBamFile:
-                for line in inBamFile:
+            with open(oldFastaFile, 'r') as inFastaFile:
+                for line in inFastaFile:
                     print(line)
 
 
@@ -32,3 +32,8 @@ with open(newBedFile, 'w') as outBedfile:
 # for record in SeqIO.parse(inFile,'fasta'):
 #     if record.id == "sequence id you want to extract from":
 #         print str(record.seq)[startCoordinates:endCoordinates + 1]
+
+
+#chr    length of Chr   offset(CoordinateStart) bases each line (60without 61with \n)
+#22	    51304566	    2876892038	            60	    61
+#when reading fasta
