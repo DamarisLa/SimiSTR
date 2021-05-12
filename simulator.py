@@ -99,6 +99,7 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
                                 check_right = check_right + patternLen  #maybe your can even go further left
                             else:
                                 goRight = False                         #stop checking further right
+                                check_right = check_right - patternLen
 
                         partOfSeq_4 = sequence[check_left:check_right]
                         numberOfRepeats = len(partOfSeq_4)/patternLen
