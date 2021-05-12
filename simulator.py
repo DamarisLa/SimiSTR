@@ -36,7 +36,7 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
     bedfile_l_copy = copy.deepcopy(bedfile_l)
     # have an offset, that tells how much all following coordinates will be later or earlier
     offset = 0  # original in the beginning
-    randomModification = 0
+
     with open(newFastaFile, 'w') as outFastaFile:
         with open(oldFastaFile, 'r') as inFastaFile:
             for record in SeqIO.parse(oldFastaFile, "fasta"):
@@ -45,7 +45,7 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
                     shortTR = bedfile_l[i]
                     chrnr = shortTR[0]
                     patternStart = int(shortTR[1])-1
-                    patternEnd = int(shortTR[2])-1
+                    patternEnd = int(shortTR[2])
                     patternLen = int(shortTR[3])
                     pattern = shortTR[4].strip()
                     if record.id == chrnr:
@@ -91,7 +91,7 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
                                 goLeft = False                          #stop checking further right
                                 check_left = check_left + patternLen    #because last length did still match
                         ### Rightside check ###
-                        check_right = patternEnd + patternLen
+                        check_right = patternEnd
                         goRight = True
                         while check_right+patternLen <= seq_len and goRight:
                             partOfSeq_3 = sequence[check_right:check_right+patternLen]
@@ -99,15 +99,32 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
                                 check_right = check_right + patternLen  #maybe your can even go further left
                             else:
                                 goRight = False                         #stop checking further right
-                                check_right = check_right - patternLen
 
-                        partOfSeq_4 = sequence[check_left:check_right]
-                        numberOfRepeats = len(partOfSeq_4)/patternLen
+                        patternStart = check_left
+                        patternEnd = check_right
+
+                        partOfSeq_4 = sequence[patternStart:patternEnd]
+                        numberOfRepeats = int(len(partOfSeq_4)/patternLen)
+                        #do you want to increase or decrease?
+
                         #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
-
                         #if you want to simulate an increase of repeats, do anything between
+                        manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                        # just to see in debugging that string replacement works
+                        debugHelpPartOfSeq = sequence[patternStart - 10:patternEnd + 10 + manipulation]
+                        print(debugHelpPartOfSeq)
+                        numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
+                        patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
+                        partOfSeqNew = pattern * numberOfRepeatsNew
 
-                        ### here starts the fun ###
+                        offset = patternEndNew - patternEnd #remember for following
+                        #replace
+                        sequence2 = sequence[:patternStart+1] + "" + sequence[patternEnd:]
+                        sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart+1:]
+                        # just to see in debugging that string replacement works
+                        debugHelpPartOfSeq2 = sequence2[patternStart - 10:patternEnd + 10 + manipulation*patternLen]
+                        print(debugHelpPartOfSeq2)
+
 
 
 main_manipulation(bedfile_l,newFastaFile,oldFastaFile)
