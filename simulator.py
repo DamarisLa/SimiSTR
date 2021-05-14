@@ -24,39 +24,46 @@ def getBedFile(oldBedFile):
     return bedfile_l
 
 
-bedfile_l = getBedFile(oldBedFile)
-
-
-
+#write out the new coordinates. The adapted bedfile. To find the regions and to
+def printBedModifications(bedfile_l_copy, newBedFile):
+    with open(newBedFile, 'w') as outBedfile:
+        for line in bedfile_l_copy():
+            outBedfile.write(line)
 
 
 #main function manipulate Fasta
-def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
+def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange):
+    bedfile_l = getBedFile(oldBedFile)
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
     bedfile_l_copy = copy.deepcopy(bedfile_l)
     # have an offset, that tells how much all following coordinates will be later or earlier
     offset = 0  # original in the beginning
-
+    sequence2 = ""
     with open(newFastaFile, 'w') as outFastaFile:
+        writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
         with open(oldFastaFile, 'r') as inFastaFile:
-            for record in SeqIO.parse(oldFastaFile, "fasta"):
+            for record in SeqIO.parse(inFastaFile, "fasta"):
+                record2 = copy.deepcopy(record)
+                # for i in range(0,len(record.seq)):
+                sequence = record.seq
+                sequence2 = copy.deepcopy(sequence)
+
                 # writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
                 for i in range(0,len(bedfile_l)):
                     shortTR = bedfile_l[i]
                     chrnr = shortTR[0]
-                    patternStart = int(shortTR[1])-1
-                    patternEnd = int(shortTR[2])
+                    patternStart = int(shortTR[1])-1 + offset
+                    patternEnd = int(shortTR[2]) + offset
                     patternLen = int(shortTR[3])
                     pattern = shortTR[4].strip()
+
                     if record.id == chrnr:
-                        #for i in range(0,len(record.seq)):
-                        sequence = record.seq
-                        seq_len = len(sequence)
-                        partOfSeq = sequence[patternStart:patternEnd]
+                        seq_len = len(sequence2)
+                        partOfSeq = sequence2[patternStart:patternEnd]
                         #print(pattern, "; ",partOfSeq)
 
                         #mabye check if startposition really matches...or adjust it to the left or right
-                        partOfSeq_1 = sequence[patternStart:patternStart+patternLen]
+                        partOfSeq_1 = sequence2[patternStart:patternStart+patternLen]
                         startpoint = patternStart                           #if start is 1000
                         startPointCorrect = False
                         lower = False
@@ -64,9 +71,10 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
                         while not startPointCorrect:
                             if partOfSeq_1 == pattern:
                                 startPointCorrect = True #found startpoint
+                                patternStart = startPointCorrect
                             else: #will always go one further away from current start. trying both directions parallel
                                 startpoint = startpoint + number            # start is 999, 1001, 998, 1002 usw.
-                                partOfSeq_1 = sequence[startpoint:startpoint + patternLen]
+                                partOfSeq_1 = sequence2[startpoint:startpoint + patternLen]
                                 if lower:   #true
                                     number += 1     #3
                                     number *= (-1)  #-3
@@ -84,7 +92,7 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
                         check_left = patternStart - patternLen
                         goLeft = True
                         while check_left >= 0 and goLeft:
-                            partOfSeq_2 = sequence[check_left:check_left+patternLen]
+                            partOfSeq_2 = sequence2[check_left:check_left+patternLen]
                             if partOfSeq_2 == pattern:                  #still matching
                                 check_left = check_left - patternLen    #maybe your can even go further left
                             else:
@@ -94,47 +102,59 @@ def main_manipulation(bedfile_l, newFastaFile, oldFastaFile):
                         check_right = patternEnd
                         goRight = True
                         while check_right+patternLen <= seq_len and goRight:
-                            partOfSeq_3 = sequence[check_right:check_right+patternLen]
+                            partOfSeq_3 = sequence2[check_right:check_right+patternLen]
                             if partOfSeq_3 == pattern:                  #still matching
                                 check_right = check_right + patternLen  #maybe your can even go further left
                             else:
                                 goRight = False                         #stop checking further right
 
+
                         patternStart = check_left
                         patternEnd = check_right
 
-                        partOfSeq_4 = sequence[patternStart:patternEnd]
+                        partOfSeq_4 = sequence2[patternStart:patternEnd]
                         numberOfRepeats = int(len(partOfSeq_4)/patternLen)
+
+                        entrance = bedfile_l_copy[i]
+                        entrance[1] = patternStart + 1
+                        entrance[2] = patternEnd
+                        bedfile_l_copy[i] = entrance
                         #do you want to increase or decrease?
+                        if random.random()<=chanceOfChange:
+                            #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
+                            #if you want to simulate an increase of repeats, do anything between
+                            manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                            # just to see in debugging that string replacement works
+                            debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10]
+                            #print(debugHelpPartOfSeq)
+                            numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
+                            patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
+                            partOfSeqNew = pattern * numberOfRepeatsNew
 
-                        #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
-                        #if you want to simulate an increase of repeats, do anything between
-                        manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
-                        # just to see in debugging that string replacement works
-                        debugHelpPartOfSeq = sequence[patternStart - 10:patternEnd + 10 + manipulation]
-                        print(debugHelpPartOfSeq)
-                        numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
-                        patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-                        partOfSeqNew = pattern * numberOfRepeatsNew
-
-                        offset = patternEndNew - patternEnd #remember for following
-                        #replace
-                        sequence2 = sequence[:patternStart+1] + "" + sequence[patternEnd:]
-                        sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart+1:]
-                        # just to see in debugging that string replacement works
-                        debugHelpPartOfSeq2 = sequence2[patternStart - 10:patternEnd + 10 + manipulation*patternLen]
-                        print(debugHelpPartOfSeq2)
+                            offset += (patternEndNew - patternEnd) #remember for following
+                            #replace
+                            sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]
+                            debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10 ]
+                            #print(debugHelpPartOfSeq)
+                            sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:]
+                            debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10 + manipulation*patternLen]
+                            #print(debugHelpPartOfSeq)
+                            # just to see in debugging that string replacement works
+                            debugHelpPartOfSeq2 = sequence2[patternStart - 10:patternEnd + 10 + -1*manipulation*patternLen]
+                            #print(debugHelpPartOfSeq2)
 
 
 
-main_manipulation(bedfile_l,newFastaFile,oldFastaFile)
+                record2.seq = sequence2
+                writer.write_header()
+                writer.write_record(record2)
+            printBedModifications(bedfile_l_copy,newBedFile)
 
 
-#write out the new coordinates. The adapted bedfile. To find the regions and to
-def printBedModifications(bedfile_l_copy):
-    with open(newBedFile, 'w') as outBedfile:
-        for line in bedfile_l_copy():
-            outBedfile.write(line)
+
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile)
+
+
 
 
 
