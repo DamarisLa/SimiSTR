@@ -27,8 +27,13 @@ def getBedFile(oldBedFile):
 #write out the new coordinates. The adapted bedfile. To find the regions and to
 def printBedModifications(bedfile_l_copy, newBedFile):
     with open(newBedFile, 'w') as outBedfile:
-        for line in bedfile_l_copy():
-            outBedfile.write(line)
+        for line in bedfile_l_copy: #not recording bad mathces in new bedfile
+            if line[1] != 0 and line[2] !=0:
+                lines = line[0]+"\t"+str(line[1])+"\t"+str(line[2])+"\t"+line[3]+"\t"+line[4]
+                outBedfile.write(lines)
+
+#bedfile_l = getBedFile(oldBedFile)
+#printBedModifications(bedfile_l,newBedFile)
 
 
 #main function manipulate Fasta
@@ -45,7 +50,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
             for record in SeqIO.parse(inFastaFile, "fasta"):
                 record2 = copy.deepcopy(record)
                 # for i in range(0,len(record.seq)):
-                sequence = record.seq
+                sequence= record.seq
                 sequence2 = copy.deepcopy(sequence)
 
                 # writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
@@ -60,7 +65,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     if record.id == chrnr:
                         seq_len = len(sequence2)
                         partOfSeq = sequence2[patternStart:patternEnd]
-                        #print(pattern, "; ",partOfSeq)
+                        print(pattern, "; ",partOfSeq)
 
                         #mabye check if startposition really matches...or adjust it to the left or right
                         partOfSeq_1 = sequence2[patternStart:patternStart+patternLen]
@@ -68,10 +73,54 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                         startPointCorrect = False
                         lower = False
                         number = -1                 #-1
-                        while not startPointCorrect:
+                        noFit = False
+                        while not startPointCorrect and not noFit:
                             if partOfSeq_1 == pattern:
                                 startPointCorrect = True #found startpoint
-                                patternStart = startPointCorrect
+                                patternStart = startpoint
+                                # find out if area in reference of this STR is acutally longer or shorter than according to
+                                # the bed say? basically count if pattern goes left an right for longer.
+                                # maybe later change to another comparison algorithm that takes costs into account (Blast)
+                                ### Leftside check ###
+                                check_left = patternStart - patternLen
+                                goLeft = True
+                                while check_left >= 0 and goLeft:
+                                    partOfSeq_2 = sequence2[check_left:check_left + patternLen]
+                                    if partOfSeq_2 == pattern:  # still matching
+                                        check_left = check_left - patternLen  # maybe your can even go further left
+                                    else:
+                                        goLeft = False  # stop checking further right
+                                        check_left = check_left + patternLen  # because last length did still match
+
+                                ### Rightside check ###
+                                check_right = check_left
+                                goRight = True
+                                while check_right + patternLen <= seq_len and goRight:
+                                    partOfSeq_3 = sequence2[check_right:check_right + patternLen]
+                                    if partOfSeq_3 == pattern:  # still matching
+                                        check_right = check_right + patternLen  # maybe your can even go further left
+                                    else:
+                                        goRight = False  # stop checking further right
+
+                                patternStart = check_left
+                                patternEnd = check_right
+
+                                if patternEnd - patternStart == patternLen:
+                                    startPointCorrect = False
+                                    startpoint += number
+                                    partOfSeq_1 = sequence2[startpoint:startpoint + patternLen]
+                                    if lower:  # true
+                                        number += 1  # 3
+                                        number *= (-1)  # -3
+                                        lower = False  # false
+                                    else:  # false
+                                        number *= (-1)  # 1 .... 3
+                                        number += 1  # 2 .... 4
+                                        lower = True  # true
+                                    if abs(number) > 20:
+                                        noFit = True
+
+
                             else: #will always go one further away from current start. trying both directions parallel
                                 startpoint = startpoint + number            # start is 999, 1001, 998, 1002 usw.
                                 partOfSeq_1 = sequence2[startpoint:startpoint + patternLen]
@@ -83,34 +132,8 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     number *= (-1)  #1 .... 3
                                     number += 1     #2 .... 4
                                     lower = True    #true
-
-
-                        # find out if area in reference of this STR is acutally longer or shorter than according to
-                        # the bed say? basically count if pattern goes left an right for longer.
-                        # maybe later change to another comparison algorithm that takes costs into account (Blast)
-                        ### Leftside check ###
-                        check_left = patternStart - patternLen
-                        goLeft = True
-                        while check_left >= 0 and goLeft:
-                            partOfSeq_2 = sequence2[check_left:check_left+patternLen]
-                            if partOfSeq_2 == pattern:                  #still matching
-                                check_left = check_left - patternLen    #maybe your can even go further left
-                            else:
-                                goLeft = False                          #stop checking further right
-                                check_left = check_left + patternLen    #because last length did still match
-                        ### Rightside check ###
-                        check_right = patternEnd
-                        goRight = True
-                        while check_right+patternLen <= seq_len and goRight:
-                            partOfSeq_3 = sequence2[check_right:check_right+patternLen]
-                            if partOfSeq_3 == pattern:                  #still matching
-                                check_right = check_right + patternLen  #maybe your can even go further left
-                            else:
-                                goRight = False                         #stop checking further right
-
-
-                        patternStart = check_left
-                        patternEnd = check_right
+                                if abs(number) > 20:
+                                    noFit = True
 
                         partOfSeq_4 = sequence2[patternStart:patternEnd]
                         numberOfRepeats = int(len(partOfSeq_4)/patternLen)
@@ -142,7 +165,11 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                             # just to see in debugging that string replacement works
                             debugHelpPartOfSeq2 = sequence2[patternStart - 10:patternEnd + 10 + -1*manipulation*patternLen]
                             #print(debugHelpPartOfSeq2)
-
+                        if noFit:# no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
+                            entrance = bedfile_l_copy[i]
+                            entrance[1] = 0 #mark it as 0 later don't put it in new bedfile
+                            entrance[2] = 0
+                            bedfile_l_copy[i] = entrance
 
 
                 record2.seq = sequence2
@@ -152,7 +179,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
 
 
-main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99)
 
 
 
