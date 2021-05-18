@@ -8,7 +8,7 @@ import random
 #read the original bedfile. safe all coordinates maybe into a dict
 # ?? whats the key ?? the coordinate? or should it be a list? => as iteration from first to last. List
 # makes more sense than dict
-class simulating:
+class simulator:
     def __init__(self,newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange):
         self.main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange)
 
