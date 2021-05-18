@@ -179,7 +179,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
 
 
-main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99)
+#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99)
 
 
 
