@@ -2,17 +2,13 @@ import copy
 from Bio import SeqIO
 import random
 
-oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed"
-newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"    #ref-file before STR simulations
-oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"         #ref-file after STR simulations
 
 
 
 #read the original bedfile. safe all coordinates maybe into a dict
 # ?? whats the key ?? the coordinate? or should it be a list? => as iteration from first to last. List
 # makes more sense than dict
-class simulating():
+class simulating:
     def __init__(self,newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange):
         self.main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange)
 
