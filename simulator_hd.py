@@ -1,9 +1,11 @@
 # simulates STR changes compared to a reference genome
+# hd stands for haploid and diploid, as in this version haploid or diploid genomes can be simulated
 
 import copy
 from Bio import SeqIO
 import random
-
+import sys
+import os
 
 # oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
 # newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"

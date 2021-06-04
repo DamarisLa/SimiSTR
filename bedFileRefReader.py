@@ -1,13 +1,6 @@
-import copy
 from Bio import SeqIO
-import random
 import sys
 import os
-
-newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-
 
 def getBedFile(oldBedFile):
     bedfile_l = list()
@@ -19,10 +12,11 @@ def getBedFile(oldBedFile):
     return bedfile_l
 
 
-def main_manipulation(newFastaFile, newBedFile, oldBedfile):
-
+def main_reader(newFastaFile, newBedFile, oldBedfile):
     bedfile_l = getBedFile(newBedFile)
+    print("Successful first newBedFile read")
     bedfile_l_old =getBedFile(oldBedfile)
+    print("Successful first oldBedFile read")
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
 
     with open(newFastaFile, 'r') as inFastaFile:
@@ -52,5 +46,23 @@ def main_manipulation(newFastaFile, newBedFile, oldBedfile):
                     print("new: ",shortTR," ", (patternEnd-patternStart)/patternLen)
                     print("old: ",shortTRold, " ", (patternEndold-patternStartold)/patternLenold)
 
+#main_manipulation(newFastaFile,newBedFile,oldBedFile)
 
-main_manipulation(newFastaFile,newBedFile,oldBedFile)
+if len(sys.argv) < 4:
+    print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
+          "the  name and dir where the new bedfile should be, "
+          "and a number between 0 and 1 indicating the change with which the original ref file")
+else:
+    for i in sys.argv:
+        print(i)
+    if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
+        print("Enter main reader.")
+        main_reader(sys.argv[1],sys.argv[3],sys.argv[2])
+        #[0]./bedFileRefReader.py [1]../../hs37d5.chr22.new1.fa  [2]../bedfiles/hs37_ver8.chr22.bed [3]hs37_ver8.chr22.new1.bed
+    else:
+        if not os.path.isfile(sys.argv[1]):
+            print(sys.argv[1], " is not a file")
+        elif not os.path.isfile(sys.argv[2]):
+            print(sys.argv[2], " is not a file")
+        elif not os.path.isfile(sys.argv[3]):
+            print(sys.argv[3], " is not a file")
