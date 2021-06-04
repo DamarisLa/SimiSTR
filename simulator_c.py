@@ -1,6 +1,7 @@
 import copy
 from Bio import SeqIO
 import random
+import os
 
 
 
@@ -9,8 +10,16 @@ import random
 # ?? whats the key ?? the coordinate? or should it be a list? => as iteration from first to last. List
 # makes more sense than dict
 class simulator:
-    def __init__(self,newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange):
-        self.main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange)
+    def __init__(self,oldFastaFile,newFastaFile,oldBedFile,newBedFile,chanceOfChange):
+        if os.path.isfile(oldFastaFile) and os.path.isfile(oldBedFile):
+            print("running")
+            self.__main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange)
+        else :
+            if not os.path.isfile(oldBedFile):
+                print(oldBedFile, " is not the wright filedir.")
+            elif not os.path.isfile(oldFastaFile):
+                print(oldFastaFile, " is not the wright filedir")
+
 
     def __getBedFile(self, oldBedFile):
         bedfile_l = list()

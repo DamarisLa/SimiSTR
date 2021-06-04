@@ -1,17 +1,13 @@
 import copy
 from Bio import SeqIO
 import random
+import sys
+import os
 
-oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed"
-newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"    #ref-file before STR simulations
-oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"         #ref-file after STR simulations
-
-
-
-#read the original bedfile. safe all coordinates maybe into a dict
-# ?? whats the key ?? the coordinate? or should it be a list? => as iteration from first to last. List
-# makes more sense than dict
+# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
+# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -32,12 +28,9 @@ def printBedModifications(bedfile_l_copy, newBedFile):
                 lines = line[0]+"\t"+str(line[1])+"\t"+str(line[2])+"\t"+line[3]+"\t"+line[4]
                 outBedfile.write(lines)
 
-#bedfile_l = getBedFile(oldBedFile)
-#printBedModifications(bedfile_l,newBedFile)
-
-
 #main function manipulate Fasta
 def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange):
+    chanceOfChange = float(chanceOfChange)
     bedfile_l = getBedFile(oldBedFile)
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
     bedfile_l_copy = copy.deepcopy(bedfile_l)
@@ -52,7 +45,8 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                 # for i in range(0,len(record.seq)):
                 sequence= record.seq
                 sequence2 = copy.deepcopy(sequence)
-
+                recordLen = len(sequence)
+                print(recordLen)
                 # writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
                 for i in range(0,len(bedfile_l)):
                     shortTR = bedfile_l[i]
@@ -65,7 +59,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     if record.id == chrnr:
                         seq_len = len(sequence2)
                         partOfSeq = sequence2[patternStart:patternEnd]
-                        print(pattern, "; ",partOfSeq)
+                        #print(pattern, "; ",partOfSeq)
 
                         #mabye check if startposition really matches...or adjust it to the left or right
                         partOfSeq_1 = sequence2[patternStart:patternStart+patternLen]
@@ -154,6 +148,10 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                             patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
                             partOfSeqNew = pattern * numberOfRepeatsNew
 
+                            entrance = bedfile_l_copy[i]
+                            entrance[1] = patternStart + 1
+                            entrance[2] = patternEndNew
+                            bedfile_l_copy[i] = entrance
                             offset += (patternEndNew - patternEnd) #remember for following
                             #replace
                             sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]
@@ -177,14 +175,23 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                 writer.write_record(record2)
             printBedModifications(bedfile_l_copy,newBedFile)
 
-
-
 #main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99)
 
-
-
-
-
+# if len(sys.argv) < 6:
+#     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
+#           "the  name and dir where the new bedfile should be, "
+#           "and a number between 0 and 1 indicating the change with which the original ref file")
+# else:
+#     for i in sys.argv:
+#         print(i)
+#     if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
+#         main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5])
+#         #[0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
+#     else:
+#         if not os.path.isfile(sys.argv[1]):
+#             print(sys.argv[1], " is not a file")
+#         elif not os.path.isfile(sys.argv[3]):
+#             print(sys.argv[3], " is not a file")
 
 # fai format:
 #chr    length of Chr   offset(CoordinateStart) bases each line (60without 61with \n)
