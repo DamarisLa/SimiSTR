@@ -7,10 +7,10 @@ import sys
 from Bio import SeqIO
 import os
 
-# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
+newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -231,7 +231,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     writer.write_record(record2)
             printBedModifications(bedfile_l_copy,newBedFile)
 
-#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05, 0.05)
 
 if len(sys.argv) < 6:
     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
@@ -259,7 +259,7 @@ else:
             main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
     else: #default
         if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
-            main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 1, 0.01)
+            main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 1, 0.01, 0.01) #per default only each chromosome only once (haploid)
             #[0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
         else:
             if not os.path.isfile(sys.argv[1]):
