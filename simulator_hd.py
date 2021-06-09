@@ -7,10 +7,10 @@ import sys
 from Bio import SeqIO
 import os
 
-oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
+# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -18,7 +18,7 @@ def getBedFile(oldBedFile):
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
             splitline = line.split("\t")
-            if len(splitline)>3:
+            if len(splitline) > 3:
                 bedfile_l.append(splitline) #chr    from Pos    to Pos      lenMotif    motif
     return bedfile_l
 
@@ -89,15 +89,15 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                 recordLen = len(sequence)
                 print(recordLen)
                 for chr in range(0,nrOfChr):
+                    offset = 0  # original in the beginning
                     nameOfChr = record2.name
                     idOfChr = record2.id
-                    if nrOfChr == 2:
-                        if chr == 2:
-                            nameOfChr = nameOfChr+"_2"
-                            idOfChr = idOfChr+"_2"
-                        else :
-                            nameOfChr = nameOfChr+"_1"
-                            idOfChr = idOfChr + "_1"
+                    if chr == 1:
+                        nameOfChr = nameOfChr+"_2"
+                        idOfChr = idOfChr+"_2"
+                    else :
+                        nameOfChr = nameOfChr+"_1"
+                        idOfChr = idOfChr + "_1"
                     record2.name = nameOfChr
                     record2.id = idOfChr
                     #else: nothing!!
@@ -232,7 +232,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     writer.write_record(record2)
             printBedModifications(bedfile_l_copy,newBedFile)
 
-main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
+#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
 
 if len(sys.argv) < 6:
     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
@@ -260,7 +260,7 @@ else:
                     print("Not a float")
                     canBeCast = False
                 if canBeCast:
-                    print("sys.argv[7].isdigit")
+                    print("sys.argv[7].isfloat")
                     chanceOfMutation= float(sys.argv[7])
                     if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
                         print("your assigned chance of mutation rate ", chanceOfMutation)
@@ -269,7 +269,7 @@ else:
                         print("Your chance of assignment was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
                         main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
                 else:
-                    print("sys.argv[7] is not numeric, therefore default mutation rate is at 0.01 == 1%")
+                    print("sys.argv[7] is not float, therefore default mutation rate is at 0.01 == 1%")
                     main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
             else:
                 print("len < 7: 0.01 (1%) chance of mutation, as you did not give a parameter for chance of mutation")
@@ -280,7 +280,7 @@ else:
     else: #default
         print("6 parameters, therefore run is default haploid and with 0.01 == 1% mutationrate")
         if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
-            print("less than 6 parameters, therefore run is default haploid and with 0.01 == 1% mutationrate")
+            print("6 parameters, therefore run is default haploid and with 0.01 == 1% mutationrate")
             main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 1, 0.01)
             #[0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
         else:
