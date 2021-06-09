@@ -7,10 +7,10 @@ import sys
 from Bio import SeqIO
 import os
 
-# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
+newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -90,13 +90,14 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                 print(recordLen)
                 for chr in range(0,nrOfChr):
                     nameOfChr = record2.name
+                    idOfChr = record2.id
                     if nrOfChr == 2:
                         if chr == 2:
-                            nameOfChr = record2.name+"_2"
-                            idOfChr = record2.id+"_2"
+                            nameOfChr = nameOfChr+"_2"
+                            idOfChr = idOfChr+"_2"
                         else :
-                            nameOfChr = record2.name+"_1"
-                            idOfChr = record2.id + "_1"
+                            nameOfChr = nameOfChr+"_1"
+                            idOfChr = idOfChr + "_1"
                     record2.name = nameOfChr
                     record2.id = idOfChr
                     #else: nothing!!
@@ -194,7 +195,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 #if you want to simulate an increase of repeats, do anything between
                                 manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
                                 # just to see in debugging that string replacement works
-                                debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10]
+                                #debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10]
                                 #print(debugHelpPartOfSeq)
                                 numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
                                 patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
@@ -207,7 +208,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 offset += (patternEndNew - patternEnd) #remember for following
                                 #replace
                                 sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]
-                                debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10 ]
+                                #debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10 ]
                                 #print(debugHelpPartOfSeq)
                                 chance = random.random()
                                 if chance < chanceOfMutationPerBase:
@@ -231,7 +232,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     writer.write_record(record2)
             printBedModifications(bedfile_l_copy,newBedFile)
 
-#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
 
 if len(sys.argv) < 6:
     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
@@ -240,25 +241,46 @@ if len(sys.argv) < 6:
 else:
     for i in sys.argv:
         print(i)
-    if len(sys.argv) >= 6:
+    if len(sys.argv) > 6:
+        print("more than 6 parameters")
         if sys.argv[6].isalpha():
+            print("sys.argv[6].isalpha()")
+            run = 1
             if sys.argv[6] == "d":
-                main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 2, 0.01)
+                print("sys.arg[6]: you assigned 'd' therefore run is diploid.")
+                run = 2
             else:
-                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
-            if len(sys.argv) >=7:
-                if sys.argv[7].isnumeric():
+                print("sys.arg[6]: run is haploid.")
+            if len(sys.argv) >7:
+                print("more than 7 parameters")
+                canBeCast = True
+                try:
+                    float(sys.argv[7])
+                except ValueError:
+                    print("Not a float")
+                    canBeCast = False
+                if canBeCast:
+                    print("sys.argv[7].isdigit")
                     chanceOfMutation= float(sys.argv[7])
-                    if chanceOfMutation > 0.0 and chanceOfMutation < 1.0:
-                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 2, chanceOfMutation)
+                    if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
+                        print("your assigned chance of mutation rate ", chanceOfMutation)
+                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, chanceOfMutation)
                     else :
-                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
+                        print("Your chance of assignment was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
+                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
                 else:
-                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
+                    print("sys.argv[7] is not numeric, therefore default mutation rate is at 0.01 == 1%")
+                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
+            else:
+                print("len < 7: 0.01 (1%) chance of mutation, as you did not give a parameter for chance of mutation")
+                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
         else:
+            print("sys.argv[6] is not the right format (string: 'd' or 'h'), therefore run is default haploid and with 0.01 == 1% mutationrate")
             main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
     else: #default
+        print("6 parameters, therefore run is default haploid and with 0.01 == 1% mutationrate")
         if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
+            print("less than 6 parameters, therefore run is default haploid and with 0.01 == 1% mutationrate")
             main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 1, 0.01)
             #[0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
         else:
