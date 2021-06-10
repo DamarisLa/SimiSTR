@@ -71,50 +71,50 @@ def mutate(sequence, chanceOfMutation):
 
 #main function manipulate Fasta
 def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange, nrOfChr, chanceOfMutationPerBase):
+    #cast inputs
     chanceOfChange = float(chanceOfChange)
+    chanceOfMutationPerBase = float(chanceOfMutationPerBase)
+    #safe bedfile as lists.
     bedfile_l = getBedFile(oldBedFile)
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
     bedfile_l_copy = copy.deepcopy(bedfile_l)
-    # have an offset, that tells how much all following coordinates will be later or earlier
-    offset = 0  # original in the beginning
     sequence2 = ""
     with open(newFastaFile, 'w') as outFastaFile:
         writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
-        with open(oldFastaFile, 'r') as inFastaFile:
-            for record in SeqIO.parse(inFastaFile, "fasta"):
-                record2 = copy.deepcopy(record)
-                # for i in range(0,len(record.seq)):
+        with open(oldFastaFile, 'r') as inFastaFile: #read fastaFile
+            for record in SeqIO.parse(inFastaFile, "fasta"): #every Record. 1 .... 2 .... 3..... .... 22 .... x...
                 sequence= record.seq
-                sequence2 = copy.deepcopy(sequence)
-                recordLen = len(sequence)
-                print(recordLen)
-                for chr in range(0,nrOfChr):
+                recordLen = len(sequence)               # old length
+                print("old length", recordLen)
+
+                for chr in range(0,nrOfChr): # per new to be created chromosome
+                    record2 = copy.deepcopy(record)  # changes only on deep copies.
+                    sequence2 = copy.deepcopy(sequence)  # changes only on deep copies.
+                    # have an offset, that tells how much all following coordinates will be later or earlier
                     offset = 0  # original in the beginning
+                    #naming of haploid and or diploid chromosome entrances.
                     nameOfChr = record2.name
                     idOfChr = record2.id
+                    allele = 1
                     if chr == 1:
-                        nameOfChr = nameOfChr+"_2"
-                        idOfChr = idOfChr+"_2"
-                    else :
-                        nameOfChr = nameOfChr+"_1"
-                        idOfChr = idOfChr + "_1"
+                        allele+=1
+                    #else :
+                    #    allele = allele
+                    nameOfChr = nameOfChr + "_" + allele
+                    idOfChr = idOfChr + "_" + allele
                     record2.name = nameOfChr
                     record2.id = idOfChr
-                    #else: nothing!!
-                # writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
-                    for i in range(0,len(bedfile_l)):
-                        shortTR = bedfile_l[i]
-                        chrnr = shortTR[0]
+
+                    for i in range(0,len(bedfile_l)): #go through all coordinates in the bedfile.
+                        shortTR = bedfile_l[i]  # entrance on i
+                        chrnr = shortTR[0]      # which chromosome
+                        chrnr_w = chrnr+"_"+allele         # this number will be written down
                         patternStart = int(shortTR[1])-1 + offset
                         patternEnd = int(shortTR[2]) + offset
                         patternLen = int(shortTR[3])
                         pattern = shortTR[4].strip()
-                        if record.id == chrnr:
+                        if record.id == chrnr: #recored id must be same as chrnr in the line of the bedfile.
                             seq_len = len(sequence2)
-                            partOfSeq = sequence2[patternStart:patternEnd]
-                            #print(pattern, "; ",partOfSeq)
-
-                            #mabye check if startposition really matches...or adjust it to the left or right
                             partOfSeq_1 = sequence2[patternStart:patternStart+patternLen]
                             startpoint = patternStart                           #if start is 1000
                             startPointCorrect = False
@@ -186,6 +186,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                             numberOfRepeats = int(len(partOfSeq_4)/patternLen)
 
                             entrance = bedfile_l_copy[i]
+                            entrance[0] = chrnr_w
                             entrance[1] = patternStart + 1
                             entrance[2] = patternEnd
                             bedfile_l_copy[i] = entrance
@@ -202,6 +203,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 partOfSeqNew = pattern * numberOfRepeatsNew
 
                                 entrance = bedfile_l_copy[i]
+                                entrance[0] = chrnr_w
                                 entrance[1] = patternStart + 1
                                 entrance[2] = patternEndNew
                                 bedfile_l_copy[i] = entrance
@@ -223,11 +225,14 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 #print(debugHelpPartOfSeq2)
                             if noFit:# no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                 entrance = bedfile_l_copy[i]
+                                entrance[0] = chrnr_w
                                 entrance[1] = 0 #mark it as 0 later don't put it in new bedfile
                                 entrance[2] = 0
                                 bedfile_l_copy[i] = entrance
 
                     record2.seq = sequence2
+                    record2.id = idOfChr
+                    record2.name = nameOfChr
                     writer.write_header()
                     writer.write_record(record2)
             printBedModifications(bedfile_l_copy,newBedFile)
