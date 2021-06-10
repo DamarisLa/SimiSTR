@@ -7,10 +7,10 @@ import sys
 from Bio import SeqIO
 import os
 
-# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
+newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -76,6 +76,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
     chanceOfMutationPerBase = float(chanceOfMutationPerBase)
     #safe bedfile as lists.
     bedfile_l = getBedFile(oldBedFile)
+    bedfile_l_length = len(bedfile_l)
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
     bedfile_l_copy = copy.deepcopy(bedfile_l)
     sequence2 = ""
@@ -100,15 +101,15 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                         allele+=1
                     #else :
                     #    allele = allele
-                    nameOfChr = nameOfChr + "_" + allele
-                    idOfChr = idOfChr + "_" + allele
+                    nameOfChr = nameOfChr + "_" + str(allele)
+                    idOfChr = idOfChr + "_" + str(allele)
                     record2.name = nameOfChr
                     record2.id = idOfChr
 
-                    for i in range(0,len(bedfile_l)): #go through all coordinates in the bedfile.
+                    for i in range(0,bedfile_l_length): #go through all coordinates in the bedfile.
                         shortTR = bedfile_l[i]  # entrance on i
                         chrnr = shortTR[0]      # which chromosome
-                        chrnr_w = chrnr+"_"+allele         # this number will be written down
+                        chrnr_w = chrnr+"_"+str(allele)         # this number will be written down
                         patternStart = int(shortTR[1])-1 + offset
                         patternEnd = int(shortTR[2]) + offset
                         patternLen = int(shortTR[3])
@@ -182,62 +183,70 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     if abs(number) > 20:
                                         noFit = True
 
+                            #general information
                             partOfSeq_4 = sequence2[patternStart:patternEnd]
                             numberOfRepeats = int(len(partOfSeq_4)/patternLen)
 
-                            entrance = bedfile_l_copy[i]
-                            entrance[0] = chrnr_w
-                            entrance[1] = patternStart + 1
-                            entrance[2] = patternEnd
-                            bedfile_l_copy[i] = entrance
-                            #do you want to increase or decrease?
+                            #preparation to change bedfile
+                            entrance = bedfile_l[i]
+                            entrance_c = copy.deepcopy(entrance)  # only change the copy
+                            entrance_c[0] = chrnr_w
+                            entrance_c[1] = patternStart + 1
+                            entrance_c[2] = patternEnd
+
+                            partOfSeqNew = pattern * numberOfRepeats
+                            ##if STRs should be changed
                             if random.random()<=chanceOfChange:
                                 #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
                                 #if you want to simulate an increase of repeats, do anything between
                                 manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
-                                # just to see in debugging that string replacement works
-                                #debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10]
-                                #print(debugHelpPartOfSeq)
                                 numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
                                 patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-                                partOfSeqNew = pattern * numberOfRepeatsNew
+                                entrance_c[2] = patternEndNew
+                                offset += (patternEndNew - patternEnd)  # remember for following
+                                partOfSeqNew = pattern * numberOfRepeatsNew # new middle sequence
 
-                                entrance = bedfile_l_copy[i]
-                                entrance[0] = chrnr_w
-                                entrance[1] = patternStart + 1
-                                entrance[2] = patternEndNew
-                                bedfile_l_copy[i] = entrance
-                                offset += (patternEndNew - patternEnd) #remember for following
-                                #replace
-                                sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]
-                                #debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10 ]
-                                #print(debugHelpPartOfSeq)
-                                chance = random.random()
-                                if chance < chanceOfMutationPerBase:
-                                    #chanceOfMutPerPos = chanceOfMutationPerBase+1 / (len(partOfSeqNew)+1) #this should be the way
-                                    #chanceOfMutPerPos = chanceOfMutationPerBase / 10
-                                    partOfSeqNew = mutate(partOfSeqNew, chanceOfMutationPerBase)
-                                sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:]
-                                debugHelpPartOfSeq2 = sequence2[patternStart - 10:patternEnd + 10 + manipulation*patternLen]
-                                #print(debugHelpPartOfSeq)
-                                # just to see in debugging that string replacement works
-                                debugHelpPartOfSeq3 = sequence2[patternStart - 10:patternEnd + 10 + -1*manipulation*patternLen]
-                                #print(debugHelpPartOfSeq2)
+
+                            #cut current sequence replace
+                            sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:] #cuts part inbetween
+
+                            #mutate new sequence
+                            chance = random.random()
+                            if chance < chanceOfMutationPerBase:
+                                partOfSeqNew = mutate(partOfSeqNew, chanceOfMutationPerBase)
+
+                            #insert new sequence
+                            sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:] #fills part inbetween
+
+                            #changes in bedfile
+                            if allele == 1: # only change the first entrance of the copy (first chromosome)
+                                bedfile_l_copy[i] = entrance_c
+                            else:           # append the entrances of the second chromosome
+                                bedfile_l_copy.append(entrance_c)
+
+                            #to many errors in pattern in general
                             if noFit:# no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
-                                entrance = bedfile_l_copy[i]
+                                entrance = bedfile_l[i]
+                                entrance_c = copy.deepcopy(entrance)
                                 entrance[0] = chrnr_w
-                                entrance[1] = 0 #mark it as 0 later don't put it in new bedfile
+                                entrance[1] = 0  # mark it as 0 later don't put it in new bedfile
                                 entrance[2] = 0
-                                bedfile_l_copy[i] = entrance
+                                if allele == 1:
+                                    bedfile_l_copy[i] = entrance_c
+                                else:
+                                    bedfile_l_copy[-1] = entrance_c
 
                     record2.seq = sequence2
                     record2.id = idOfChr
                     record2.name = nameOfChr
+                    newrecordlen = len(sequence2)
+                    print("new length sequence: ", newrecordlen)
                     writer.write_header()
                     writer.write_record(record2)
+
             printBedModifications(bedfile_l_copy,newBedFile)
 
-#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
 
 if len(sys.argv) < 6:
     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
