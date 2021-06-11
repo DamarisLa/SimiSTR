@@ -7,10 +7,10 @@ import sys
 from Bio import SeqIO
 import os
 
-oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
+# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -18,7 +18,7 @@ def getBedFile(oldBedFile):
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
             splitline = line.split("\t")
-            if len(splitline)>3:
+            if len(splitline) > 3:
                 bedfile_l.append(splitline) #chr    from Pos    to Pos      lenMotif    motif
     return bedfile_l
 
@@ -71,49 +71,51 @@ def mutate(sequence, chanceOfMutation):
 
 #main function manipulate Fasta
 def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange, nrOfChr, chanceOfMutationPerBase):
+    #cast inputs
     chanceOfChange = float(chanceOfChange)
+    chanceOfMutationPerBase = float(chanceOfMutationPerBase)
+    #safe bedfile as lists.
     bedfile_l = getBedFile(oldBedFile)
+    bedfile_l_length = len(bedfile_l)
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
     bedfile_l_copy = copy.deepcopy(bedfile_l)
-    # have an offset, that tells how much all following coordinates will be later or earlier
-    offset = 0  # original in the beginning
     sequence2 = ""
     with open(newFastaFile, 'w') as outFastaFile:
         writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
-        with open(oldFastaFile, 'r') as inFastaFile:
-            for record in SeqIO.parse(inFastaFile, "fasta"):
-                record2 = copy.deepcopy(record)
-                # for i in range(0,len(record.seq)):
+        with open(oldFastaFile, 'r') as inFastaFile: #read fastaFile
+            for record in SeqIO.parse(inFastaFile, "fasta"): #every Record. 1 .... 2 .... 3..... .... 22 .... x...
                 sequence= record.seq
-                sequence2 = copy.deepcopy(sequence)
-                recordLen = len(sequence)
-                print(recordLen)
-                for chr in range(0,nrOfChr):
+                recordLen = len(sequence)               # old length
+                print("old length", recordLen)
+
+                for chr in range(0,nrOfChr): # per new to be created chromosome
+                    record2 = copy.deepcopy(record)  # changes only on deep copies.
+                    sequence2 = copy.deepcopy(sequence)  # changes only on deep copies.
+                    # have an offset, that tells how much all following coordinates will be later or earlier
+                    offset = 0  # original in the beginning
+                    #naming of haploid and or diploid chromosome entrances.
                     nameOfChr = record2.name
-                    if nrOfChr == 2:
-                        if chr == 2:
-                            nameOfChr = record2.name+"_2"
-                            idOfChr = record2.id+"_2"
-                        else :
-                            nameOfChr = record2.name+"_1"
-                            idOfChr = record2.id + "_1"
+                    idOfChr = record2.id
+                    allele = 1
+                    if chr == 1:
+                        allele+=1
+                    #else :
+                    #    allele = allele
+                    nameOfChr = nameOfChr + "_" + str(allele)
+                    idOfChr = idOfChr + "_" + str(allele)
                     record2.name = nameOfChr
                     record2.id = idOfChr
-                    #else: nothing!!
-                # writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
-                    for i in range(0,len(bedfile_l)):
-                        shortTR = bedfile_l[i]
-                        chrnr = shortTR[0]
+
+                    for i in range(0,bedfile_l_length): #go through all coordinates in the bedfile.
+                        shortTR = bedfile_l[i]  # entrance on i
+                        chrnr = shortTR[0]      # which chromosome
+                        chrnr_w = chrnr+"_"+str(allele)         # this number will be written down
                         patternStart = int(shortTR[1])-1 + offset
                         patternEnd = int(shortTR[2]) + offset
                         patternLen = int(shortTR[3])
                         pattern = shortTR[4].strip()
-                        if record.id == chrnr:
+                        if record.id == chrnr: #recored id must be same as chrnr in the line of the bedfile.
                             seq_len = len(sequence2)
-                            partOfSeq = sequence2[patternStart:patternEnd]
-                            #print(pattern, "; ",partOfSeq)
-
-                            #mabye check if startposition really matches...or adjust it to the left or right
                             partOfSeq_1 = sequence2[patternStart:patternStart+patternLen]
                             startpoint = patternStart                           #if start is 1000
                             startPointCorrect = False
@@ -181,57 +183,70 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     if abs(number) > 20:
                                         noFit = True
 
+                            #general information
                             partOfSeq_4 = sequence2[patternStart:patternEnd]
                             numberOfRepeats = int(len(partOfSeq_4)/patternLen)
 
-                            entrance = bedfile_l_copy[i]
-                            entrance[1] = patternStart + 1
-                            entrance[2] = patternEnd
-                            bedfile_l_copy[i] = entrance
-                            #do you want to increase or decrease?
+                            #preparation to change bedfile
+                            entrance = bedfile_l[i]
+                            entrance_c = copy.deepcopy(entrance)  # only change the copy
+                            entrance_c[0] = chrnr_w
+                            entrance_c[1] = patternStart + 1
+                            entrance_c[2] = patternEnd
+
+                            partOfSeqNew = pattern * numberOfRepeats
+                            ##if STRs should be changed
                             if random.random()<=chanceOfChange:
                                 #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
                                 #if you want to simulate an increase of repeats, do anything between
                                 manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
-                                # just to see in debugging that string replacement works
-                                debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10]
-                                #print(debugHelpPartOfSeq)
                                 numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
                                 patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-                                partOfSeqNew = pattern * numberOfRepeatsNew
+                                entrance_c[2] = patternEndNew
+                                offset += (patternEndNew - patternEnd)  # remember for following
+                                partOfSeqNew = pattern * numberOfRepeatsNew # new middle sequence
 
-                                entrance = bedfile_l_copy[i]
-                                entrance[1] = patternStart + 1
-                                entrance[2] = patternEndNew
-                                bedfile_l_copy[i] = entrance
-                                offset += (patternEndNew - patternEnd) #remember for following
-                                #replace
-                                sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]
-                                debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10 ]
-                                #print(debugHelpPartOfSeq)
-                                chance = random.random()
-                                if chance < chanceOfMutationPerBase:
-                                    #chanceOfMutPerPos = chanceOfMutationPerBase+1 / (len(partOfSeqNew)+1) #this should be the way
-                                    #chanceOfMutPerPos = chanceOfMutationPerBase / 10
-                                    partOfSeqNew = mutate(partOfSeqNew, chanceOfMutationPerBase)
-                                sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:]
-                                debugHelpPartOfSeq2 = sequence2[patternStart - 10:patternEnd + 10 + manipulation*patternLen]
-                                #print(debugHelpPartOfSeq)
-                                # just to see in debugging that string replacement works
-                                debugHelpPartOfSeq3 = sequence2[patternStart - 10:patternEnd + 10 + -1*manipulation*patternLen]
-                                #print(debugHelpPartOfSeq2)
+
+                            #cut current sequence replace
+                            sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:] #cuts part inbetween
+
+                            #mutate new sequence
+                            chance = random.random()
+                            if chance < chanceOfMutationPerBase:
+                                partOfSeqNew = mutate(partOfSeqNew, chanceOfMutationPerBase)
+
+                            #insert new sequence
+                            sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:] #fills part inbetween
+
+                            #changes in bedfile
+                            if allele == 1: # only change the first entrance of the copy (first chromosome)
+                                bedfile_l_copy[i] = entrance_c
+                            else:           # append the entrances of the second chromosome
+                                bedfile_l_copy.append(entrance_c)
+
+                            #to many errors in pattern in general
                             if noFit:# no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
-                                entrance = bedfile_l_copy[i]
-                                entrance[1] = 0 #mark it as 0 later don't put it in new bedfile
+                                entrance = bedfile_l[i]
+                                entrance_c = copy.deepcopy(entrance)
+                                entrance[0] = chrnr_w
+                                entrance[1] = 0  # mark it as 0 later don't put it in new bedfile
                                 entrance[2] = 0
-                                bedfile_l_copy[i] = entrance
+                                if allele == 1:
+                                    bedfile_l_copy[i] = entrance_c
+                                else:
+                                    bedfile_l_copy[-1] = entrance_c
 
                     record2.seq = sequence2
+                    record2.id = idOfChr
+                    record2.name = nameOfChr
+                    newrecordlen = len(sequence2)
+                    print("new length sequence: ", newrecordlen)
                     writer.write_header()
                     writer.write_record(record2)
+
             printBedModifications(bedfile_l_copy,newBedFile)
 
-main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05, 0.05)
+#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
 
 if len(sys.argv) < 6:
     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
@@ -240,26 +255,47 @@ if len(sys.argv) < 6:
 else:
     for i in sys.argv:
         print(i)
-    if len(sys.argv) >= 6:
+    if len(sys.argv) > 6:
+        print("more than 6 parameters")
         if sys.argv[6].isalpha():
+            print("sys.argv[6].isalpha()")
+            run = 1
             if sys.argv[6] == "d":
-                main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 2, 0.01)
+                print("sys.arg[6]: you assigned 'd' therefore run is diploid.")
+                run = 2
             else:
-                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
-            if len(sys.argv) >=7:
-                if sys.argv[7].isnumeric():
+                print("sys.arg[6]: run is haploid.")
+            if len(sys.argv) >7:
+                print("more than 7 parameters")
+                canBeCast = True
+                try:
+                    float(sys.argv[7])
+                except ValueError:
+                    print("Not a float")
+                    canBeCast = False
+                if canBeCast:
+                    print("sys.argv[7].isfloat")
                     chanceOfMutation= float(sys.argv[7])
-                    if chanceOfMutation > 0.0 and chanceOfMutation < 1.0:
-                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 2, chanceOfMutation)
+                    if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
+                        print("your assigned chance of mutation rate ", chanceOfMutation)
+                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, chanceOfMutation)
                     else :
-                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
+                        print("Your chance of assignment was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
+                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
                 else:
-                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
+                    print("sys.argv[7] is not float, therefore default mutation rate is at 0.01 == 1%")
+                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
+            else:
+                print("len < 7: 0.01 (1%) chance of mutation, as you did not give a parameter for chance of mutation")
+                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01)
         else:
+            print("sys.argv[6] is not the right format (string: 'd' or 'h'), therefore run is default haploid and with 0.01 == 1% mutationrate")
             main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01)
     else: #default
+        print("6 parameters, therefore run is default haploid and with 0.01 == 1% mutationrate")
         if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
-            main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 1, 0.01, 0.01) #per default only each chromosome only once (haploid)
+            print("6 parameters, therefore run is default haploid and with 0.01 == 1% mutationrate")
+            main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 1, 0.01)
             #[0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
         else:
             if not os.path.isfile(sys.argv[1]):
