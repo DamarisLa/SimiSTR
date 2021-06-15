@@ -7,10 +7,10 @@ import sys
 from Bio import SeqIO
 import os
 
-# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
+newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -36,6 +36,7 @@ def mutate(sequence, chanceOfMutation, indelsLessMutation):
     offset2= 0
     for i in sequence:
         chance2 = random.random()
+        chance3 = random.random()
         if chance2 < chanceOfMutation:
             chance = random.random()
             if i == "A":
@@ -66,9 +67,107 @@ def mutate(sequence, chanceOfMutation, indelsLessMutation):
                     sequence_2 += "C"
                 else:
                     sequence_2 += "T"
+        elif chance3 < chanceOfMutation/indelsLessMutation: #zb 1% / 10  = 0.1%
+            if random.random() < 0.5:#insertion
+                sequence_2 += i
+                if random.random()<0.25:
+                    sequence_2 += "A"
+                elif  random.random()<0.5:
+                    sequence_2 += "C"
+                elif random.random() < 0.75:
+                    sequence_2 += "G"
+                else:
+                    sequence_2 += "T"
+                offset2+=1
+            else:#deletion
+                sequence_2 +=""
+                offset2-=1
         else:
             sequence_2+= i
     return sequence_2,offset2
+
+def findStartPoint(seq,start,pattern,patternLen):
+    seq_len = len(seq)
+    partOfSeq_1 = seq[start:start + patternLen]
+    startpoint = start  # if start is 1000
+    endpoint = start + patternLen
+    startPointCorrect = False
+    lower = False
+    number = -1  # -1
+    noFit = False
+    times = False
+    while not startPointCorrect and not noFit:
+        if pattern != partOfSeq_1:  #pattern was not found on initial start point
+            # will always go one further away from current start. trying both directions parallel
+            startpoint = startpoint + number  # start is 999, 1001, 998, 1002 usw.
+            partOfSeq_1 = seq[startpoint:startpoint + patternLen]
+            if partOfSeq_1 == pattern:  #
+                number = -1
+            else:
+                if lower:  # true
+                    number += 1  # 3
+                    number *= (-1)  # -3
+                    lower = False  # false
+                else:  # false
+                    number *= (-1)  # 1 .... 3
+                    number += 1  # 2 .... 4
+                    lower = True  # true
+                if abs(number) > patternLen*5+1:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
+                    noFit = True
+                    number = -1
+
+        else:# if a pattern is found
+            startPointCorrect = True  # found startpoint
+            patternStart = startpoint
+            # find out if area in reference of this STR is acutally longer or shorter than according to
+            # the bed say? basically count if pattern goes left an right for longer.
+            # maybe later change to another comparison algorithm that takes costs into account (Blast)
+
+            ### Leftside check ###
+            check_left = patternStart - patternLen
+            goLeft = True
+            while check_left >= 0 and goLeft:
+                partOfSeq_2 = seq[check_left:check_left + patternLen]
+                if partOfSeq_2 == pattern:  # still matching
+                    check_left = check_left - patternLen  # maybe your can even go further left
+                else:
+                    goLeft = False  # stop checking further left
+                    check_left = check_left + patternLen  # because last position did not match, so go back to last
+                                                          # one working
+
+            ### Rightside check ###
+            check_right = check_left
+            goRight = True
+            while check_right + patternLen <= seq_len and goRight:
+                partOfSeq_3 = seq[check_right:check_right + patternLen]
+                if partOfSeq_3 == pattern:  # still matching
+                    check_right = check_right + patternLen  # maybe your can even go further left
+                else:
+                    goRight = False  # stop checking further right
+
+            startpoint = check_left
+            endpoint = check_right
+
+            if endpoint - startpoint == patternLen: #length only one time the pattern
+                if not times:
+                    if number <0:
+                        number+=patternLen*5
+                    else:
+                        number-=patternLen*5
+                    startPointCorrect = False
+                    startpoint += number
+                    partOfSeq_1 = seq[startpoint:startpoint + patternLen]
+                    times = True
+                else:
+                    startPointCorrect = True
+
+
+
+
+
+    return startpoint, endpoint, noFit
+
+
 
 #main function manipulate Fasta
 def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange, nrOfChr, chanceOfMutationPerBase, indelsLessMutation, homozygousity):
@@ -80,7 +179,6 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
     bedfile_l_length = len(bedfile_l)
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
     bedfile_l_copy = copy.deepcopy(bedfile_l)
-    sequence2 = ""
     with open(newFastaFile, 'w') as outFastaFile:
         writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
         with open(oldFastaFile, 'r') as inFastaFile: #read fastaFile
@@ -88,8 +186,9 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                 sequence= record.seq
                 recordLen = len(sequence)               # old length
                 print("old length", recordLen)
-
-                for chr in range(0,nrOfChr): # per new to be created chromosome
+                homozygousity_d = dict()
+                allele = 1
+                for chr in range(0,nrOfChr): # per chromosome a new to be created chromosome #eigther only 0 oder 0 and 1
                     record2 = copy.deepcopy(record)  # changes only on deep copies.
                     sequence2 = copy.deepcopy(sequence)  # changes only on deep copies.
                     # have an offset, that tells how much all following coordinates will be later or earlier
@@ -97,11 +196,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     #naming of haploid and or diploid chromosome entrances.
                     nameOfChr = record2.name
                     idOfChr = record2.id
-                    allele = 1
-                    if chr == 1:
-                        allele+=1
-                    #else :
-                    #    allele = allele
+
                     nameOfChr = nameOfChr + "_" + str(allele)
                     idOfChr = idOfChr + "_" + str(allele)
                     record2.name = nameOfChr
@@ -115,126 +210,126 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                         patternEnd = int(shortTR[2]) + offset
                         patternLen = int(shortTR[3])
                         pattern = shortTR[4].strip()
-                        if record.id == chrnr: #recored id must be same as chrnr in the line of the bedfile.
-                            seq_len = len(sequence2)
-                            partOfSeq_1 = sequence2[patternStart:patternStart+patternLen]
-                            startpoint = patternStart                           #if start is 1000
-                            startPointCorrect = False
-                            lower = False
-                            number = -1                 #-1
-                            noFit = False
-                            while not startPointCorrect and not noFit:
-                                if partOfSeq_1 == pattern:
-                                    startPointCorrect = True #found startpoint
-                                    patternStart = startpoint
-                                    # find out if area in reference of this STR is acutally longer or shorter than according to
-                                    # the bed say? basically count if pattern goes left an right for longer.
-                                    # maybe later change to another comparison algorithm that takes costs into account (Blast)
-                                    ### Leftside check ###
-                                    check_left = patternStart - patternLen
-                                    goLeft = True
-                                    while check_left >= 0 and goLeft:
-                                        partOfSeq_2 = sequence2[check_left:check_left + patternLen]
-                                        if partOfSeq_2 == pattern:  # still matching
-                                            check_left = check_left - patternLen  # maybe your can even go further left
-                                        else:
-                                            goLeft = False  # stop checking further right
-                                            check_left = check_left + patternLen  # because last length did still match
 
-                                    ### Rightside check ###
-                                    check_right = check_left
-                                    goRight = True
-                                    while check_right + patternLen <= seq_len and goRight:
-                                        partOfSeq_3 = sequence2[check_right:check_right + patternLen]
-                                        if partOfSeq_3 == pattern:  # still matching
-                                            check_right = check_right + patternLen  # maybe your can even go further left
-                                        else:
-                                            goRight = False  # stop checking further right
-
-                                    patternStart = check_left
-                                    patternEnd = check_right
-
-                                    if patternEnd - patternStart == patternLen:
-                                        startPointCorrect = False
-                                        startpoint += number
-                                        partOfSeq_1 = sequence2[startpoint:startpoint + patternLen]
-                                        if lower:  # true
-                                            number += 1  # 3
-                                            number *= (-1)  # -3
-                                            lower = False  # false
-                                        else:  # false
-                                            number *= (-1)  # 1 .... 3
-                                            number += 1  # 2 .... 4
-                                            lower = True  # true
-                                        if abs(number) > 20:
-                                            noFit = True
+                        homozy = False #a bool for second run, to decide wether sth is treated as homozygot
+                        if allele == 1:
+                            chrnr2 = chrnr
+                            ps = shortTR[1]
+                            homozygousity_d[chrnr2, ps] = ""
+                        else:
+                            if random.random() < homozygousity:
+                                homozy = True
+                                chrnr2 = chrnr
+                                ps = shortTR[1]
+                                partOfSeq = homozygousity_d[chrnr2, ps]
+                                # cut current sequence replace
+                                sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]  # cuts part inbetween
+                                # insert new sequence
+                                sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[patternStart:]  # fills part inbetween
+                                entrance_c = bedfile_l_copy[i]
+                                entrance_cn = copy.deepcopy(entrance_c)
+                                entrance_cn[0] = chrnr_w
+                                entrance_cn[1] = patternStart+1
+                                entrance_cn[2] = patternStart+len(partOfSeq)
+                                oldSeqLen = (patternEnd-patternStart)
+                                change3 = len(partOfSeq) - oldSeqLen
+                                offset += change3
+                                bedfile_l_copy.append(entrance_cn)
 
 
-                                else: #will always go one further away from current start. trying both directions parallel
-                                    startpoint = startpoint + number            # start is 999, 1001, 998, 1002 usw.
-                                    partOfSeq_1 = sequence2[startpoint:startpoint + patternLen]
-                                    if lower:   #true
-                                        number += 1     #3
-                                        number *= (-1)  #-3
-                                        lower = False   #false
-                                    else:       #false
-                                        number *= (-1)  #1 .... 3
-                                        number += 1     #2 .... 4
-                                        lower = True    #true
-                                    if abs(number) > 20:
-                                        noFit = True
+                        if record.id == chrnr and homozy == False: #recored id must be same as chrnr in the line of the bedfile.
 
-                            #general information
-                            partOfSeq_4 = sequence2[patternStart:patternEnd]
-                            numberOfRepeats = int(len(partOfSeq_4)/patternLen)
+                            #find correct startpoit or if bedfile-entrance does not fit to sequence on that position
+                            correctStart, correctEnd, noFit = findStartPoint(sequence2,patternStart,pattern,patternLen) #seq,start,pattern,patternLen
+                            # if noFit: patternStart and patternEnd stay as they are, but will not be noted in new
+                            #           bedfile. And offset most not be changed.
 
-                            #preparation to change bedfile
+                            helppattern = pattern
+                            debugHelpPartOfSeq = sequence2[patternStart - 30:patternEnd + 30 ]
+                            debugHelpPartOfSeq1 = sequence2[patternStart:patternEnd]
+                            debugHelpPartOfSeq2 = sequence2[correctStart - 30:correctEnd + 30]
+                            debugHelpPartOfSeq3 = sequence2[correctStart:correctEnd]
+                            #print(helppattern,"\n",debugHelpPartOfSeq,"\n",debugHelpPartOfSeq1,"\n",debugHelpPartOfSeq2,"\n",debugHelpPartOfSeq3,"\n")
+
+                            # preparation to change bedfile
                             entrance = bedfile_l[i]
                             entrance_c = copy.deepcopy(entrance)  # only change the copy
                             entrance_c[0] = chrnr_w
                             entrance_c[1] = patternStart + 1
                             entrance_c[2] = patternEnd
 
-                            partOfSeqNew = pattern * numberOfRepeats
-                            ##if STRs should be changed
-                            if random.random()<=chanceOfChange:
-                                #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
-                                #if you want to simulate an increase of repeats, do anything between
-                                manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
-                                numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
-                                patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-                                entrance_c[2] = patternEndNew
-                                offset += (patternEndNew - patternEnd)  # remember for following
-                                partOfSeqNew = pattern * numberOfRepeatsNew # new middle sequence
+                            partOfSeq_4 = sequence2[patternStart:patternEnd] #just for debugging
+                            if not noFit: #it fits and has a start
+                                startOffest = correctStart - patternStart
+                                if startOffest != 0:
+                                    print("start: ", startOffest, "p: ", pattern)
+                                    print(debugHelpPartOfSeq)
+                                    print(debugHelpPartOfSeq1)
+                                    print(debugHelpPartOfSeq2)
+                                    print(debugHelpPartOfSeq3)
+                                endOffset =  correctEnd - patternEnd
+                                if endOffset != 0:
+                                    print("end: ", endOffset) #if the new end is somewhere else then before, then the distance to the next STR region changes.
+                                patternStart = correctStart
+                                patternEnd = correctEnd
+                                #general information
+                                partOfSeq_4 = sequence2[patternStart:patternEnd]
+                                numberOfRepeats = int(len(partOfSeq_4)/patternLen)
+
+                                partOfSeqNew = pattern * numberOfRepeats
+                                ##if STRs should be changed
+                                if random.random()<=chanceOfChange:
+                                    #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
+                                    #if you want to simulate an increase of repeats, do anything between
+                                    manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                                    numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
+                                    patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
+                                    entrance_c[2] = patternEndNew
+                                    #offset += (patternEndNew - patternEnd)  # remember for following
+                                    change = (manipulation*patternLen)
+                                    offset += change
+                                    partOfSeqNew = pattern * numberOfRepeatsNew # new middle sequence
 
 
-                            #cut current sequence replace
-                            sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:] #cuts part inbetween
+                                #mutate new sequence
+                                partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,indelsLessMutation)
+                                offset += offset2
 
-                            #mutate new sequence
-                            partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,indelsLessMutation)
+                                #cut current sequence replace
+                                patternEndNew += offset2
+                                sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:] #cuts part inbetween
 
-                            #insert new sequence
-                            sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:] #fills part inbetween
-
-                            #changes in bedfile
-                            if allele == 1: # only change the first entrance of the copy (first chromosome)
-                                bedfile_l_copy[i] = entrance_c
-                            else:           # append the entrances of the second chromosome
-                                bedfile_l_copy.append(entrance_c)
+                                #insert new sequence
+                                sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:] #fills part inbetween
 
                             #to many errors in pattern in general
                             if noFit:# no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                 entrance = bedfile_l[i]
                                 entrance_c = copy.deepcopy(entrance)
-                                entrance[0] = chrnr_w
-                                entrance[1] = 0  # mark it as 0 later don't put it in new bedfile
-                                entrance[2] = 0
+                                entrance_c[0] = chrnr_w
+                                entrance_c[1] = 0  # mark it as 0 later don't put it in new bedfile
+                                entrance_c[2] = 0
+                            else :
                                 if allele == 1:
-                                    bedfile_l_copy[i] = entrance_c
-                                else:
-                                    bedfile_l_copy[-1] = entrance_c
+                                    homozygousity_d[chrnr2, ps] = partOfSeqNew
+                                # preparation to change bedfile
+                                entrance = bedfile_l[i]
+                                entrance_c = copy.deepcopy(entrance)  # only change the copy
+                                entrance_c[0] = chrnr_w
+                                entrance_c[1] = patternStart + 1
+                                entrance_c[2] = patternEndNew
+                                if patternEndNew < patternStart+1:
+                                    entrance_c[2] = patternStart+1
 
+
+                            # changes in bedfile
+                            if allele == 1:  # only change the first entrance of the copy (first chromosome)
+                                bedfile_l_copy[i] = entrance_c
+                            else:  # append the entrances of the second chromosome
+                                bedfile_l_copy.append(entrance_c)
+
+                    if allele == 1: #will only be visited once
+                        allele += 1
                     record2.seq = sequence2
                     record2.id = idOfChr
                     record2.name = nameOfChr
@@ -245,7 +340,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
             printBedModifications(bedfile_l_copy,newBedFile)
 
-#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.01, 10, 0.5)
 
 if len(sys.argv) < 6:
     print("Please give fastafilenames+dir to the ref [1] and new Fasta that will be procues [2], the old bedfile [3], "
