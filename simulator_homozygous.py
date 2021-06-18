@@ -26,10 +26,16 @@ def getBedFile(oldBedFile):
 #write out the new coordinates. The adapted bedfile. To find the regions and to
 def printBedModifications(bedfile_l_copy, newBedFile):
     with open(newBedFile, 'w') as outBedfile:
+        count = 0
         for line in bedfile_l_copy: #not recording bad mathces in new bedfile
-            if line[1] != 0 and line[2] !=0:
+
+            if line[1] != 0 and line[2] !=0: #thats the ones where pattern was not found
                 lines = line[0]+"\t"+str(line[1])+"\t"+str(line[2])+"\t"+line[3]+"\t"+line[4]
                 outBedfile.write(lines)
+            else :
+                count +=1
+        print(count)
+
 
 def mutate(sequence, chanceOfMutation, indelsLessMutation):
     sequence_2 = ""
@@ -91,18 +97,21 @@ def findStartPoint(seq,start,pattern,patternLen):
     partOfSeq_1 = seq[start:start + patternLen]
     startpoint = start  # if start is 1000
     endpoint = start + patternLen
+    startpoint_mem = startpoint
+    endpoint_mem = endpoint
     startPointCorrect = False
     lower = False
     number = -1  # -1
     noFit = False
     times = False
     while not startPointCorrect and not noFit:
+
         if pattern != partOfSeq_1:  #pattern was not found on initial start point
             # will always go one further away from current start. trying both directions parallel
             startpoint = startpoint + number  # start is 999, 1001, 998, 1002 usw.
             partOfSeq_1 = seq[startpoint:startpoint + patternLen]
-            if partOfSeq_1 == pattern:  #
-                number = -1
+            if partOfSeq_1 == pattern:  #found
+                number = -1 #reset and leave
             else:
                 if lower:  # true
                     number += 1  # 3
@@ -112,9 +121,11 @@ def findStartPoint(seq,start,pattern,patternLen):
                     number *= (-1)  # 1 .... 3
                     number += 1  # 2 .... 4
                     lower = True  # true
-                if abs(number) > patternLen*5+1:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
+                if abs(number) > patternLen*3.5:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
                     noFit = True
                     number = -1
+                    startpoint = startpoint_mem
+                    endpoint = endpoint_mem
 
         else:# if a pattern is found
             startPointCorrect = True  # found startpoint
@@ -149,21 +160,19 @@ def findStartPoint(seq,start,pattern,patternLen):
             endpoint = check_right
 
             if endpoint - startpoint == patternLen: #length only one time the pattern
+                endpoint_mem = endpoint
+                startpoint_mem = startpoint
                 if not times:
                     if number <0:
-                        number+=patternLen*5
+                        number+=patternLen*3
                     else:
-                        number-=patternLen*5
+                        number-=patternLen*3
                     startPointCorrect = False
                     startpoint += number
                     partOfSeq_1 = seq[startpoint:startpoint + patternLen]
                     times = True
                 else:
                     startPointCorrect = True
-
-
-
-
 
     return startpoint, endpoint, noFit
 
@@ -233,7 +242,9 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 entrance_cn[2] = patternStart+len(partOfSeq)
                                 oldSeqLen = (patternEnd-patternStart)
                                 change3 = len(partOfSeq) - oldSeqLen
+                                print("Change: ",change3)
                                 offset += change3
+                                print("offset: ", offset)
                                 bedfile_l_copy.append(entrance_cn)
 
 
@@ -264,14 +275,15 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 if startOffest != 0:
                                     print("start: ", startOffest, "p: ", pattern)
                                     print(debugHelpPartOfSeq)
-                                    print(debugHelpPartOfSeq1)
+                                    print(" "*29 ,debugHelpPartOfSeq1)
                                     print(debugHelpPartOfSeq2)
-                                    print(debugHelpPartOfSeq3)
+                                    print(" "*29 ,debugHelpPartOfSeq3)
                                 endOffset =  correctEnd - patternEnd
                                 if endOffset != 0:
                                     print("end: ", endOffset) #if the new end is somewhere else then before, then the distance to the next STR region changes.
                                 patternStart = correctStart
                                 patternEnd = correctEnd
+                                patternEndNew = correctEnd
                                 #general information
                                 partOfSeq_4 = sequence2[patternStart:patternEnd]
                                 numberOfRepeats = int(len(partOfSeq_4)/patternLen)
@@ -289,11 +301,17 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     change = (manipulation*patternLen)
                                     offset += change
                                     partOfSeqNew = pattern * numberOfRepeatsNew # new middle sequence
+                                    if change != 0:
+                                        print("Change STR offset: ", change)
+
 
 
                                 #mutate new sequence
                                 partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,indelsLessMutation)
                                 offset += offset2
+
+                                if offset2 != 0:
+                                    print("offset2 (mutation): ", offset2)
 
                                 #cut current sequence replace
                                 patternEndNew += offset2
@@ -301,12 +319,12 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
                                 #insert new sequence
                                 sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:] #fills part inbetween
-
+                                print("offset: ", offset)
                             #to many errors in pattern in general
                             if noFit:# no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                 entrance = bedfile_l[i]
                                 entrance_c = copy.deepcopy(entrance)
-                                entrance_c[0] = chrnr_w
+                                entrance_c[0] = -1
                                 entrance_c[1] = 0  # mark it as 0 later don't put it in new bedfile
                                 entrance_c[2] = 0
                             else :
@@ -340,7 +358,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
             printBedModifications(bedfile_l_copy,newBedFile)
 
-main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.01, 10, 0.5)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05, 10, 0.5)
 
 if len(sys.argv) < 6:
     print("Please give fastafilenames+dir to the ref [1] and new Fasta that will be procues [2], the old bedfile [3], "

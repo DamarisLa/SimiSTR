@@ -28,25 +28,26 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
             # writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
             for i in range(0,len(bedfile_l)):
                 shortTR = bedfile_l[i]
-                shortTRold = bedfile_l_old[i]
+                #shortTRold = bedfile_l_old[i%(len(bedfile_l_old))]
                 chrnr = shortTR[0]
                 patternStart = int(shortTR[1])-1
                 patternEnd = int(shortTR[2])
                 patternLen = int(shortTR[3])
                 pattern = shortTR[4].strip()
-                patternStartold = int(shortTRold[1])-1
-                patternEndold = int(shortTRold[2])
-                patternLenold = int(shortTRold[3])
-                patternold = shortTRold[4].strip()
+                #patternStartold = int(shortTRold[1])-1
+                #patternEndold = int(shortTRold[2])
+                #patternLenold = int(shortTRold[3])
+                #patternold = shortTRold[4].strip()
                 if record.id == chrnr:
                     seq_len = len(sequence)
                     partOfSeq = sequence[patternStart:patternEnd]
-
-                    print(partOfSeq)
+                    partOfSeq2 = sequence[patternStart-5:patternEnd+5]
+                    print(partOfSeq2)
+                    print("    ",partOfSeq)
                     print("new: ",shortTR," ", (patternEnd-patternStart)/patternLen)
-                    print("old: ",shortTRold, " ", (patternEndold-patternStartold)/patternLenold)
+                    #print("old: ",shortTRold, " ", (patternEndold-patternStartold)/patternLenold)
 
-main_reader("..\FilteredViewed\\hs37d5.chr22.manipulated099_3.fa","..\FilteredViewed\\hs37_ver8.chr22.manipulated099_3.bed","..\FilteredViewed\\hs37_ver8.chr22.bed")
+main_reader("..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa","..\FilteredViewed\\hs37_ver8.chr22.adapt.bed","..\FilteredViewed\\hs37_ver8.chr22.bed")
 
 # if len(sys.argv) < 4:
 #     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
