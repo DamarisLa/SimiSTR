@@ -2,18 +2,17 @@
 # hd stands for haploid and diploid, as in this version haploid or diploid genomes can be simulated
 
 import copy
+import os
 import random
 import sys
-from Bio import SeqIO
-import os
-
 import winsound
 
+from Bio import SeqIO
 
-oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+oldBedFile = "..\\FilteredViewed\\hs37_ver8.new.sorted2.chr22.bed"
+newBedFile = "..\\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
+newFastaFile = "..\\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
+oldFastaFile = "..\\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
@@ -22,83 +21,84 @@ def getBedFile(oldBedFile):
         for line in inBedFile:
             splitline = line.split("\t")
             if len(splitline) > 3:
-                bedfile_l.append(splitline) #chr    from Pos    to Pos      lenMotif    motif
+                bedfile_l.append(splitline)  # chr    from Pos    to Pos      lenMotif    motif
     return bedfile_l
 
 
-#write out the new coordinates. The adapted bedfile. To find the regions and to
+# write out the new coordinates. The adapted bedfile. To find the regions and to
 def printBedModifications(bedfile_l_copy, newBedFile):
     with open(newBedFile, 'w') as outBedfile:
         count = 0
-        for line in bedfile_l_copy: #not recording bad mathces in new bedfile
+        for line in bedfile_l_copy:  # not recording bad mathces in new bedfile
 
-            if line[1] != 0 and line[2] !=0: #thats the ones where pattern was not found
-                lines = line[0]+"\t"+str(line[1])+"\t"+str(line[2])+"\t"+line[3]+"\t"+line[4]
+            if line[1] != 0 and line[2] != 0:  # thats the ones where pattern was not found
+                lines = line[0] + "\t" + str(line[1]) + "\t" + str(line[2]) + "\t" + line[3] + "\t" + line[4]
                 outBedfile.write(lines)
-            else :
-                count +=1
+            else:
+                count += 1
         print(count)
 
 
 def mutate(sequence, chanceOfMutation, indelsLessMutation):
     sequence_2 = ""
-    offset2= 0
-    chanceForIndels= 0
-    if (indelsLessMutation != 0): # to avoid division through zero
-        chanceForIndels = chanceOfMutation/indelsLessMutation
-    for i in sequence:
+    offset2 = 0
+    chanceForIndels = 0
+    if indelsLessMutation != 0:  # to avoid division through zero
+        chanceForIndels = chanceOfMutation / indelsLessMutation
+    for base in sequence:
         chance2 = random.random()
         chance3 = random.random()
         if chance2 < chanceOfMutation:
             chance = random.random()
-            if i == "A":
+            if base == "A":
                 if chance < 0.85:
                     sequence_2 += "G"
                 elif chance < 0.95:
                     sequence_2 += "T"
                 else:
                     sequence_2 += "C"
-            elif i == "T":
+            elif base == "T":
                 if chance < 0.85:
                     sequence_2 += "C"
                 elif chance < 0.95:
                     sequence_2 += "A"
                 else:
                     sequence_2 += "G"
-            elif i == "C":
+            elif base == "C":
                 if chance < 0.85:
                     sequence_2 += "T"
                 elif chance < 0.95:
                     sequence_2 += "G"
                 else:
                     sequence_2 += "A"
-            else: # i == "G":
+            else:  # i == "G":
                 if chance < 0.85:
                     sequence_2 += "A"
                 elif chance < 0.95:
                     sequence_2 += "C"
                 else:
                     sequence_2 += "T"
-        elif chance3 < chanceForIndels: #zb 1% / 10  = 0.1%
-            if random.random() < 0.5:#insertion
-                sequence_2 += i
-                if random.random()<0.25:
+        elif chance3 < chanceForIndels:  # zb 1% / 10  = 0.1%
+            if random.random() < 0.5:  # insertion
+                sequence_2 += base
+                if random.random() < 0.25:
                     sequence_2 += "A"
-                elif  random.random()<0.5:
+                elif random.random() < 0.5:
                     sequence_2 += "C"
                 elif random.random() < 0.75:
                     sequence_2 += "G"
                 else:
                     sequence_2 += "T"
-                offset2+=1
-            else:                      #deletion
-                sequence_2 +=""
-                offset2-=1
+                offset2 += 1
+            else:  # deletion
+                sequence_2 += ""
+                offset2 -= 1
         else:
-            sequence_2+= i
-    return sequence_2,offset2
+            sequence_2 += base
+    return sequence_2, offset2
 
-def findStartPoint(seq,start,pattern,patternLen):
+
+def findStartPoint(seq, start, pattern, patternLen):
     seq_len = len(seq)
     partOfSeq_1 = seq[start:start + patternLen]
     startpoint = start  # if start is 1000
@@ -112,12 +112,12 @@ def findStartPoint(seq,start,pattern,patternLen):
     times = False
     while not startPointCorrect and not noFit:
 
-        if pattern != partOfSeq_1:  #pattern was not found on initial start point
+        if pattern != partOfSeq_1:  # pattern was not found on initial start point
             # will always go one further away from current start. trying both directions parallel
             startpoint = startpoint + number  # start is 999, 1001, 998, 1002 usw.
             partOfSeq_1 = seq[startpoint:startpoint + patternLen]
-            if partOfSeq_1 == pattern:  #found
-                number = -1 #reset and leave
+            if partOfSeq_1 == pattern:  # found
+                number = -1  # reset and leave
             else:
                 if lower:  # true
                     number += 1  # 3
@@ -127,20 +127,20 @@ def findStartPoint(seq,start,pattern,patternLen):
                     number *= (-1)  # 1 .... 3
                     number += 1  # 2 .... 4
                     lower = True  # true
-                if abs(number) > 20:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
+                if abs(number) > 30:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
                     noFit = True
                     number = -1
                     startpoint = startpoint_mem
                     endpoint = endpoint_mem
 
-        else:# if a pattern is found
+        else:  # if a pattern is found
             startPointCorrect = True  # found startpoint
             patternStart = startpoint
             # find out if area in reference of this STR is acutally longer or shorter than according to
             # the bed say? basically count if pattern goes left an right for longer.
             # maybe later change to another comparison algorithm that takes costs into account (Blast)
 
-            ### Leftside check ###
+            # __ Leftside check __ #
             check_left = patternStart - patternLen
             goLeft = True
             while check_left >= 0 and goLeft:
@@ -150,9 +150,9 @@ def findStartPoint(seq,start,pattern,patternLen):
                 else:
                     goLeft = False  # stop checking further left
                     check_left = check_left + patternLen  # because last position did not match, so go back to last
-                                                          # one working
+                    # one working
 
-            ### Rightside check ###
+            # __ Rightside check __ #
             check_right = check_left
             goRight = True
             while check_right + patternLen <= seq_len and goRight:
@@ -165,14 +165,14 @@ def findStartPoint(seq,start,pattern,patternLen):
             startpoint = check_left
             endpoint = check_right
 
-            if endpoint - startpoint == patternLen: #length only one time the pattern
+            if endpoint - startpoint == patternLen:  # length only one time the pattern
                 endpoint_mem = endpoint
                 startpoint_mem = startpoint
                 if not times:
-                    if number <0:
-                        number+=15
+                    if number < 0:
+                        number += 9
                     else:
-                        number-=15
+                        number -= 9
                     startPointCorrect = False
                     startpoint += number
                     partOfSeq_1 = seq[startpoint:startpoint + patternLen]
@@ -183,32 +183,33 @@ def findStartPoint(seq,start,pattern,patternLen):
     return startpoint, endpoint, noFit
 
 
-
-#main function manipulate Fasta
-def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange, nrOfChr, chanceOfMutationPerBase, indelsLessMutation, homozygousity):
-    #cast inputs
+# main function manipulate Fasta
+def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange, nrOfChr,
+                      chanceOfMutationPerBase, indelsLessMutation, homozygousity_rate):
+    # cast inputs
     chanceOfChange = float(chanceOfChange)
     chanceOfMutationPerBase = float(chanceOfMutationPerBase)
-    #safe bedfile as lists.
+    # safe bedfile as lists.
     bedfile_l = getBedFile(oldBedFile)
     bedfile_l_length = len(bedfile_l)
     # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
     bedfile_l_copy = copy.deepcopy(bedfile_l)
     with open(newFastaFile, 'w') as outFastaFile:
         writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
-        with open(oldFastaFile, 'r') as inFastaFile: #read fastaFile
-            for record in SeqIO.parse(inFastaFile, "fasta"): #every Record. 1 .... 2 .... 3..... .... 22 .... x...
-                sequence= record.seq
-                recordLen = len(sequence)               # old length
+        with open(oldFastaFile, 'r') as inFastaFile:  # read fastaFile
+            for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
+                sequence = record.seq
+                recordLen = len(sequence)  # old length
                 print("old length", recordLen)
                 homozygousity_d = dict()
                 allele = 1
-                for chr in range(0,nrOfChr): # per chromosome a new to be created chromosome #eigther only 0 oder 0 and 1
+                for chr in range(0,
+                                 nrOfChr):  # per chromosome a new to be created chromosome #eigther only 0 oder 0 and 1
                     record2 = copy.deepcopy(record)  # changes only on deep copies.
                     sequence2 = copy.deepcopy(sequence)  # changes only on deep copies.
                     # have an offset, that tells how much all following coordinates will be later or earlier
                     offset = 0  # original in the beginning
-                    #naming of haploid and or diploid chromosome entrances.
+                    # naming of haploid and or diploid chromosome entrances.
                     nameOfChr = record2.name
                     idOfChr = record2.id
 
@@ -217,147 +218,186 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     record2.name = nameOfChr
                     record2.id = idOfChr
 
-                    for i in range(0,bedfile_l_length): #go through all coordinates in the bedfile.
-                        shortTR = bedfile_l[i]  # entrance on i
-                        chrnr = shortTR[0]      # which chromosome
-                        chrnr_w = chrnr+"_"+str(allele)         # this number will be written down
-                        patternStart = int(shortTR[1])-1 + offset
+                    for bedfEntrence in range(0, bedfile_l_length):  # go through all coordinates in the bedfile.
+                        shortTR = bedfile_l[bedfEntrence]
+                        chrnr = shortTR[0]  # which chromosome
+                        chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
+                        patternStart = int(shortTR[1]) - 1 + offset
                         patternEnd = int(shortTR[2]) + offset
                         patternLen = int(shortTR[3])
                         pattern = shortTR[4].strip()
 
-                        homozy = False #a bool for second run, to decide wether sth is treated as homozygot
-                        if allele == 1:
-                            chrnr2 = chrnr
-                            ps = shortTR[1]
-                            homozygousity_d[chrnr2, ps] = ""
-                        else:
-                            if random.random() < homozygousity:
-                                homozy = True
+                        # if shortTR[1] == '16140803' or shortTR[1] == '16113001' or shortTR[1] == '1640818' or shortTR[1]\
+                        #         =='16079731' or shortTR[1] == '17575547' or shortTR[1] == '17547790' or shortTR[1] \
+                        #         == '16369814' or shortTR[1] == '16112986' or shortTR[1] == '16112757' or shortTR[1] \
+                        #         == '16140355' or shortTR[1] == '16368681' or shortTR[1] == '17543200' \
+                        #         or shortTR[1] == '17570680' or shortTR[1] == '17698949':
+                        #     print(offset)
+
+                        # homozy = False #a bool for second run, to decide wether sth is treated as homozygot
+
+                        if record.id == chrnr:  # and homozy == False:  #recored id must be same as chrnr in the line of the bedfile.
+
+                            if allele > 1 and random.random() < homozygousity_rate:  # should be the second allele and inside the homozygosity rate
+                                # if below chance then copy allele 1
+                                # homozy = True
                                 chrnr2 = chrnr
                                 ps = shortTR[1]
                                 partOfSeq = homozygousity_d[chrnr2, ps]
+
                                 # cut current sequence replace
-                                sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]  # cuts part inbetween
+                                sequence2 = sequence2[:patternStart] + "" + sequence2[
+                                                                            patternEnd:]  # cuts part inbetween
                                 # insert new sequence
-                                sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[patternStart:]  # fills part inbetween
-                                entrance_c = bedfile_l_copy[i]
+                                sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[
+                                                                                   patternStart:]  # fills part inbetween
+                                entrance_c = bedfile_l_copy[bedfEntrence]
                                 entrance_cn = copy.deepcopy(entrance_c)
                                 entrance_cn[0] = chrnr_w
-                                entrance_cn[1] = patternStart+1
-                                entrance_cn[2] = patternStart+len(partOfSeq)
-                                oldSeqLen = (patternEnd-patternStart)
+                                entrance_cn[1] = patternStart + 1
+                                entrance_cn[2] = patternStart + len(partOfSeq)
+                                oldSeqLen = (patternEnd - patternStart)
                                 change3 = len(partOfSeq) - oldSeqLen
-                                #print("Change: ",change3)
+                                # print("Change: ",change3)
                                 offset += change3
-                                #print("offset: ", offset)
+                                # print("offset: ", offset)
                                 bedfile_l_copy.append(entrance_cn)
+                            else:  #
+                                chrnr2 = chrnr
+                                ps = shortTR[1]
+                                homozygousity_d[chrnr2, ps] = ""
+                                # find correct startpoit or if bedfile-entrance does not fit to sequence on that position
+                                correctStart, correctEnd, noFit = findStartPoint(sequence2, patternStart, pattern,
+                                                                                 patternLen)  # seq,start,pattern,patternLen
+                                # if noFit: patternStart and patternEnd stay as they are, but will not be noted in new
+                                #           bedfile. And offset most not be changed.
 
+                                debugHelpPartOfSeq = sequence2[patternStart - 30:patternEnd + 30]
+                                debugHelpPartOfSeq1 = sequence2[patternStart:patternEnd]
+                                debugHelpPartOfSeq2 = sequence2[correctStart - 30:correctEnd + 30]
+                                debugHelpPartOfSeq3 = sequence2[correctStart:correctEnd]
+                                # print(helppattern,"\n",debugHelpPartOfSeq,"\n",debugHelpPartOfSeq1,"\n",debugHelpPartOfSeq2,"\n",debugHelpPartOfSeq3,"\n")
 
-                        if record.id == chrnr and homozy == False: #recored id must be same as chrnr in the line of the bedfile.
-
-                            #find correct startpoit or if bedfile-entrance does not fit to sequence on that position
-                            correctStart, correctEnd, noFit = findStartPoint(sequence2,patternStart,pattern,patternLen) #seq,start,pattern,patternLen
-                            # if noFit: patternStart and patternEnd stay as they are, but will not be noted in new
-                            #           bedfile. And offset most not be changed.
-
-                            helppattern = pattern
-                            debugHelpPartOfSeq = sequence2[patternStart - 30:patternEnd + 30 ]
-                            debugHelpPartOfSeq1 = sequence2[patternStart:patternEnd]
-                            debugHelpPartOfSeq2 = sequence2[correctStart - 30:correctEnd + 30]
-                            debugHelpPartOfSeq3 = sequence2[correctStart:correctEnd]
-                            #print(helppattern,"\n",debugHelpPartOfSeq,"\n",debugHelpPartOfSeq1,"\n",debugHelpPartOfSeq2,"\n",debugHelpPartOfSeq3,"\n")
-
-                            # preparation to change bedfile
-                            entrance = bedfile_l[i]
-                            entrance_c = copy.deepcopy(entrance)  # only change the copy
-                            entrance_c[0] = chrnr_w
-                            entrance_c[1] = patternStart + 1
-                            entrance_c[2] = patternEnd
-
-                            partOfSeq_4 = sequence2[patternStart:patternEnd] #just for debugging
-                            if not noFit: #it fits and has a start
-                                startOffest = correctStart - patternStart
-                                if startOffest != 0:
-                                    print("bedfile entrance", shortTR)
-                                    print("offset: ", offset)
-                                    print("last STR change: ", change)
-                                    print("start: ", startOffest, "p: ", pattern)
-                                    print(debugHelpPartOfSeq)
-                                    print("                             " ,debugHelpPartOfSeq1)
-                                    print(debugHelpPartOfSeq2)
-                                    print("                             " ,debugHelpPartOfSeq3)
-                                endOffset =  correctEnd - patternEnd
-                                if endOffset != 0:
-                                    print("end: ", endOffset) #if the new end is somewhere else then before, then the distance to the next STR region changes.
-                                patternStart = correctStart
-                                patternEnd = correctEnd
-                                patternEndNew = correctEnd
-                                #general information
-                                partOfSeq_4 = sequence2[patternStart:patternEnd]
-                                numberOfRepeats = int(len(partOfSeq_4)/patternLen)
-
-                                partOfSeqNew = pattern * numberOfRepeats
-                                ##if STRs should be changed
-                                if random.random()<=chanceOfChange:
-                                    #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
-                                    #if you want to simulate an increase of repeats, do anything between
-                                    #manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
-                                    manipulation = -2
-                                    numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
-                                    #patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-                                    #offset += (patternEndNew - patternEnd)  # remember for following
-                                    change = (manipulation*patternLen)
-                                    offset += change
-                                    partOfSeqNew = pattern * numberOfRepeatsNew # new middle sequence
-                                    patternEndNew = patternEnd + change
-                                    #entrance_c[2] = patternEndNew
-                                    #if change != 0:
-                                    #    print("Change STR offset: ", change)
-
-
-
-                                #mutate new sequence
-                                partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,indelsLessMutation)
-                                offset += offset2
-
-                                if offset2 != 0:
-                                    print("offset2 (mutation): ", offset2)
-
-                                #cut current sequence replace
-                                patternEndNew += offset2
-                                sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:] #cuts part inbetween
-
-                                #insert new sequence
-                                sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternStart:] #fills part inbetween
-                                #print("offset: ", offset)
-                            #to many errors in pattern in general
-                            if noFit:# no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
-                                entrance = bedfile_l[i]
-                                entrance_c = copy.deepcopy(entrance)
-                                entrance_c[0] = -1
-                                entrance_c[1] = 0  # mark it as 0 later don't put it in new bedfile
-                                entrance_c[2] = 0
-                            else :
-                                if allele == 1:
-                                    homozygousity_d[chrnr2, ps] = partOfSeqNew
                                 # preparation to change bedfile
-                                entrance = bedfile_l[i]
+                                entrance = bedfile_l[bedfEntrence]
                                 entrance_c = copy.deepcopy(entrance)  # only change the copy
-                                entrance_c[0] = chrnr_w
-                                entrance_c[1] = patternStart + 1
-                                entrance_c[2] = patternEndNew
-                                if patternEndNew < patternStart+1:
-                                    entrance_c[2] = patternStart+1
 
+                                partOfSeq_4 = sequence2[patternStart:patternEnd]  # just for debugging
+                                if not noFit:  # it fits and has a start
+                                    startOffest = correctStart - patternStart
+                                    # -------------------------------
+                                    if startOffest != 0:
+                                        print("bedfile entrance", shortTR)
+                                        print("offset: ", offset)
+                                        print("last STR change: ", change)
+                                        print("start: ", startOffest, "p: ", pattern)
+                                        print(debugHelpPartOfSeq)
+                                        print("                             ", debugHelpPartOfSeq1)
+                                        print(debugHelpPartOfSeq2)
+                                        print("                             ", debugHelpPartOfSeq3)
+                                        print("Maybe Sort your bedfile.")
+                                    endOffset = correctEnd - patternEnd
+                                    if endOffset != 0:
+                                        print("end: ",
+                                              endOffset)  # if the new end is somewhere else then before, then the distance to the next STR region changes.
+                                    # -------------------------------
+                                    # assign correct ends
+                                    patternStart = correctStart
+                                    patternEnd = correctEnd
+                                    patternEndNew = correctEnd
+                                    # general information
+                                    partOfSeq_4 = sequence2[patternStart:patternEnd]
+                                    numberOfRepeats = int(len(partOfSeq_4) / patternLen)
 
-                            # changes in bedfile
-                            if allele == 1:  # only change the first entrance of the copy (first chromosome)
-                                bedfile_l_copy[i] = entrance_c
-                            else:  # append the entrances of the second chromosome
-                                bedfile_l_copy.append(entrance_c)
+                                    partOfSeqNew = pattern * numberOfRepeats
+                                    # if STRs should be changed
+                                    if random.random() <= chanceOfChange:
+                                        # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
+                                        # if you want to simulate an increase of repeats, do anything between
 
-                    if allele == 1: #will only be visited once
+                                        # manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                                        #manipulation = (-1)*(random.randint(0,numberOfRepeats))
+                                        manipulation = -1 * numberOfRepeats
+                                        #manipulation = 10
+                                        numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
+
+                                        # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
+                                        # offset += (patternEndNew - patternEnd)  # remember for following
+                                        change = (manipulation * patternLen)
+                                        # offset += change
+                                        partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
+                                        # patternEndNew = patternEnd + change
+                                        # entrance_c[2] = patternEndNew
+                                        # if change != 0:
+                                        #    print("Change STR offset: ", change)
+
+                                    # mutate new sequence
+                                    partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,
+                                                                   indelsLessMutation)
+                                    # offset += offset2
+
+                                    #if offset2 != 0:
+                                    #    print("offset2 (mutation): ", offset2)
+
+                                    debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
+                                    # cut current sequence replace
+                                    patternEndNew += offset2
+                                    #sequence2 = sequence2[:patternStart] + "" + sequence2[
+                                    #                                            patternEnd:]  # cuts part inbetween
+                                    debugHelpPartOfSeq8 = sequence2[patternStart - 3:patternEnd + 3]
+                                    # insert new sequence
+                                    #sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[
+                                    #                                                      patternStart:]  # fills part inbetween
+                                    sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
+                                    patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
+                                    # print("offset: ", offset)
+                                    debugHelpPartOfSeq6 = sequence2[patternStart - 3:patternEndNew + 3]
+
+                                    # print(debugHelpPartOfSeq6)
+                                    # just to see in debugging that string replacement works
+                                    debugHelpPartOfSeq7 = sequence2[patternStart:patternEndNew]
+                                    offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
+
+                                    # offset += offsettemp
+
+                                    # if patternEndNew <= patternStart:
+                                    #     # print("ps ", patternStart, ";pen ",patternEndNew,";offsettemp ", offsettemp)
+                                    #     patternEndNew = patternStart
+                                    #     offsettemp2 = patternEnd - patternStart
+                                    #     offset -= offsettemp2
+                                    # else:
+                                    offset += offsettemp
+
+                                    if change != offsettemp:
+                                        print("change ", change, "offsettemp ", offsettemp)
+                                    # print(debugHelpPartOfSeq7)
+                                # to many errors in pattern in general
+                                if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
+                                    entrance = bedfile_l[bedfEntrence]
+                                    print("no fit, entrance: ", entrance)
+                                    entrance_c = copy.deepcopy(entrance)
+                                    entrance_c[0] = -1
+                                    entrance_c[1] = 0  # mark it as 0 later don't put it in new bedfile
+                                    entrance_c[2] = 0
+                                else:
+                                    if allele == 1:
+                                        homozygousity_d[chrnr2, ps] = partOfSeqNew
+                                    # preparation to change bedfile
+                                    entrance = bedfile_l[bedfEntrence]
+                                    entrance_c = copy.deepcopy(entrance)  # only change the copy
+                                    entrance_c[0] = chrnr_w
+                                    entrance_c[1] = patternStart + 1
+                                    entrance_c[2] = patternEndNew
+                                    # if patternEndNew < patternStart+1:
+                                    #    entrance_c[2] = patternStart+1
+
+                                # changes in bedfile
+                                if allele == 1:  # only change the first entrance of the copy (first chromosome)
+                                    bedfile_l_copy[bedfEntrence] = entrance_c
+                                else:  # append the entrances of the second chromosome
+                                    bedfile_l_copy.append(entrance_c)
+
+                    if allele == 1:  # will only be visited once
                         allele += 1
                     record2.seq = sequence2
                     record2.id = idOfChr
@@ -367,15 +407,17 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     writer.write_header()
                     writer.write_record(record2)
 
-            printBedModifications(bedfile_l_copy,newBedFile)
+            printBedModifications(bedfile_l_copy, newBedFile)
 
-main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 1.00, 1, 0.000001, 0, 0)
+
+main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 2, 0.01, 10, 0.5)
 
 if len(sys.argv) < 6:
     print("Please give fastafilenames+dir to the ref [1] and new Fasta that will be procues [2], the old bedfile [3], "
           "the  name and dir where the new bedfile should be [4], "
           "and a number between >0.0 && <1.0 indicating the changes of STR to the original ref file [5]")
-    print("Additional: 'd' oder 'h' for diploid or haploid approach [6], chance of mutation >0.0 && <1.0 [7], how much rarer an indel is than a mutation (0-100, comma possible) [8], homozygousity >0.0 && <1.0 [9]")
+    print(
+        "Additional: 'd' oder 'h' for diploid or haploid approach [6], chance of mutation >0.0 && <1.0 [7], how much rarer an indel is than a mutation (0-100, comma possible) [8], homozygousity_rate >0.0 && <1.0 [9]")
 else:
     for i in sys.argv:
         print(i)
@@ -389,7 +431,7 @@ else:
                 run = 2
             else:
                 print("sys.arg[6]: run is haploid. 'h' or sth else was given.")
-            if len(sys.argv) >7:
+            if len(sys.argv) > 7:
                 print("more than 7 parameters")
                 canBeCast = True
                 try:
@@ -399,7 +441,7 @@ else:
                     canBeCast = False
                 if canBeCast:
                     print("sys.argv[7].isfloat")
-                    chanceOfMutation= float(sys.argv[7])
+                    chanceOfMutation = float(sys.argv[7])
                     if len(sys.argv) > 8:
                         print("more than 8 parameters")
                         canBeCast = True
@@ -408,10 +450,10 @@ else:
                         except ValueError:
                             print("Not a float")
                             canBeCast = False
-                        if canBeCast: #can [8] be cast
+                        if canBeCast:  # can [8] be cast
                             print("sys.argv[8].isfloat")
                             indelLessTmutation = float(sys.argv[8])
-                            if len(sys.argv) > 9: #len > 9
+                            if len(sys.argv) > 9:  # len > 9
                                 print("more than 9 parameters")
                                 canBeCast = True
                                 try:
@@ -422,11 +464,11 @@ else:
                                 if canBeCast:
                                     print("sys.argv[8].isfloat")
                                     homozygous = float(sys.argv[8])
-                                    if homozygous >= 0.0 and homozygous <= 1.0:
+                                    if 0.0 <= homozygous <= 1.0:
                                         print("in field 9 homozygous possibilty assigned was: ", homozygous)
                                         print("How much rarer is an Indel than Mutation, according to assignment: ",
                                               indelLessTmutation)
-                                        if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
+                                        if 0.0 <= chanceOfMutation <= 1.0:
                                             print("your assigned chance of mutation rate ", chanceOfMutation)
                                             main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
                                                               sys.argv[5],
@@ -445,7 +487,7 @@ else:
                                             "wrong format. homozygous possibilty needs a value > 0.0 and smaller <=1.0. default is 0")
                                         print("How much rarer is an Indel than Mutation, according to assignment: ",
                                               indelLessTmutation)
-                                        if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
+                                        if 0.0 <= chanceOfMutation <= 1.0:
                                             print("your assigned chance of mutation rate ", chanceOfMutation)
                                             main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
                                                               sys.argv[5],
@@ -458,11 +500,12 @@ else:
                                                               sys.argv[5],
                                                               run,
                                                               0.01, indelLessTmutation, 0)
-                                else: #9 was not cast.
-                                    print("wrong format. homozygous possibilty needs a value > 0.0 and smaller <=1.0. default is 0")
+                                else:  # 9 was not cast.
+                                    print(
+                                        "wrong format. homozygous possibilty needs a value > 0.0 and smaller <=1.0. default is 0")
                                     print("How much rarer is an Indel than Mutation, according to assignment: ",
                                           indelLessTmutation)
-                                    if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
+                                    if 0.0 <= chanceOfMutation <= 1.0:
                                         print("your assigned chance of mutation rate ", chanceOfMutation)
                                         main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
                                                           sys.argv[5],
@@ -475,12 +518,12 @@ else:
                                                           sys.argv[5],
                                                           run,
                                                           0.01, indelLessTmutation, 0)
-                            else: #len not 0 9
+                            else:  # len not 0 9
                                 print(
                                     "in field 9 homozygous possibilty was missing. here the default is 0")
                                 print("How much rarer is an Indel than Mutation, according to assignment: ",
                                       indelLessTmutation)
-                                if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
+                                if 0.0 <= chanceOfMutation <= 1.0:
                                     print("your assigned chance of mutation rate ", chanceOfMutation)
                                     main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
                                                       run,
@@ -491,86 +534,90 @@ else:
                                     main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
                                                       run,
                                                       0.01, indelLessTmutation, 0)
-                        else:#[8] can not be cast. therefore default. And 7 fields ok and can be run. but check of range nessesary
-                                print("wrong format. in field 8 a number is needed to express how much rarer an indel"
-                                      "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-                                if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
-                                    print("your assigned chance of mutation rate ", chanceOfMutation)
-                                    print("Default is 10 times rarer")
-                                    print(
-                                        "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
-                                                      run, chanceOfMutation, 10, 0)
-                                else:
-                                    print(
-                                        "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
-                                    print("Default is 10 times rarer")
-                                    print(
-                                        "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
-                                                      run, 0.01, 10, 0)
-                    else: # 7 fields. but and chance of mutation was casted float. But is it in range?
-                        if chanceOfMutation >= 0.0 and chanceOfMutation <= 1.0:
-                            print("your assigned chance of mutation rate ", chanceOfMutation)
-                            print("in field 8 a number is needed to express how much rarer an indel"
+                        else:  # [8] can not be cast. therefore default. And 7 fields ok and can be run. but check of range nessesary
+                            print("wrong format. in field 8 a number is needed to express how much rarer an indel"
                                   "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-                            print("Default is 10 times rarer")
-                            print("in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, chanceOfMutation, 10, 0)
-                        else :
-                            print("Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
+                            if 0.0 <= chanceOfMutation <= 1.0:
+                                print("your assigned chance of mutation rate ", chanceOfMutation)
+                                print("Default is 10 times rarer")
+                                print(
+                                    "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
+                                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
+                                                  run, chanceOfMutation, 10, 0)
+                            else:
+                                print(
+                                    "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
+                                print("Default is 10 times rarer")
+                                print(
+                                    "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
+                                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
+                                                  run, 0.01, 10, 0)
+                    else:  # 7 fields. but and chance of mutation was casted float. But is it in range?
+                        if 0.0 <= chanceOfMutation <= 1.0:
+                            print("your assigned chance of mutation rate ", chanceOfMutation)
                             print("in field 8 a number is needed to express how much rarer an indel"
                                   "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
                             print("Default is 10 times rarer")
                             print(
                                 "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01, 10, 0)
-                else: # 7 cannot be cast
+                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run,
+                                              chanceOfMutation, 10, 0)
+                        else:
+                            print(
+                                "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
+                            print("in field 8 a number is needed to express how much rarer an indel"
+                                  "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
+                            print("Default is 10 times rarer")
+                            print(
+                                "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
+                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run,
+                                              0.01, 10, 0)
+                else:  # 7 cannot be cast
                     print("sys.argv[7] is not float, therefore default mutation rate is at 0.01 == 1%")
                     print("in field [8] a number is needed to express how much rarer an indel"
                           "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
                     print("Default is 10 times rarer")
                     print("in field [9] homozygous possibilty was missing. here the default is 0")
                     main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01, 10, 0)
-            else: # 7 fielts
-                print("len < 7: 0.01 (1%) chance of mutation, as you did not give a parameter for chance of mutation[7]")
+            else:  # 7 fielts
+                print(
+                    "len < 7: 0.01 (1%) chance of mutation, as you did not give a parameter for chance of mutation[7]")
                 print("in field [8] a number is needed to express how much rarer an indel"
                       "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
                 print("Default is 10 times rarer")
                 print("in field [9] homozygous possibilty was missing. here the default is 0")
-                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01,10, 0)
+                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01, 10, 0)
         else:
-            print("sys.argv[6] is not the right format (string: 'd' or 'h'), therefore run is default haploid and with 0.01 == 1% mutationrate [7]")
+            print(
+                "sys.argv[6] is not the right format (string: 'd' or 'h'), therefore run is default haploid and with 0.01 == 1% mutationrate [7]")
             print("in field [8] a number is needed to express how much rarer an indel"
                   "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
             print("Default is 10 times rarer")
             print("in field [9] homozygous possibilty was missing. here the default is 0")
             main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01, 10, 0)
-    else: #default
+    else:  # default
         if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
             print("given 5 parameters, therefore run is default haploid [6] and with 0.01 == 1% mutationrate [7]")
             print("in field [8] a number is needed to express how much rarer an indel"
                   "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
             print("Default is 10 times rarer")
             print("in field [9] homozygous possibilty was missing. here the default is 0")
-            main_manipulation(sys.argv[2],sys.argv[1],sys.argv[4],sys.argv[3],sys.argv[5], 1, 0.01, 10, 0)
-            #[0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
+            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01, 10, 0)
+            # [0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
         else:
             if not os.path.isfile(sys.argv[1]):
                 print(sys.argv[1], " is not a file")
             elif not os.path.isfile(sys.argv[3]):
                 print(sys.argv[3], " is not a file")
 
-
-
 duration = 1000  # milliseconds
 freq = 440  # Hz
 winsound.Beep(freq, duration)
 # fai format:
-#chr    length of Chr   offset(CoordinateStart) bases each line (60without 61with \n)
-#22	    51304566	    2876892038	            60	    61
-#when reading fasta
+# chr    length of Chr   offset(CoordinateStart) bases each line (60without 61with \n)
+# 22	    51304566	    2876892038	            60	    61
+# when reading fasta
 
-#bedfile format
-#chr    from Pos    to Pos      lenMotif    motif
-#22	    16052168	16052199	4	        AAAC    ==> 68:AAACAAACAAACAAACAAACAAACAAACAAAC:99
+# bedfile format
+# chr    from Pos    to Pos      lenMotif    motif
+# 22	    16052168	16052199	4	        AAAC    ==> 68:AAACAAACAAACAAACAAACAAACAAACAAAC:99

@@ -29,31 +29,39 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
             count = 0
             for i in range(0,len(bedfile_l)):
                 shortTR = bedfile_l[i]
-                #shortTRold = bedfile_l_old[i%(len(bedfile_l_old))]
+                shortTRold = bedfile_l_old[i%(len(bedfile_l_old))]
                 chrnr = shortTR[0]
                 patternStart = int(shortTR[1])-1
                 patternEnd = int(shortTR[2])
                 patternLen = int(shortTR[3])
                 pattern = shortTR[4].strip()
-                #patternStartold = int(shortTRold[1])-1
-                #patternEndold = int(shortTRold[2])
-                #patternLenold = int(shortTRold[3])
-                #patternold = shortTRold[4].strip()
+                patternStartold = int(shortTRold[1])-1
+                patternEndold = int(shortTRold[2])
+                patternLenold = int(shortTRold[3])
+                patternold = shortTRold[4].strip()
+
 
                 if record.id == chrnr:
                     seq_len = len(sequence)
                     partOfSeq = sequence[patternStart:patternEnd]
-                    partOfSeq2 = sequence[patternStart-5:patternEnd+5]
+                    partOfSeq2 = sequence[patternStart-6:patternEnd+6]
+
+                    print("old: ", shortTRold, " ", (patternEndold - patternStartold) / patternLenold)
+
                     print(partOfSeq2)
-                    print("    ",partOfSeq)
+                    print("     ",partOfSeq)
                     print("new: ",shortTR," ", (patternEnd-patternStart)/patternLen,"\n")
                     patterntotal = int((patternEnd-patternStart)/patternLen)*pattern
-                    if patterntotal != partOfSeq:
+                    if patterntotal != partOfSeq and not patternStart == patternEnd:
                         count +=1
-                    #print("old: ",shortTRold, " ", (patternEndold-patternStartold)/patternLenold)
+
+
             print("Unequal pairs: ", count)
 
-main_reader("..\FilteredViewed\\hs37d5.chr22.fa","..\FilteredViewed\\hs37_ver8.chr22.bed","..\FilteredViewed\\hs37_ver8.chr22.bed")
+
+main_reader("..\\FilteredViewed\\hs37d5.chr22.rand_adapt.fa","..\\FilteredViewed\\hs37_ver8.chr22.adapt.bed","..\\FilteredViewed\\hs37_ver8.new.sorted2.chr22.bed")
+
+
 
 # if len(sys.argv) < 4:
 #     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "

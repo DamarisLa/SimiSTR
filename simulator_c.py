@@ -153,7 +153,8 @@ class simulator:
                             if random.random()<=chanceOfChange:
                                 #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
                                 #if you want to simulate an increase of repeats, do anything between
-                                manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                                #manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                                manipulation = 10
                                 # just to see in debugging that string replacement works
                                 debugHelpPartOfSeq = sequence2[patternStart - 10:patternEnd + 10]
                                 #print(debugHelpPartOfSeq)

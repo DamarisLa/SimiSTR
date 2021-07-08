@@ -199,7 +199,8 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                             if random.random()<=chanceOfChange:
                                 #if you want to simulate a reduction you cannot reduce more than the available number of repeats.
                                 #if you want to simulate an increase of repeats, do anything between
-                                manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                                #manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
+                                manipulation = 10
                                 numberOfRepeatsNew = numberOfRepeats+ manipulation      #total new number of repeats
                                 patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
                                 entrance_c[2] = patternEndNew
@@ -246,7 +247,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
             printBedModifications(bedfile_l_copy,newBedFile)
 
-main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 2, 0.05)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99, 1, 0.0000001)
 
 if len(sys.argv) < 6:
     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
