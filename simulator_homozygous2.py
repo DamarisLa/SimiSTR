@@ -5,14 +5,7 @@ import copy
 import os
 import random
 import sys
-import winsound
-
 from Bio import SeqIO
-
-oldBedFile = "..\\FilteredViewed\\hs37_ver8.new.sorted.bed"
-newBedFile = "..\\FilteredViewed\\hs37_ver8.adapt.bed"
-newFastaFile = "..\\FilteredViewed\\hs37d5.rand_adapt.fa"
-oldFastaFile = "..\\FilteredViewed\\hs37d5.fa"
 
 
 def getBedFile(oldBedFile):
@@ -277,22 +270,6 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
                                 partOfSeq_4 = sequence2[patternStart:patternEnd]  # just for debugging
                                 if not noFit:  # it fits and has a start
-                                    startOffest = correctStart - patternStart
-                                    # -------------------------------
-                                    # if startOffest > patternLen:
-                                    #     print("bedfile entrance", shortTR)
-                                    #     print("offset: ", offset)
-                                    #     print("last STR change: ", change)
-                                    #     print("start: ", startOffest, "p: ", pattern)
-                                    #     print(debugHelpPartOfSeq)
-                                    #     print("                             ", debugHelpPartOfSeq1)
-                                    #     print(debugHelpPartOfSeq2)
-                                    #     print("                             ", debugHelpPartOfSeq3)
-                                    endOffset = correctEnd - patternEnd
-                                    if endOffset != 0:
-                                        print("end: ",
-                                              endOffset)  # if the new end is somewhere else then before, then the distance to the next STR region changes.
-                                    # -------------------------------
                                     # assign correct ends
                                     patternStart = correctStart
                                     patternEnd = correctEnd
@@ -308,9 +285,6 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                         # if you want to simulate an increase of repeats, do anything between
 
                                         manipulation = random.randint(0,10) if random.random()<0.5 else (-1)*(random.randint(0,numberOfRepeats))
-                                        #manipulation = (-1)*(random.randint(0,numberOfRepeats))
-                                        #manipulation = -1 * numberOfRepeats
-                                        #manipulation = 10
                                         numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
 
                                         # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
@@ -320,16 +294,11 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                         partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
                                         # patternEndNew = patternEnd + change
                                         # entrance_c[2] = patternEndNew
-                                        # if change != 0:
-                                        #    print("Change STR offset: ", change)
+
 
                                     # mutate new sequence
                                     partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,
                                                                    indelsLessMutation)
-                                    # offset += offset2
-
-                                    #if offset2 != 0:
-                                    #    print("offset2 (mutation): ", offset2)
 
                                     debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
                                     # cut current sequence replace
@@ -342,28 +311,15 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     #                                                      patternStart:]  # fills part inbetween
                                     sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
                                     patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
-                                    # print("offset: ", offset)
                                     debugHelpPartOfSeq6 = sequence2[patternStart - 3:patternEndNew + 3]
 
-                                    # print(debugHelpPartOfSeq6)
                                     # just to see in debugging that string replacement works
                                     debugHelpPartOfSeq7 = sequence2[patternStart:patternEndNew]
                                     offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
 
-                                    # offset += offsettemp
 
-                                    # if patternEndNew <= patternStart:
-                                    #     # print("ps ", patternStart, ";pen ",patternEndNew,";offsettemp ", offsettemp)
-                                    #     patternEndNew = patternStart
-                                    #     offsettemp2 = patternEnd - patternStart
-                                    #     offset -= offsettemp2
-                                    # else:
                                     offset += offsettemp
 
-                                    #if change != offsettemp:
-                                    #    print("change ", change, "offsettemp ", offsettemp)
-                                    # print(debugHelpPartOfSeq7)
-                                # to many errors in pattern in general
                                 if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                     entrance = bedfile_l[bedfEntrance]
                                     print("no fit, entrance: ", entrance)
@@ -402,7 +358,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
             printBedModifications(bedfile_l_copy, newBedFile)
 
 
-main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 1, 0.01, 10, 0.5)
+
 
 if len(sys.argv) < 6:
     print("Please give fastafilenames+dir to the ref [1] and new Fasta that will be procues [2], the old bedfile [3], "
@@ -602,14 +558,4 @@ else:
             elif not os.path.isfile(sys.argv[3]):
                 print(sys.argv[3], " is not a file")
 
-#duration = 1000  # milliseconds
-#freq = 440  # Hz
-#winsound.Beep(freq, duration)
-# fai format:
-# chr    length of Chr   offset(CoordinateStart) bases each line (60without 61with \n)
-# 22	    51304566	    2876892038	            60	    61
-# when reading fasta
 
-# bedfile format
-# chr    from Pos    to Pos      lenMotif    motif
-# 22	    16052168	16052199	4	        AAAC    ==> 68:AAACAAACAAACAAACAAACAAACAAACAAAC:99

@@ -3,21 +3,31 @@
 import copy
 from Bio import SeqIO
 import random
+import re
 
 
-# oldBedFile = "..\FilteredViewed\\hs37_ver8.chr22.bed "
-# newBedFile = "..\FilteredViewed\\hs37_ver8.chr22.adapt.bed"
-# newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-# oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+oldBedFile = "..\FilteredViewed\\simplerepeats_37_min3bp_max10bp.bed"
+newBedFile = "..\FilteredViewed\\simplerepeats_37_min3bp_max10bp.adapt.bed"
+newFastaFile = "..\FilteredViewed\\simplerepeats_37_min3bp_max10bp.rand_adapt.fa"
+oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
 
 
 def getBedFile(oldBedFile):
     bedfile_l = list()
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
+            print(line)
             splitline = line.split("\t")
+            print(splitline)
             if len(splitline)>3:
-                bedfile_l.append(splitline) #chr    from Pos    to Pos      lenMotif    motif
+                txt = re.search("\d", splitline[1])
+                chr = -1
+                if txt is not None:
+                    chr = txt[0]
+                if chr != -1:
+                    important_fields = chr,splitline[2],splitline[3],splitline[7],splitline[-1].strip()
+                    print(important_fields)
+                    bedfile_l.append(important_fields) #chr    from Pos    to Pos      lenMotif    motif
     return bedfile_l
 
 
@@ -176,7 +186,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                 writer.write_record(record2)
             printBedModifications(bedfile_l_copy,newBedFile)
 
-#main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99)
+main_manipulation(newFastaFile,oldFastaFile,newBedFile,oldBedFile, 0.99)
 
 # if len(sys.argv) < 6:
 #     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
