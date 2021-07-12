@@ -6,12 +6,13 @@ import os
 import random
 import sys
 import winsound
+import re
 
 from Bio import SeqIO
 
-oldBedFile = "..\\FilteredViewed\\hs37_ver8.new.sorted.bed"
-newBedFile = "..\\FilteredViewed\\hs37_ver8.adapt.bed"
-newFastaFile = "..\\FilteredViewed\\hs37d5.rand_adapt.fa"
+oldBedFile = "..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.bed"
+newBedFile = "..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.adapt.bed"
+newFastaFile = "..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.rand_adapt.fa"
 oldFastaFile = "..\\FilteredViewed\\hs37d5.fa"
 
 
@@ -19,9 +20,20 @@ def getBedFile(oldBedFile):
     bedfile_l = list()
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
+            #print(line)
             splitline = line.split("\t")
-            if len(splitline) > 3:
-                bedfile_l.append(splitline)  # chr    from Pos    to Pos      lenMotif    motif
+            #print(splitline)
+            if len(splitline)>3:
+                txt = re.search("chr(\d*)", splitline[1])
+                chr = -1
+                if txt is not None:
+                    chr = txt[1]
+                if chr != -1 and chr != '':
+                    #if int(chr) > 10:
+                    #    print(chr)
+                    important_fields = [chr,splitline[2],splitline[3],splitline[7],splitline[-1].strip()]
+                    #print(important_fields)
+                    bedfile_l.append(important_fields) #chr    from Pos    to Pos      lenMotif    motif
     return bedfile_l
 
 
@@ -226,7 +238,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
                         if record.id == chrnr:  # and homozy == False:  #recored id must be same as chrnr in the line of the bedfile.
                             chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
-                            patternStart = int(shortTR[1]) - 1 + offset
+                            patternStart = int(shortTR[1])  + offset #gangstr -1
                             patternEnd = int(shortTR[2]) + offset
                             patternLen = int(shortTR[3])
                             pattern = shortTR[4].strip()
@@ -247,7 +259,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 entrance_c = bedfile_l_copy[bedfEntrance]
                                 entrance_cn = copy.deepcopy(entrance_c)
                                 entrance_cn[0] = chrnr_w
-                                entrance_cn[1] = patternStart + 1
+                                entrance_cn[1] = patternStart #+ 1
                                 entrance_cn[2] = patternStart + len(partOfSeq)
                                 oldSeqLen = (patternEnd - patternStart)
                                 change3 = len(partOfSeq) - oldSeqLen
@@ -289,9 +301,9 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     #     print(debugHelpPartOfSeq2)
                                     #     print("                             ", debugHelpPartOfSeq3)
                                     endOffset = correctEnd - patternEnd
-                                    if endOffset != 0:
-                                        print("end: ",
-                                              endOffset)  # if the new end is somewhere else then before, then the distance to the next STR region changes.
+                                    #if endOffset != 0:
+                                    #    print("end: ",
+                                    #          endOffset)  # if the new end is somewhere else then before, then the distance to the next STR region changes.
                                     # -------------------------------
                                     # assign correct ends
                                     patternStart = correctStart
@@ -378,7 +390,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     entrance = bedfile_l[bedfEntrance]
                                     entrance_c = copy.deepcopy(entrance)  # only change the copy
                                     entrance_c[0] = chrnr_w
-                                    entrance_c[1] = patternStart + 1
+                                    entrance_c[1] = patternStart #+ 1
                                     entrance_c[2] = patternEndNew
                                     # if patternEndNew < patternStart+1:
                                     #    entrance_c[2] = patternStart+1

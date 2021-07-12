@@ -9,7 +9,7 @@ import re
 oldBedFile = "..\FilteredViewed\\simplerepeats_37_min3bp_max10bp.bed"
 newBedFile = "..\FilteredViewed\\simplerepeats_37_min3bp_max10bp.adapt.bed"
 newFastaFile = "..\FilteredViewed\\simplerepeats_37_min3bp_max10bp.rand_adapt.fa"
-oldFastaFile = "..\FilteredViewed\\hs37d5.chr22.fa"
+oldFastaFile = "..\FilteredViewed\\hs37d5.fa"
 
 
 def getBedFile(oldBedFile):
@@ -67,6 +67,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     patternLen = int(shortTR[3])
                     pattern = shortTR[4].strip()
 
+                    #print(record.id, chrnr)
                     if record.id == chrnr:
                         seq_len = len(sequence2)
                         partOfSeq = sequence2[patternStart:patternEnd]

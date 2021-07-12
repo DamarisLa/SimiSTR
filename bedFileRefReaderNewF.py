@@ -1,14 +1,26 @@
 from Bio import SeqIO
 import sys
 import os
+import re
 
 def getBedFile(oldBedFile):
     bedfile_l = list()
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
+            #print(line)
             splitline = line.split("\t")
+            #print(splitline)
             if len(splitline)>3:
-                bedfile_l.append(splitline) #chr    from Pos    to Pos      lenMotif    motif
+                txt = re.search("chr(\d*)", splitline[1])
+                chr = -1
+                if txt is not None:
+                    chr = txt[1]
+                if chr != -1 and chr != '':
+                    #if int(chr) > 10:
+                    #    print(chr)
+                    important_fields = [chr,splitline[2],splitline[3],splitline[7],splitline[-1].strip()]
+                    #print(important_fields)
+                    bedfile_l.append(important_fields) #chr    from Pos    to Pos      lenMotif    motif
     return bedfile_l
 
 
@@ -31,14 +43,14 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
                 shortTR = bedfile_l[i]
                 #shortTRold = bedfile_l_old[i%(len(bedfile_l_old))]
                 chrnr = shortTR[0]
-                patternStart = int(shortTR[1])#-1
+                patternStart = int(shortTR[1])
                 patternEnd = int(shortTR[2])
                 patternLen = int(shortTR[3])
                 pattern = shortTR[4].strip()
-                #patternStartold = int(shortTRold[1])-1
-                #patternEndold = int(shortTRold[2])
-                #patternLenold = int(shortTRold[3])
-                #patternold = shortTRold[4].strip()
+                # patternStartold = int(shortTRold[1])
+                # patternEndold = int(shortTRold[2])
+                # patternLenold = int(shortTRold[3])
+                # patternold = shortTRold[4].strip()
 
 
                 if record.id == chrnr:
@@ -59,7 +71,7 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
             print("Unequal pairs: ", count)
 
 
-main_reader("..\\FilteredViewed\\hs37d5.fa","..\\FilteredViewed\\bedfiles_intersected2.bed","..\\FilteredViewed\\bedfiles_intersected2.bed")
+main_reader("..\\FilteredViewed\\hs37d5.fa","..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.bed","..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.bed")
 
 
 
