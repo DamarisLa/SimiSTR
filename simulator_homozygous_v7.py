@@ -7,10 +7,6 @@ import random
 import sys
 from Bio import SeqIO
 
-oldBedFile = "..\FilteredViewed\\hs37_ver8.new.sorted.bed"
-newBedFile = "..\FilteredViewed\\hs37_ver8.adapt.bed"
-newFastaFile = "..\FilteredViewed\\hs37d5.chr22.rand_adapt.fa"
-oldFastaFile = "..\FilteredViewed\\hs37d5.fa"
 
 def getBedFile(oldBedFile):
     #bedfile_l = list()
@@ -368,7 +364,6 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
             printBedModifications(bedfile_l_copy, newBedFile)
 
 
-main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 2, 0.01, 10, 0.5)
 
 if len(sys.argv) < 6:
     print("Please give fastafilenames+dir to the ref [1] and new Fasta that will be procues [2], the old bedfile [3], "
