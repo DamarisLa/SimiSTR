@@ -7,35 +7,45 @@ import random
 import sys
 import winsound
 import re
-
+import timeit
 from Bio import SeqIO
 
-oldBedFile = "..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.bed"
-newBedFile = "..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.adapt.bed"
-newFastaFile = "..\\FilteredViewed\\simplerepeats_37_min3bp_max10bp.rand_adapt.fa"
-oldFastaFile = "..\\FilteredViewed\\hs37d5.fa"
+oldBedFile = "..\FilteredViewed\\hs37_ver8.new.sorted.short.bed"
+newBedFile = "..\FilteredViewed\\hs37_ver8.adapt.short.bed"
+newFastaFile = "..\FilteredViewed\\hs37d5.rand_adapt.short.fa"
+oldFastaFile = "..\FilteredViewed\\hs37d5.fa"
 
 
+#alternative reader
+# def getBedFile(oldBedFile):
+#     bedfile_l = list()
+#     with open(oldBedFile, 'r') as inBedFile:
+#         for line in inBedFile:
+#             #print(line)
+#             splitline = line.split("\t")
+#             #print(splitline)
+#             if len(splitline)>3:
+#                 txt = re.search("chr(\d*)", splitline[1])
+#                 chr = -1
+#                 if txt is not None:
+#                     chr = txt[1]
+#                 if chr != -1 and chr != '':
+#                     #if int(chr) > 10:
+#                     #    print(chr)
+#                     important_fields = [chr,splitline[2],splitline[3],splitline[7],splitline[-1].strip()]
+#                     #print(important_fields)
+#                     bedfile_l.append(important_fields) #chr    from Pos    to Pos      lenMotif    motif
+#     return bedfile_l
+
+#old reader
 def getBedFile(oldBedFile):
     bedfile_l = list()
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
-            #print(line)
             splitline = line.split("\t")
-            #print(splitline)
-            if len(splitline)>3:
-                txt = re.search("chr(\d*)", splitline[1])
-                chr = -1
-                if txt is not None:
-                    chr = txt[1]
-                if chr != -1 and chr != '':
-                    #if int(chr) > 10:
-                    #    print(chr)
-                    important_fields = [chr,splitline[2],splitline[3],splitline[7],splitline[-1].strip()]
-                    #print(important_fields)
-                    bedfile_l.append(important_fields) #chr    from Pos    to Pos      lenMotif    motif
+            if len(splitline) > 3:
+                bedfile_l.append(splitline)  # chr    from Pos    to Pos      lenMotif    motif
     return bedfile_l
-
 
 # write out the new coordinates. The adapted bedfile. To find the regions and to
 def printBedModifications(bedfile_l_copy, newBedFile):
@@ -108,6 +118,83 @@ def mutate(sequence, chanceOfMutation, indelsLessMutation):
         else:
             sequence_2 += base
     return sequence_2, offset2
+#
+# def mutate(sequence, chanceOfMutation, indelsLessMutation):
+#     #sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
+#     offset2 = 0
+#     chanceForIndels = 0
+#     if indelsLessMutation != 0:  # to avoid division through zero
+#         chanceForIndels = chanceOfMutation / indelsLessMutation
+#     for base in range(0,len(sequence)):
+#         chance2 = random.random()
+#         chance3 = random.random()
+#         if chance2 < chanceOfMutation:
+#             chance = random.random()
+#             if base+1 < len(sequence):
+#                 if sequence[base] == "A":
+#                     if chance < 0.85:
+#                         #sequence_2 += "G"                                  #replace
+#                         sequence = sequence[:base] + 'G' + sequence[base+1:] #[inclusive:exclusive] => [:base]=>exclusive+ base + [base+1:]=>
+#                     elif chance < 0.95:
+#                         #sequence_2 += "T"
+#                         sequence = sequence[:base] + 'T' + sequence[base+1:]
+#                     else:
+#                         #sequence_2 += "C"
+#                         sequence = sequence[:base] + 'C' + sequence[base+1:]
+#                 elif sequence[base]  == "T":
+#                     if chance < 0.85:
+#                         #sequence_2 += "C"
+#                         sequence = sequence[:base] + 'C' + sequence[base+1:]
+#                     elif chance < 0.95:
+#                         #sequence_2 += "A"
+#                         sequence = sequence[:base] + 'A' + sequence[base+1:]
+#                     else:
+#                         #sequence_2 += "G"
+#                         sequence = sequence[:base] + 'G' + sequence[base+1:]
+#                 elif sequence[base]  == "C":
+#                     if chance < 0.85:
+#                         #sequence_2 += "T"
+#                         sequence = sequence[:base] + 'T' + sequence[base+1:]
+#                     elif chance < 0.95:
+#                         #sequence_2 += "G"
+#                         sequence = sequence[:base] + 'G' + sequence[base+1:]
+#                     else:
+#                         #sequence_2 += "A"
+#                         sequence = sequence[:base] + 'A' + sequence[base+1:]
+#                 else:  # i == "G":
+#                     if chance < 0.85:
+#                         #sequence_2 += "A"
+#                         sequence = sequence[:base] + 'A' + sequence[base+1:]
+#                     elif chance < 0.95:
+#                         #sequence_2 += "C"
+#                         sequence = sequence[:base] + 'C' + sequence[base+1:]
+#                     else:
+#                         #sequence_2 += "T"
+#                         sequence = sequence[:base] + 'T' + sequence[base+1:]
+#         elif chance3 < chanceForIndels:  # zb 1% / 10  = 0.1%
+#             if base+1 < len(sequence):
+#                 if random.random() < 0.5:  # insertion
+#                     #sequence_2 += base
+#                     if random.random() < 0.25:
+#                         #sequence_2 += "A"
+#                         sequence = sequence[:base] + 'G' + sequence[base:] #insertion
+#                     elif random.random() < 0.5:
+#                         #sequence_2 += "C"
+#                         sequence = sequence[:base] + 'C' + sequence[base:]
+#                     elif random.random() < 0.75:
+#                         #sequence_2 += "G"
+#                         sequence = sequence[:base] + 'G' + sequence[base:]
+#                     else:
+#                         #sequence_2 += "T"
+#                         sequence = sequence[:base] + 'T' + sequence[base:]
+#                     offset2 += 1
+#                 else:  # deletion
+#                     #sequence_2 += ""
+#                     sequence = sequence[:base] + sequence[base+1:]
+#                     offset2 -= 1
+#         #else:
+#         #    sequence_2 += base
+#     return sequence, offset2
 
 
 def findStartPoint(seq, start, pattern, patternLen):
@@ -198,6 +285,7 @@ def findStartPoint(seq, start, pattern, patternLen):
 # main function manipulate Fasta
 def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chanceOfChange, nrOfChr,
                       chanceOfMutationPerBase, indelsLessMutation, homozygousity_rate):
+    start = timeit.default_timer()
     # cast inputs
     chanceOfChange = float(chanceOfChange)
     chanceOfMutationPerBase = float(chanceOfMutationPerBase)
@@ -412,9 +500,11 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     writer.write_record(record2)
 
             printBedModifications(bedfile_l_copy, newBedFile)
+            stop = timeit.default_timer()
+            print('Time: ', stop - start)
 
 
-main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 1, 0.01, 10, 0.5)
+main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 2, 0.01, 10, 0.5)
 
 if len(sys.argv) < 6:
     print("Please give fastafilenames+dir to the ref [1] and new Fasta that will be procues [2], the old bedfile [3], "

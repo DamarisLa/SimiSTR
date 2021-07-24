@@ -59,7 +59,12 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
             print("Unequal pairs: ", count)
 
 
-main_reader("..\\FilteredViewed\\hs37d5.fa","..\\FilteredViewed\\bedfiles_intersected2.bed","..\\FilteredViewed\\bedfiles_intersected2.bed")
+oldBedFile = "..\\FilteredViewed\\Grch38\\oldBedfile38\\simplerepeats_38_min3bp_max10bp_4_1.short.sorted.bed"
+newBedFile = "..\\FilteredViewed\\Grch38\\grch38.adapt.bed"
+newFastaFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
+oldFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
+
+main_reader(newFastaFile,newBedFile,oldBedFile)
 
 
 
