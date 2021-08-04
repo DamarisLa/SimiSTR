@@ -11,7 +11,7 @@ import timeit
 
 
 
-oldBedFile = "..\\FilteredViewed\\Grch38\\merged.sorted.bed"
+oldBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
 newBedFile = "..\\FilteredViewed\\Grch38\\grch38.adapt.bed"
 newFastaFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
 oldFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
@@ -466,7 +466,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                             shortTR = bedfile_l[bedfEntrance]
                             chrnr = shortTR[0]  # which chromosome
                             chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
-                            patternStart = offset + int(shortTR[1])  # - 1 #-1 for gangstr bedfiles
+                            patternStart = offset + int(shortTR[1])  - 1 #-1 for gangstr bedfiles
                             patternEnd = offset + int(shortTR[2])
                             patternLen = int(shortTR[3])
                             pattern = shortTR[4].strip()
@@ -487,7 +487,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 entrance_c = bedfile_l_copy[bedfEntrance]
                                 entrance_cn = copy.deepcopy(entrance_c)
                                 entrance_cn[0] = chrnr_w
-                                entrance_cn[1] = patternStart  # + 1
+                                entrance_cn[1] = patternStart  + 1
                                 entrance_cn[2] = patternStart + len(partOfSeq)
                                 oldSeqLen = (patternEnd - patternStart)
                                 change3 = len(partOfSeq) - oldSeqLen
@@ -578,7 +578,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     entrance = bedfile_l[bedfEntrance]
                                     entrance_c = copy.deepcopy(entrance)  # only change the copy
                                     entrance_c[0] = chrnr_w
-                                    entrance_c[1] = patternStart  # + 1
+                                    entrance_c[1] = patternStart + 1
                                     entrance_c[2] = patternEndNew
                                     # if patternEndNew < patternStart+1:
                                     #    entrance_c[2] = patternStart+1

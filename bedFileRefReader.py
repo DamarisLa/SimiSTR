@@ -31,7 +31,7 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
                 shortTR = bedfile_l[i]
                 #shortTRold = bedfile_l_old[i%(len(bedfile_l_old))]
                 chrnr = shortTR[0]
-                patternStart = int(shortTR[1])#-1
+                patternStart = int(shortTR[1])-1
                 patternEnd = int(shortTR[2])
                 patternLen = int(shortTR[3])
                 pattern = shortTR[4].strip()
@@ -59,12 +59,17 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
             print("Unequal pairs: ", count)
 
 
-oldBedFile = "..\\FilteredViewed\\Grch38\\oldBedfile38\\simplerepeats_38_min3bp_max10bp_4_1.short.sorted.bed"
-newBedFile = "..\\FilteredViewed\\Grch38\\grch38.adapt.bed"
-newFastaFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
+newBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
+oldBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
+newFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
 oldFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
 
-#main_reader(newFastaFile,newBedFile,oldBedFile)
+
+
+
+
+
+main_reader(newFastaFile,newBedFile,oldBedFile)
 
 
 
