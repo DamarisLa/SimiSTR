@@ -1,8 +1,8 @@
 from bedFileRefReader import getBedFile
 import json
 
-bedfile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
-jsonfile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.json"
+bedfile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\hg38_ver13.sorted.bed"
+jsonfile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\hg38_ver13.sorted.json"
 
 
 def catalogJsonWriter (bedfile, jsonfile):

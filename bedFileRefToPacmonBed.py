@@ -33,15 +33,15 @@ def main_changer(newFastaFile, newBedFile, pacmonbed):
                     pattern = shortTR[4].strip()
                     if record.id == chrnr:
                         seq_len = len(sequence)
-                        partOfSeq = sequence[patternStart:patternEnd]
-                        outline = str(chrnr)+"\t"+str(patternStart+1)+"\t"+str(patternEnd)+"\t"+str(patternLen)+"\t"+str(pattern)+"\t"+str(partOfSeq)+"\n"
+                        numberOfRepeats = len(sequence[patternStart:patternEnd])/patternLen
+                        outline = str(chrnr)+"\t"+str(patternStart+1)+"\t"+str(patternEnd)+"\t"+str(patternLen)+"\t"+str(pattern)+"\t"+str(numberOfRepeats)+"\n"
                         outPcmB.write(outline)
 
 
 
-newBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
+newBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\hg38_ver13.rname.sorted.bed"
 newFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
-PacmonBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY_pcm.bed"
+PacmonBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\hg38_ver13.rname.sorted_pcm.bed"
 
 
 main_changer(newFastaFile,newBedFile,PacmonBedFile)
