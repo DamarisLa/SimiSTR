@@ -1,5 +1,7 @@
 from Bio import SeqIO
 import re
+import sys
+import os
 
 def splitHaploid(fastaFile):
 
@@ -27,6 +29,16 @@ def splitHaploid(fastaFile):
 
 
 
-newFastaFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
-splitHaploid(newFastaFile)
+#newFastaFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
+#splitHaploid(newFastaFile)
 
+
+if len(sys.argv) < 2:
+    for i in sys.argv:
+        print(i)
+    if os.path.isfile(sys.argv[1]):
+        splitHaploid(sys.argv[1])
+        #[0]./splitFasta.py     [1]../../reference/hs37d5.chr22.fa
+    else:
+        if not os.path.isfile(sys.argv[1]):
+            print(sys.argv[1], " is not a file")
