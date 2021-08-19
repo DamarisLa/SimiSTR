@@ -42,3 +42,4 @@ if len(sys.argv) < 2:
     else:
         if not os.path.isfile(sys.argv[1]):
             print(sys.argv[1], " is not a file")
+else :
