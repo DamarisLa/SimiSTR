@@ -30,6 +30,3 @@ def splitHaploid(fastaFile):
 newFastaFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
 splitHaploid(newFastaFile)
 
-
-
-
