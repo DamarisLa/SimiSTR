@@ -43,3 +43,5 @@ if len(sys.argv) < 2:
         if not os.path.isfile(sys.argv[1]):
             print(sys.argv[1], " is not a file")
 else :
+    print(  "Import: 1 Fasta \
+            Output: 2 Fastas (Hap01 and Hap02) Run by: python splitFasta.py diploid.fa (.fa instead of .fasta)")
