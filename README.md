@@ -32,7 +32,7 @@ Further can the simulation file (.fasta) be created as
 - There is a folder attached with other versions. [OldVersions](https://github.com/DamarisLa/STRsimulator/tree/main/OldVersions) 
 - Further Input fasta 
 
-### Future Improvements:
+### Future Improvements
 Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
 
 
