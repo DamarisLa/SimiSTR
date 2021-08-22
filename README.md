@@ -39,7 +39,7 @@ There is a folder attached with other versions, that might contain readers deali
     -       22	20354654	20354669	4	ATTT
     -       22	20374713	20374727	3	TTG
     
-#### Important: [GangSTR Bedfile](https://github.com/gymreklab/GangSTR) 
+#### Important: [GangSTR Bedfile](https://github.com/gymreklab/GangSTR#tr-regions---regions) 
 Currently the main function has a calculation startposition-1 when reading and startposition +1 when working with GangSTR bedfiles. 
 line nr 248 #-1 , when not working with gangstr-bedfiles. 
 line nr 248 and 360 -1  , when working with gangstr-bedfiles.
