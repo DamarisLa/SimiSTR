@@ -16,7 +16,7 @@ Further can the simulation file (.fasta) be created as
 - Python modules used: os, sys, random, copy and Bio (SeqIO)
 
 ## Usage
->- python  ./STRsimulator_v7.py \
+-      python  ./STRsimulator_v7.py \
 >    - “ref.fasta” \ ________________________# **obligation** (Reference Fasta)
 >    - “name_for_out.fasta” \ ____________# **obligation** (Result Fata)
 >    - “in_regionfile.bed” \ _______________# **obligation** (! Important: need to be sorted !) (Bedfile)
@@ -27,10 +27,18 @@ Further can the simulation file (.fasta) be created as
 >    - [0-100 or more] \ __________________# Indels times more unlikely than substitution (float, everything possible)
 >    - [0.00-1.00] \ _______________________# percentage of homozygous regions (as in 0-100%)
 
-#### Important: Input Bedfile, needs to be sorted ( f.e. bedtools sort -i myfile.bed > myfile.sorted.bed )
+#### Important: Input Bedfile, needs to be sorted in regionstart and regionend ( f.e. bedtools sort -i myfile.bed > myfile.sorted.bed )
 - Current Version expects fasta and bedfiles with Chromosome-names without "chr". 
-- There is a folder attached with other versions. [OldVersions](https://github.com/DamarisLa/STRsimulator/tree/main/OldVersions) 
-- Further Input fasta 
+There is a folder attached with other versions, that might contain readers dealing with "chr" naming. [OldVersions](https://github.com/DamarisLa/STRsimulator/tree/main/OldVersions) 
+
+- Further Input fasta should have the columns:
+- ChromosomeNr; RegionStart; RegionEnd; MotifLength; Motif
+- f.e. :
+    -       22	20348371	20348390	4	TTTA
+    -       22	20353556	20353575	4	AAAC
+    -       22	20354654	20354669	4	ATTT
+    -       22	20374713	20374727	3	TTG
+    
 
 ### Future Improvements
 Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
