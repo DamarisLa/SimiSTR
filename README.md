@@ -28,9 +28,19 @@ Further can the simulation file (.fasta) be created as
 >    - [0.00-1.00] \ _______________________# percentage of homozygous regions (as in 0-100%)
 
 #### Important: Input Bedfile, needs to be sorted ( bedtools sort -i myfile.bed > myfile.sorted.bed )
+Current Version expects fasta and bedfiles with Chromosome-names without "chr". 
+There is a folder attached with other versions. [] 
+Further Input fasta 
 
 ### Future Improvements:
 Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
+
+
+#### [BedFileParser]() 
+Contains Parser that reformat Bedfiles into Tool-specific Files needed by several STR-Tools compared in 
+STR Benchmarkpaper [here will be a link to our paper](https://)
+
+
 
 
 
