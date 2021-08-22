@@ -11,25 +11,25 @@ Further can the simulation file (.fasta) be created as
   - diploid  [d]. If diploid is chosen, 
     - the percentage  of regions that should get homozygous can be set [0.00-1.00].
 
-Installation
+## Installation
 - Implementation and testing occurred in python=3.8.
 - Python modules used: os, sys, random, copy and Bio (SeqIO)
 
-Usage
-- python  ./STRsimulator_v7.py \
-    - “ref.fasta” \  				# *obligation* (Reference Fasta)
-    - “name_for_out.fasta” \ 			# *obligation* (Result Fata)
-    - “in_regionfile.bed” \ 	# *obligation* (! Important: need to be sorted !) (Bedfile)
-    - “name_for_out_regionfile.bed” \ 	# *obligation* (Result Bedfile – contains info about changes)
-    - [0.00-1.00] \ 	# *obligation* (as in 0-100% chance a STR expansion gets modified)
-    - [d|h] \	# h = haploid | d = diploid
-    - [0.00-1.00] \	# chance for each base in region to be mutated (as in 0-100%)
-    - [0-100 or more] \	# Indels times more unlikely than substitution (float, everything possible)
-    - [0.00-1.00] \	# percentage of homozygous regions (as in 0-100%)
+## Usage
+>- python  ./STRsimulator_v7.py \
+>    - “ref.fasta” \ __________________# *obligation* (Reference Fasta)
+>    - “name_for_out.fasta” \ _________# *obligation* (Result Fata)
+>    - “in_regionfile.bed” \ ___________# *obligation* (! Important: need to be sorted !) (Bedfile)
+>    - “name_for_out_regionfile.bed” \ _# *obligation* (Result Bedfile – contains info about changes)
+>    - [0.00-1.00] \ 	_________________# *obligation* (as in 0-100% chance a STR expansion gets modified)
+>    - "[d|h]" \ _____________________# h = haploid | d = diploid
+>    - [0.00-1.00] \ _________________# chance for each base in region to be mutated (as in 0-100%)
+>    - [0-100 or more] \ _____________# Indels times more unlikely than substitution (float, everything possible)
+>    - [0.00-1.00] \ _________________# percentage of homozygous regions (as in 0-100%)
 
-Important: Input Bedfile, needs to be sorted ( bedtools sort -i myfile.bed > myfile.sorted.bed )
+#### Important: Input Bedfile, needs to be sorted ( bedtools sort -i myfile.bed > myfile.sorted.bed )
 
-Future Improvements:
+### Future Improvements:
 Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
 
 
