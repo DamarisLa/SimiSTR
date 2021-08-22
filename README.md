@@ -2,7 +2,7 @@
 Manipulation of a Referencefile in order to simulate STR!!
 
 The simulator takes a haploid file as reference(.fasta) and a region file (.bed) containing information about known STR-regions as input.
-All of supplied regions can be modified in 
+All of the supplied regions can be modified in 
   - expansion (% of regions that will randomly be positive or negative expanded [0.00-1.00]), 
   - mutation (% chance for a base to be substituted [0.00-1.00]), 
   - number of indels (X times less likely than chance for mutation to insert or delete a base [0.00-1.00]). 
@@ -27,7 +27,7 @@ Further can the simulation file (.fasta) be created as
 >    - [0-100 or more] \ __________________# Indels times more unlikely than substitution (float, everything possible)
 >    - [0.00-1.00] \ _______________________# percentage of homozygous regions (as in 0-100%)
 
-#### Important: Input Bedfile, needs to be sorted in regionstart and regionend ( f.e. bedtools sort -i myfile.bed > myfile.sorted.bed )
+#### Important: Input Bedfile, needs to be sorted in region-start and region-end ( f.e. bedtools sort -i myfile.bed > myfile.sorted.bed )
 - Current Version expects fasta and bedfiles with Chromosome-names without "chr". 
 There is a folder attached with other versions, that might contain readers dealing with "chr" naming. [OldVersions](https://github.com/DamarisLa/STRsimulator/tree/main/OldVersions) 
 - Bedfile should not have a header
@@ -40,17 +40,17 @@ There is a folder attached with other versions, that might contain readers deali
     -       22	20374713	20374727	3	TTG
     
 #### Important: [GangSTR Bedfile](https://github.com/gymreklab/GangSTR#tr-regions---regions) 
-Currently the main function has a calculation startposition-1 when reading and startposition +1 when working with GangSTR bedfiles. 
+Currently the main function has a calculation startposition-1 when reading and start position +1 when working with GangSTR bedfiles. 
 line nr 248 #-1 , when not working with gangstr-bedfiles. 
 line nr 248 and 360 -1  , when working with gangstr-bedfiles.
 line nr 269 and 360 # +1, when not working with gangstr-bedfiles. 
-!It is important to be aware of the meaning of the startposition in the bedfile one uses, and adapt the code if nessesary!
+!It is important to be aware of the meaning of the start-position in the bedfile one uses, and adapt the code if nessesary!
 
 ### Future Improvements
 - Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
 - Improvements in structure and function delegation
 - Improvements in parameter handling
-- Parameter to submit if a bedfile-startposition is +1 oder not, and automatically deals with it
+- Parameter to submit if a bedfile-start-position is +1 oder not, and automatically deals with it
 
 #### [BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
 Contains Parser that reformat Bedfiles into Tool-specific Files needed by several STR-Tools compared in 
