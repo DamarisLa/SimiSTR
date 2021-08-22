@@ -50,3 +50,6 @@
 - bedfFileRefReaderNewF.py:
   - contains bedfile reader for UCSC bedfiles. 
   - similar to "bedFileRefReader.py" (it is comparable to bedtools getfasta -fi ref.fa -fo my.bed)
+  
+  
+  
