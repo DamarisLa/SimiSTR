@@ -16,7 +16,7 @@ newFastaFile = "..\FilteredViewed\\hs37d5.rand_adapt.short.fa"
 oldFastaFile = "..\FilteredViewed\\hs37d5.fa"
 
 
-#alternative reader
+#alternative reader for ucsc files
 # def getBedFile(oldBedFile):
 #     bedfile_l = list()
 #     with open(oldBedFile, 'r') as inBedFile:
@@ -37,7 +37,7 @@ oldFastaFile = "..\FilteredViewed\\hs37d5.fa"
 #                     bedfile_l.append(important_fields) #chr    from Pos    to Pos      lenMotif    motif
 #     return bedfile_l
 
-#old reader
+#old reader for 5column bedfiles like Gangstr uses. List instead of dictionary apporach
 def getBedFile(oldBedFile):
     bedfile_l = list()
     with open(oldBedFile, 'r') as inBedFile:
