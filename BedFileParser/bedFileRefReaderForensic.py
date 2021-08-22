@@ -53,7 +53,7 @@ def main_reader(newFastaFile, newBedFile, oldBedfile):
                     #print("old: ",shortTRold, " ", (patternEndold-patternStartold)/patternLenold)
             print("Unequal pairs: ", count)
 
-main_reader("..\FilteredViewed\\hs37d5.fa","..\FilteredViewed\\forensic_str.sort.named.bed","..\FilteredViewed\\hs37_ver8.chr22.bed")
+main_reader("..\..\FilteredViewed\\hs37d5.fa","..\..\FilteredViewed\\forensic_str.sort.named.bed","..\..\FilteredViewed\\hs37_ver8.chr22.bed")
 
 # if len(sys.argv) < 4:
 #     print("Please give a fastafile, the name and dir where the new dir has to be, the old bedfile, "
