@@ -36,7 +36,7 @@ Further Input fasta
 Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
 
 
-#### [BedFileParser]() 
+#### [BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
 Contains Parser that reformat Bedfiles into Tool-specific Files needed by several STR-Tools compared in 
 STR Benchmarkpaper [here will be a link to our paper](https://)
 
