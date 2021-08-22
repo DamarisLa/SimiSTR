@@ -12,7 +12,7 @@ newFastaFile = "..\FilteredViewed\\simplerepeats_37_min3bp_max10bp.rand_adapt.fa
 oldFastaFile = "..\FilteredViewed\\hs37d5.fa"
 
 
-def getBedFile(oldBedFile):
+def getBedFile(oldBedFile): #this reader ignores "chr".
     bedfile_l = list()
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
