@@ -25,7 +25,7 @@ Maybe some old versions can be usefull.
   -  mutation worked be rebuilding region-string.
   -  was still a large main function
   
-- fourth version was: "simulator_homozygous.py"  #frist version that should be relatively bugg-free
+- fourth version was: "simulator_homozygous.py"  #frist version that should be relatively bug-free
   -  two different bedfile-reader available - one in comment-form. 
   -  both bedfile-reader work with list-approach.
   -  parameters: Haploid/Diploid, Homozygous, and Indel-factor now implemented
