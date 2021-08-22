@@ -17,15 +17,15 @@ Further can the simulation file (.fasta) be created as
 
 ## Usage
 >- python  ./STRsimulator_v7.py \
->    - “ref.fasta” \ __________________# *obligation* (Reference Fasta)
->    - “name_for_out.fasta” \ _________# *obligation* (Result Fata)
->    - “in_regionfile.bed” \ ___________# *obligation* (! Important: need to be sorted !) (Bedfile)
->    - “name_for_out_regionfile.bed” \ _# *obligation* (Result Bedfile – contains info about changes)
->    - [0.00-1.00] \ 	_________________# *obligation* (as in 0-100% chance a STR expansion gets modified)
->    - "[d|h]" \ _____________________# h = haploid | d = diploid
->    - [0.00-1.00] \ _________________# chance for each base in region to be mutated (as in 0-100%)
->    - [0-100 or more] \ _____________# Indels times more unlikely than substitution (float, everything possible)
->    - [0.00-1.00] \ _________________# percentage of homozygous regions (as in 0-100%)
+>    - “ref.fasta” \ ________________________# **obligation** (Reference Fasta)
+>    - “name_for_out.fasta” \ ____________# **obligation** (Result Fata)
+>    - “in_regionfile.bed” \ _______________# **obligation** (! Important: need to be sorted !) (Bedfile)
+>    - “name_for_out_regionfile.bed” \ ___# **obligation** (Result Bedfile – contains info about changes)
+>    - [0.00-1.00] \ 	________________________# **obligation** (as in 0-100% chance a STR expansion gets modified)
+>    - "[d|h]" \ ____________________________# h = haploid | d = diploid
+>    - [0.00-1.00] \ _______________________# chance for each base in region to be mutated (as in 0-100%)
+>    - [0-100 or more] \ __________________# Indels times more unlikely than substitution (float, everything possible)
+>    - [0.00-1.00] \ _______________________# percentage of homozygous regions (as in 0-100%)
 
 #### Important: Input Bedfile, needs to be sorted ( bedtools sort -i myfile.bed > myfile.sorted.bed )
 
