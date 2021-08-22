@@ -39,12 +39,18 @@ There is a folder attached with other versions, that might contain readers deali
     -       22	20354654	20354669	4	ATTT
     -       22	20374713	20374727	3	TTG
     
+#### Important: [GangSTR Bedfile](https://github.com/gymreklab/GangSTR) 
+Currently the main function has a calculation startposition-1 when reading and startposition +1 when working with GangSTR bedfiles. 
+line nr 248 #-1 , when not working with gangstr-bedfiles. 
+line nr 248 and 360 -1  , when working with gangstr-bedfiles.
+line nr 269 and 360 # +1, when not working with gangstr-bedfiles. 
+!It is important to be aware of the meaning of the startposition in the bedfile one uses, and adapt the code if nessesary!
 
 ### Future Improvements
 - Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
 - Improvements in structure and function delegation
 - Improvements in parameter handling
-
+- Parameter to submit if a bedfile-startposition is +1 oder not, and automatically deals with it
 
 #### [BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
 Contains Parser that reformat Bedfiles into Tool-specific Files needed by several STR-Tools compared in 
