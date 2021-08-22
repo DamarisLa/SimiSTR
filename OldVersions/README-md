@@ -1,12 +1,51 @@
 
-OLD STRsimulator Versions
+OLD STRsimulator Versions:
+some of those version have buggs etc. however, 
+they contain partially other readers 
+and or work with lists instead of dictionary 
+or have different approaches in "base-replacement" in the mutation function
+therefore a slightly changed structure.
+Maybe some old versions can be usefull. 
 
 - first version was: "simulator.py"
   -  the "getBedFile"-function here can deal with bed-files from ucsc which has more columns, and creates a bedfile-list instead of the dictionary of the final version
   the difference of list and dictionary has only minimal effect on the runtime. Biggest issue in the runtime is the fasta-reader/written, and the lacking threads.
       -     #bin	chrom	chromStart	chromEnd	name	period	copyNum	consensusSize	perMatch	perIndel	score	A	C	G	T	entropy	sequence
       -     585	chr1	10000	10468	trf	6	77.2	6	95	3	789	33	51	0	15	1.43	TAACCC
--   
+  -  first versions main function might have a lot of bugs. And is not very functional implemented- all one big function.
+  -  first version have only File and STR-expansion parameter. (Mutation, Indel, Diploid is still missing)
+  
+- second version is missing in this folder: was a class implementation, but caused to many errors, and was to time consuming at that time to fix it.
+  Class-approach, could be a feature in next versions. 
+  
+- third version was: "simulator_hd.py"
+  -  the "getBedFile"-function takes similar to "STRsimulator_v7.py" a bedfile with 5 columns. Here however the input gets stored in a list instead of dictionary.  
+  -  had the parameters for STR-expansion, and mutation. 
+  -  parameters: Haploid/Diploid, Homozygous, and Indel-factor were still missing
+  -  mutation worked be rebuilding region-string.
+  -  was still a large main function
+  
+- fourth version was: "simulator_homozygous.py"  #frist version that should be relatively bugg-free
+  -  two different bedfile-reader available - one in comment-form. 
+  -  both bedfile-reader work with list-approach.
+  -  parameters: Haploid/Diploid, Homozygous, and Indel-factor now implemented
+  -  two different mutation function available, one in comment-form. 
+      - One rebuilds the region-string. 
+      - The other one works with substring mutation.
+  -  still one big main-function. But mutation and find-start, are now own functions.
+  -  this simulator has a timing function
+  
+- fifth version was: "simulator_homozygous2.py"
+  -  first version that works with dictionaries instead of lists, to call bedfile-content.
+  -  has therefore a different structure in the main-function. 
+  -  apart from that similar to version four
+  
+- sixth version was dropped, due to certain issues.
+
+- v7 is the current version.
+
+  
+  
  
  
  
