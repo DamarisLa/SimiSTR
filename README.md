@@ -41,7 +41,9 @@ There is a folder attached with other versions, that might contain readers deali
     
 
 ### Future Improvements
-Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
+- Implementation is linear. Fasta reader is a bottle neck. Future improvement will be threading before fasta-reader, that chromosome will be run parallel, than after each other. 
+- Improvements in structure and function delegation
+- Improvements in parameter handling
 
 
 #### [BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
