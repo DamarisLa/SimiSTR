@@ -1,6 +1,6 @@
 
 OLD STRsimulator Versions:
-some of those version have buggs etc. however, 
+some of those version have bugs etc. however, 
 they contain partially other readers 
 and or work with lists instead of dictionary 
 or have different approaches in "base-replacement" in the mutation function
@@ -8,7 +8,7 @@ therefore a slightly changed structure.
 Maybe some old versions can be usefull. 
 
 - first version was: "simulator.py"
-  -  the "getBedFile"-function here can deal with bed-files from ucsc which has more columns, and creates a bedfile-list instead of the dictionary of the final version
+  -  the "getBedFile"-function here can deal with bed-files from UCSC which has more columns, and creates a bedfile-list instead of the dictionary of the final version
   the difference of list and dictionary has only minimal effect on the runtime. Biggest issue in the runtime is the fasta-reader/written, and the lacking threads.
       -     #bin	chrom	chromStart	chromEnd	name	period	copyNum	consensusSize	perMatch	perIndel	score	A	C	G	T	entropy	sequence
       -     585	chr1	10000	10468	trf	6	77.2	6	95	3	789	33	51	0	15	1.43	TAACCC
