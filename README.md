@@ -30,7 +30,7 @@ Further can the simulation file (.fasta) be created as
 #### Important: Input Bedfile, needs to be sorted in regionstart and regionend ( f.e. bedtools sort -i myfile.bed > myfile.sorted.bed )
 - Current Version expects fasta and bedfiles with Chromosome-names without "chr". 
 There is a folder attached with other versions, that might contain readers dealing with "chr" naming. [OldVersions](https://github.com/DamarisLa/STRsimulator/tree/main/OldVersions) 
-
+- Bedfile should not have a header
 - Further Input fasta should have the columns:
 - ChromosomeNr; RegionStart; RegionEnd; MotifLength; Motif
 - f.e. :
