@@ -1,1 +1,52 @@
+- bedfFileRefToPacmonBed.py:
+  - reads bedfile with 5 columns, and writes a bedfile with 6 column. This is required by [PacMonSTR](https://github.com/oscarlr-TRs/PacMonSTR#bed-file)
+  
+  >- FROM:
+  >     -     1	16506060	16506071	4	CAAA
+  >     -     1	30980621	30980632	4	TTTA
+  
+  >- TO:
+  >     -     1	16506060	16506071	4	CAAA	3.0
+  >     -     1	30980621	30980632	4	TTTA	3.0
+  
+  
+- catalog_json_writer.py:
+  - reads bedfile with 5 columns, and writes a Json-File like required by [Illumina/ExpansionHunter](https://github.com/Illumina/ExpansionHunter/blob/master/docs/04_VariantCatalogFiles.md)
+  - however it works not with all regions excellently 
+  
+  >- FROM:
+  >     -     1	16506060	16506071	4	CAAA
+  >     -     1	30980621	30980632	4	TTTA
+  
+  >- TO:
+  >     [
+            {
+                "LocusId": "1_16506060_CAAA",
+                "LocusStructure": "(CAAA)*",
+                "ReferenceRegion": "1:16506060-16506071",
+                "VariantType": "Repeat"
+            },
+            {
+                "LocusId": "1_30980621_TTTA",
+                "LocusStructure": "(TTTA)*",
+                "ReferenceRegion": "1:30980621-30980632",
+                "VariantType": "Repeat"
+            },
+        ]
 
+
+- bedFileRefReader.py:
+  - reads Fasta and one or two Bedfiles (depending if the "old-bedfile"-comments are getting uncommented). It basically just reads all regions named in the new bedfile, 
+  and checks if those regions contain the sequence expected. As reference the old bedfile can be opended parallel to look what the old entrances were. 
+  This is basically a tool that helps debugging errors. (it is comparable to bedtools getfasta -fi ref.fa -fo my.bed)
+  
+  - Reads Bedfiles into lists.
+
+- beFileRefForensic.py:
+  - similar to "bedFileRefReader.py" (it is comparable to bedtools getfasta -fi ref.fa -fo my.bed)
+  - it was used to debugg forensic STRs
+  
+  
+- bedfFileRefReaderNewF.py:
+  - contains bedfile reader for UCSC bedfiles. 
+  - similar to "bedFileRefReader.py" (it is comparable to bedtools getfasta -fi ref.fa -fo my.bed)
