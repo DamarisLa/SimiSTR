@@ -384,7 +384,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
 
 if len(sys.argv) < 6:
-    print("Please give fastafilenames+dir to the ref [1] and new Fasta that will be procues [2], the old bedfile [3], "
+    print("Please give fastafilename +dir to the ref [1] and new Fastafilename that will be created [2], the old bedfile [3], "
           "the  name and dir where the new bedfile should be [4], "
           "and a number between >0.0 && <1.0 indicating the changes of STR to the original ref file [5]")
     print(
