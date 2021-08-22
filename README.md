@@ -12,8 +12,8 @@ Further can the simulation file (.fasta) be created as
     - the percentage  of regions that should get homozygous can be set [0.00-1.00].
 
 Installation
-Implementation and testing occurred in python=3.8.
-Modules used: os, sys, random, copy and Bio (SeqIO) 
+- Implementation and testing occurred in python=3.8.
+- Modules used: os, sys, random, copy and Bio (SeqIO) 
 
 
 
