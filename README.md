@@ -51,6 +51,9 @@ line nr 269 and 360 # +1, when not working with gangstr-bedfiles.
 - Improvements in structure and function delegation
 - Improvements in parameter handling
 - Parameter to submit if a bedfile-start-position is +1 oder not, and automatically deals with it
+- Parameter to submit min/max possible change of expansion of an STR
+- Parameters in Config-File
+- Implementation will be changed. Position search like until know, however, if region cannot be found in certain window, or only 1 repeat can be found in that windoe, try to do a smith-waterman for a slightly increased region. (?) (it is a vage idea to solve the issue with overlapping regions)
 
 #### [BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
 Contains Parser that reformat Bedfiles into Tool-specific Files needed by several STR-Tools compared in 
