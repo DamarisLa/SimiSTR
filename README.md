@@ -43,10 +43,10 @@ There is a folder attached with other versions, that might contain readers deali
     -       22	20374713	20374727	3	TTG
     
 #### Important: [GangSTR Bedfile](https://github.com/gymreklab/GangSTR#tr-regions---regions) 
-Currently the main function has a calculation startposition-1 when reading and start position +1 when working with GangSTR bedfiles. 
-line nr 248 #-1 , when not working with gangstr-bedfiles. 
-line nr 248 and 360 -1  , when working with gangstr-bedfiles.
-line nr 269 and 360 # +1, when not working with gangstr-bedfiles. 
+The main function need a calculation startposition-1 when reading and start position +1 when working with GangSTR bedfiles. 
+- line nr 248 #-1 , when NOT working WITH gangstr-bedfiles. 
+- line nr 248 -1 and 360 + 1  , when working WITH gangstr-bedfiles.
+- line nr 269 and 360 # +1, when NOT working WITH gangstr-bedfiles. 
 !It is important to be aware of the meaning of the start-position in the bedfile one uses, and adapt the code if nessesary!
 
 ### Future Improvements
