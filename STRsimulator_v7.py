@@ -214,7 +214,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
         writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
         with open(oldFastaFile, 'r') as inFastaFile:  # read fastaFile
             for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
-                sequence = record.seq
+                sequence = (record.seq).upper()
                 recordLen = len(sequence)  # old length
                 print("old length", recordLen)
                 homozygousity_d = dict()
