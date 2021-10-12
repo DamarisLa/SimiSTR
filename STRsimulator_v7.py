@@ -116,7 +116,7 @@ def mutate(sequence, chanceOfMutation, indelsLessMutation):
 
 def findStartPoint(seq, start, pattern, patternLen):
     seq_len = len(seq)
-    partOfSeq_1 = seq[start:start + patternLen]
+    partOfSeq_1 = (seq[start:start + patternLen])
     startpoint = start  # if start is 1000
     endpoint = start + patternLen
     startpoint_mem = startpoint
@@ -266,7 +266,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 entrance_c = bedfile_l_copy[bedfEntrance]
                                 entrance_cn = copy.deepcopy(entrance_c)
                                 entrance_cn[0] = chrnr_w
-                                entrance_cn[1] = patternStart  # + 1
+                                entrance_cn[1] = patternStart  # + 1 #+1 when working with gangstr files
                                 entrance_cn[2] = patternStart + len(partOfSeq)
                                 oldSeqLen = (patternEnd - patternStart)
                                 change3 = len(partOfSeq) - oldSeqLen
@@ -357,7 +357,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     entrance = bedfile_l[bedfEntrance]
                                     entrance_c = copy.deepcopy(entrance)  # only change the copy
                                     entrance_c[0] = chrnr_w
-                                    entrance_c[1] = patternStart  # + 1
+                                    entrance_c[1] = patternStart  # + 1 when working
                                     entrance_c[2] = patternEndNew
                                     # if patternEndNew < patternStart+1:
                                     #    entrance_c[2] = patternStart+1
