@@ -14,7 +14,7 @@ def getBedFile(oldBedFile):
         for line in inBedFile:
             splitline = line.split("\t")
             if len(splitline) > 3:
-                splitline[4] = splitline[4].strip()
+                splitline[4] = splitline[4].strip().upper()
                 if splitline[0] not in bedfile_d.keys():
                     bedfile_d[str(splitline[0])] = list()
                     bedfile_d[str(splitline[0])].append(splitline)
