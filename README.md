@@ -9,7 +9,7 @@ All of the supplied regions can be modified in
 Further can the simulation file (.fasta) be created as 
   - haploid [h] or 
   - diploid  [d]. If diploid is chosen, 
-    - the percentage  of regions that should get homozygous can be set [0.00-1.00].
+    - the percentage of regions that should be homozygous can be set [0.00-1.00].
 
 
 The simulator works on assembled genomes, as well as on only one or more assembled chromosomes, if the bed-file contains such entrances likewise (anything else could run errorfree, but will not manipulate anything, as manipulations only occur in the known regions). 
