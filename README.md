@@ -60,7 +60,9 @@ The main function need a calculation startposition-1 when reading and start posi
 
 #### [BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
 Contains Parser that reformat Bedfiles into Tool-specific Files needed by several STR-Tools compared in 
-STR Benchmarkpaper [here will be a link to our paper](https://)
+
+
+
 
 
 
