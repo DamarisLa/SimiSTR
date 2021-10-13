@@ -58,7 +58,10 @@ The main function need a calculation startposition-1 when reading and start posi
 - Parameters in Config-File
 - Implementation will be changed. Position search like until know, however, if region cannot be found in certain window, or only 1 repeat can be found in that windoe, try to do a smith-waterman for a slightly increased region. (?) (it is a vage idea to solve the issue with overlapping regions)
 
-##### [BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
+
+
+
+[BedFileParser](https://github.com/DamarisLa/STRsimulator/tree/main/BedFileParser) 
 Contains Parser that reformat Bedfiles into Tool-specific Files needed by several STR-Tools compared in 
 
 
