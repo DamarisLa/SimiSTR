@@ -1,4 +1,6 @@
-# SimiSTR
+
+# ![grafik](https://user-images.githubusercontent.com/62024017/137172832-8453c9de-573a-4ff1-8ad2-8cf056a8cf01.png)
+
 Manipulation of a Referencefile in order to simulate STR!!
 
 The simulator takes a haploid file as reference(.fasta) and a region file (.bed) containing information about known STR-regions as input.
