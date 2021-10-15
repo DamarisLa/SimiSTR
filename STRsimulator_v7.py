@@ -7,6 +7,13 @@ import random
 import sys
 from Bio import SeqIO
 
+oldBedFile = r"D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\hackathon\tomato_chr1_catalog.bed"
+newBedFile = r"D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\hackathon\tomato_chr1_catalog.mod.bed"
+oldFastaFile = r"D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\hackathon\tomatoV4-chr1.fasta"
+newFastaFile = r"D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\hackathon\tomatoV4-chr1_mod.fa"
+
+
+
 def getBedFile(oldBedFile):
     #bedfile_l = list()
     bedfile_d = dict()
@@ -381,7 +388,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
         printBedModifications(bedfile_total, newBedFile)
 
-
+main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 2, 0.00, 0, 0.5)
 
 if len(sys.argv) < 6:
     print("Please give fastafilename +dir to the ref [1] and new Fastafilename that will be created [2], the old bedfile [3], "
