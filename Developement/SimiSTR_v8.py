@@ -7,11 +7,9 @@ import random
 import sys
 from Bio import SeqIO
 import re
+import argparse
 
-oldBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
-newBedFile = "..\\FilteredViewed\\Grch38\\grch38.adapt.bed"
-newFastaFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
-oldFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
+
 
 def getBedFile(oldBedFile):
     #bedfile_l = list()
@@ -238,156 +236,157 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                     # naming of haploid and or diploid chromosome entrances.
                     nameOfChr = record2.name
                     idOfChr = record2.id
-
-                    nameOfChr = nameOfChr + "_" + str(allele)
-                    idOfChr = idOfChr + "_" + str(allele)
-                    record2.name = nameOfChr
-                    record2.id = idOfChr
-
-                    id = str(record.id)
-                    if id in bedfile_d.keys():
-                        bedfile_l = bedfile_d[id]
-                        bedfile_l_copy = copy.deepcopy(bedfile_l)
-                        bedfile_l_length = len(bedfile_l)
-
-                        for bedfEntrance in range(0,
-                                                  bedfile_l_length):  # go through all coordinates in the bedfile.
-                            shortTR = bedfile_l[bedfEntrance]
-                            chrnr = shortTR[0]  # which chromosome
-                            chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
-                            patternStart = offset + int(shortTR[1])  # - 1 #-1 for gangstr bedfiles
-                            patternEnd = offset + int(shortTR[2])
-                            patternLen = int(shortTR[3])
-                            pattern = shortTR[4].strip()
-
-                            if allele > 1 and random.random() < homozygousity_rate:  # should be the second allele and inside the homozygosity rate
-                                # if below chance then copy allele 1
-                                # homozy = True
-                                chrnr2 = chrnr
-                                ps = shortTR[1]
-                                partOfSeq = homozygousity_d[chrnr2, ps]
-
-                                # cut current sequence replace
-                                sequence2 = sequence2[:patternStart] + "" + sequence2[
-                                                                            patternEnd:]  # cuts part inbetween
-                                # insert new sequence
-                                sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[
-                                                                                   patternStart:]  # fills part inbetween
-                                entrance_c = bedfile_l_copy[bedfEntrance]
-                                entrance_cn = copy.deepcopy(entrance_c)
-                                entrance_cn[0] = chrnr_w
-                                entrance_cn[1] = patternStart  # + 1 #+1 when working with gangstr files
-                                entrance_cn[2] = patternStart + len(partOfSeq)
-                                oldSeqLen = (patternEnd - patternStart)
-                                change3 = len(partOfSeq) - oldSeqLen
-                                # print("Change: ",change3)
-                                offset += change3
-                                # print("offset: ", offset)
-                                bedfile_l_copy[bedfEntrance] = entrance_cn
-                            else:  #
-                                chrnr2 = chrnr
-                                ps = shortTR[1]
-                                homozygousity_d[chrnr2, ps] = ""
-                                # find correct startpoit or if bedfile-entrance does not fit to sequence on that position
-                                correctStart, correctEnd, noFit = findStartPoint(sequence2, patternStart, pattern,
-                                                                                 patternLen)  # seq,start,pattern,patternLen
-                                # if noFit: patternStart and patternEnd stay as they are, but will not be noted in new
-                                #           bedfile. And offset most not be changed.
-
-                                # debugHelpPartOfSeq = sequence2[patternStart - 30:patternEnd + 30]
-                                # debugHelpPartOfSeq1 = sequence2[patternStart:patternEnd]
-                                # debugHelpPartOfSeq2 = sequence2[correctStart - 30:correctEnd + 30]
-                                # debugHelpPartOfSeq3 = sequence2[correctStart:correctEnd]
-                                # print(helppattern,"\n",debugHelpPartOfSeq,"\n",debugHelpPartOfSeq1,"\n",debugHelpPartOfSeq2,"\n",debugHelpPartOfSeq3,"\n")
-
-                                # preparation to change bedfile
-                                # entrance = bedfile_l[bedfEntrance]
-                                # entrance_c = copy.deepcopy(entrance)  # only change the copy
-
-                                # partOfSeq_4 = sequence2[patternStart:patternEnd]  # just for debugging
-                                if not noFit:  # it fits and has a start
-                                    # assign correct ends
-                                    patternStart = correctStart
-                                    patternEnd = correctEnd
-                                    patternEndNew = correctEnd
-                                    # general information
-                                    partOfSeq_4 = sequence2[patternStart:patternEnd]
-                                    numberOfRepeats = int(len(partOfSeq_4) / patternLen)
-
-                                    partOfSeqNew = pattern * numberOfRepeats
-                                    # if STRs should be changed
-                                    if random.random() <= chanceOfChange:
-                                        # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
-                                        # if you want to simulate an increase of repeats, do anything between
-
-                                        manipulation = random.randint(0, 5) if random.random() < 0.5 else (-1) * (
-                                            random.randint(0, numberOfRepeats))
-                                        numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
-
-                                        # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-                                        # offset += (patternEndNew - patternEnd)  # remember for following
-                                        change = (manipulation * patternLen)
-                                        # offset += change
-                                        partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
-                                        # patternEndNew = patternEnd + change
-                                        # entrance_c[2] = patternEndNew
-
-                                    # mutate new sequence
-                                    partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,
-                                                                   indelsLessMutation)
-
-                                    # debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
-                                    # cut current sequence replace
-                                    patternEndNew += offset2
-                                    # sequence2 = sequence2[:patternStart] + "" + sequence2[
-                                    #                                            patternEnd:]  # cuts part inbetween
-                                    # debugHelpPartOfSeq8 = sequence2[patternStart - 3:patternEnd + 3]
-                                    # insert new sequence
-                                    # sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[
-                                    #                                                      patternStart:]  # fills part inbetween
-                                    sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
-                                    patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
-                                    # debugHelpPartOfSeq6 = sequence2[patternStart - 3:patternEndNew + 3]
-
-                                    # just to see in debugging that string replacement works
-                                    # debugHelpPartOfSeq7 = sequence2[patternStart:patternEndNew]
-                                    offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
-                                    offset += offsettemp
-                                if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
-                                    entrance = bedfile_l[bedfEntrance]
-                                    print("no fit, entrance: ", entrance)
-                                    entrance_c = copy.deepcopy(entrance)
-                                    entrance_c[0] = -1
-                                    entrance_c[1] = 0  # mark it as 0 later don't put it in new bedfile
-                                    entrance_c[2] = 0
-                                else:
-                                    if allele == 1:
-                                        homozygousity_d[chrnr2, ps] = partOfSeqNew
-                                    # preparation to change bedfile
-                                    entrance = bedfile_l[bedfEntrance]
-                                    entrance_c = copy.deepcopy(entrance)  # only change the copy
-                                    entrance_c[0] = chrnr_w
-                                    entrance_c[1] = patternStart  # + 1 when working
-                                    entrance_c[2] = patternEndNew
-                                    # if patternEndNew < patternStart+1:
-                                    #    entrance_c[2] = patternStart+1
-
-                                # changes in bedfile
-                                #if allele == 1:  # only change the first entrance of the copy (first chromosome)
-                                bedfile_l_copy[bedfEntrance] = entrance_c
-                                #else:  # append the entrances of the second chromosome
-                                #    bedfile_l_copy.append(entrance_c)
-
-                        if allele == 1:  # will only be visited once
-                            allele += 1
-                        record2.seq = sequence2
-                        record2.id = idOfChr
+                    id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
+                    if id[0] is not None:
+                        nameOfChr = nameOfChr + "_" + str(allele)
+                        idOfChr = idOfChr + "_" + str(allele)
                         record2.name = nameOfChr
-                        newrecordlen = len(sequence2)
-                        print("new length sequence: ", newrecordlen)
-                        writer.write_header()
-                        writer.write_record(record2)
-                        bedfile_total.append(bedfile_l_copy)
+                        record2.id = idOfChr
+
+                        id = str(record.id)
+                        if id in bedfile_d.keys():
+                            bedfile_l = bedfile_d[id]
+                            bedfile_l_copy = copy.deepcopy(bedfile_l)
+                            bedfile_l_length = len(bedfile_l)
+
+                            for bedfEntrance in range(0,
+                                                      bedfile_l_length):  # go through all coordinates in the bedfile.
+                                shortTR = bedfile_l[bedfEntrance]
+                                chrnr = shortTR[0]  # which chromosome
+                                chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
+                                patternStart = offset + int(shortTR[1])  # - 1 #-1 for gangstr bedfiles
+                                patternEnd = offset + int(shortTR[2])
+                                patternLen = int(shortTR[3])
+                                pattern = shortTR[4].strip()
+
+                                if allele > 1 and random.random() < homozygousity_rate:  # should be the second allele and inside the homozygosity rate
+                                    # if below chance then copy allele 1
+                                    # homozy = True
+                                    chrnr2 = chrnr
+                                    ps = shortTR[1]
+                                    partOfSeq = homozygousity_d[chrnr2, ps]
+
+                                    # cut current sequence replace
+                                    sequence2 = sequence2[:patternStart] + "" + sequence2[
+                                                                                patternEnd:]  # cuts part inbetween
+                                    # insert new sequence
+                                    sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[
+                                                                                       patternStart:]  # fills part inbetween
+                                    entrance_c = bedfile_l_copy[bedfEntrance]
+                                    entrance_cn = copy.deepcopy(entrance_c)
+                                    entrance_cn[0] = chrnr_w
+                                    entrance_cn[1] = patternStart  # + 1 #+1 when working with gangstr files
+                                    entrance_cn[2] = patternStart + len(partOfSeq)
+                                    oldSeqLen = (patternEnd - patternStart)
+                                    change3 = len(partOfSeq) - oldSeqLen
+                                    # print("Change: ",change3)
+                                    offset += change3
+                                    # print("offset: ", offset)
+                                    bedfile_l_copy[bedfEntrance] = entrance_cn
+                                else:  #
+                                    chrnr2 = chrnr
+                                    ps = shortTR[1]
+                                    homozygousity_d[chrnr2, ps] = ""
+                                    # find correct startpoit or if bedfile-entrance does not fit to sequence on that position
+                                    correctStart, correctEnd, noFit = findStartPoint(sequence2, patternStart, pattern,
+                                                                                     patternLen)  # seq,start,pattern,patternLen
+                                    # if noFit: patternStart and patternEnd stay as they are, but will not be noted in new
+                                    #           bedfile. And offset most not be changed.
+
+                                    # debugHelpPartOfSeq = sequence2[patternStart - 30:patternEnd + 30]
+                                    # debugHelpPartOfSeq1 = sequence2[patternStart:patternEnd]
+                                    # debugHelpPartOfSeq2 = sequence2[correctStart - 30:correctEnd + 30]
+                                    # debugHelpPartOfSeq3 = sequence2[correctStart:correctEnd]
+                                    # print(helppattern,"\n",debugHelpPartOfSeq,"\n",debugHelpPartOfSeq1,"\n",debugHelpPartOfSeq2,"\n",debugHelpPartOfSeq3,"\n")
+
+                                    # preparation to change bedfile
+                                    # entrance = bedfile_l[bedfEntrance]
+                                    # entrance_c = copy.deepcopy(entrance)  # only change the copy
+
+                                    # partOfSeq_4 = sequence2[patternStart:patternEnd]  # just for debugging
+                                    if not noFit:  # it fits and has a start
+                                        # assign correct ends
+                                        patternStart = correctStart
+                                        patternEnd = correctEnd
+                                        patternEndNew = correctEnd
+                                        # general information
+                                        partOfSeq_4 = sequence2[patternStart:patternEnd]
+                                        numberOfRepeats = int(len(partOfSeq_4) / patternLen)
+
+                                        partOfSeqNew = pattern * numberOfRepeats
+                                        # if STRs should be changed
+                                        if random.random() <= chanceOfChange:
+                                            # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
+                                            # if you want to simulate an increase of repeats, do anything between
+
+                                            manipulation = random.randint(0, 5) if random.random() < 0.5 else (-1) * (
+                                                random.randint(0, numberOfRepeats))
+                                            numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
+
+                                            # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
+                                            # offset += (patternEndNew - patternEnd)  # remember for following
+                                            change = (manipulation * patternLen)
+                                            # offset += change
+                                            partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
+                                            # patternEndNew = patternEnd + change
+                                            # entrance_c[2] = patternEndNew
+
+                                        # mutate new sequence
+                                        partOfSeqNew, offset2 = mutate(partOfSeqNew, chanceOfMutationPerBase,
+                                                                       indelsLessMutation)
+
+                                        # debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
+                                        # cut current sequence replace
+                                        patternEndNew += offset2
+                                        # sequence2 = sequence2[:patternStart] + "" + sequence2[
+                                        #                                            patternEnd:]  # cuts part inbetween
+                                        # debugHelpPartOfSeq8 = sequence2[patternStart - 3:patternEnd + 3]
+                                        # insert new sequence
+                                        # sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[
+                                        #                                                      patternStart:]  # fills part inbetween
+                                        sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
+                                        patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
+                                        # debugHelpPartOfSeq6 = sequence2[patternStart - 3:patternEndNew + 3]
+
+                                        # just to see in debugging that string replacement works
+                                        # debugHelpPartOfSeq7 = sequence2[patternStart:patternEndNew]
+                                        offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
+                                        offset += offsettemp
+                                    if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
+                                        entrance = bedfile_l[bedfEntrance]
+                                        print("no fit, entrance: ", entrance)
+                                        entrance_c = copy.deepcopy(entrance)
+                                        entrance_c[0] = -1
+                                        entrance_c[1] = 0  # mark it as 0 later don't put it in new bedfile
+                                        entrance_c[2] = 0
+                                    else:
+                                        if allele == 1:
+                                            homozygousity_d[chrnr2, ps] = partOfSeqNew
+                                        # preparation to change bedfile
+                                        entrance = bedfile_l[bedfEntrance]
+                                        entrance_c = copy.deepcopy(entrance)  # only change the copy
+                                        entrance_c[0] = chrnr_w
+                                        entrance_c[1] = patternStart  # + 1 when working
+                                        entrance_c[2] = patternEndNew
+                                        # if patternEndNew < patternStart+1:
+                                        #    entrance_c[2] = patternStart+1
+
+                                    # changes in bedfile
+                                    #if allele == 1:  # only change the first entrance of the copy (first chromosome)
+                                    bedfile_l_copy[bedfEntrance] = entrance_c
+                                    #else:  # append the entrances of the second chromosome
+                                    #    bedfile_l_copy.append(entrance_c)
+
+                            if allele == 1:  # will only be visited once
+                                allele += 1
+                            record2.seq = sequence2
+                            record2.id = idOfChr
+                            record2.name = nameOfChr
+                            newrecordlen = len(sequence2)
+                            print("new length sequence: ", newrecordlen)
+                            writer.write_header()
+                            writer.write_record(record2)
+                            bedfile_total.append(bedfile_l_copy)
 
         printBedModifications(bedfile_total, newBedFile)
 
