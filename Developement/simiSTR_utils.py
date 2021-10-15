@@ -2,15 +2,15 @@
 
 import re
 
-class Reader:
-    def __init__(self, inputBedFile):
+class SimiSTR_Reader:
+    def __init__(self,inputBedFile):
         self.inputBedFile = inputBedFile
-        self.bedfile_d = dict()
+        #self.inputFasta = inputFasta
 
     # This reader collects all bed file entrances in a dictionary for easier access
-    def getBedFile(self, inputBedFile):
+    def getBedFile(self):
         bedfile_d = dict()
-        with open(inputBedFile, 'r') as inBedFile:
+        with open(self.inputBedFile, 'r') as inBedFile:
             for bedline in inBedFile:
                 """ 
                 Here you can first filter out the header information that can contain
@@ -25,11 +25,11 @@ class Reader:
                         chromosomeNr = self.getChromosomeNumber(chromosome)
                         # sequence in CAPs
                         sequence = sequence.upper()
-                        if chromosomeNr not in self.bedfile_d:
-                            self.bedfile_d[chromosomeNr] = [bedElements]
+                        if chromosomeNr not in bedfile_d:
+                            bedfile_d[chromosomeNr] = [bedElements]
                         else:
-                            self.bedfile_d[chromosomeNr].append(bedElements)  # chr    from Pos    to Pos      lenMotif    motif
-            return self.bedfile_d
+                            bedfile_d[chromosomeNr].append(bedElements)  # chr    from Pos    to Pos      lenMotif    motif
+            return bedfile_d
 
     def isBedHeader(self, line):
         # from https://en.wikipedia.org/wiki/BED_(file_format)#Header
@@ -50,10 +50,14 @@ class Reader:
         return chrNr
 
 
-class Writer:
+class SimiSTR_Writer:
+    def __init__(self, outputBedfile):
+        self.outputBed = outputBedfile
+        # self.outputFa = outputFasta
+
     # write out the new coordinates of the adapted bed file.
-    def printBedModifications(self, bedfile_l_copy, newBedFile):
-        with open(newBedFile, 'w') as outBedfile:
+    def printBedModifications(self, bedfile_l_copy):
+        with open(self.outputBed, 'w') as outBedfile:
             count = 0
             for chr in bedfile_l_copy:
                 for line in chr:  # not recording bad mathces in new bedfile
@@ -64,3 +68,4 @@ class Writer:
                     else:
                         count += 1
             print(count)
+
