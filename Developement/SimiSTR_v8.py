@@ -12,19 +12,7 @@ import argparse
 
 
 
-# write out the new coordinates of the adapted bed file.
-def printBedModifications(bedfile_l_copy, newBedFile):
-    with open(newBedFile, 'w') as outBedfile:
-        count = 0
-        for chr in bedfile_l_copy:
-            for line in chr:  # not recording bad mathces in new bedfile
-                if line[1] != 0 and line[2] != 0:  # thats the ones where pattern was not found
-                    lines = str(line[0]) + "\t" + str(line[1]) + "\t" + str(line[2]) + "\t" + str(line[3]) + "\t" \
-                            + str(line[4]) + "\t" + str(line[5] + "\n")
-                    outBedfile.write(lines)
-                else:
-                    count += 1
-        print(count)
+
 
 # mutation of sequence by chance and less likely mutate by insertion or deletion
 def mutate(sequence, chanceOfMutation, indelsLessMutation):
