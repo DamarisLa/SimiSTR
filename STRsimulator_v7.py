@@ -4,6 +4,7 @@
 import copy
 import os
 import random
+import re
 import sys
 from Bio import SeqIO
 

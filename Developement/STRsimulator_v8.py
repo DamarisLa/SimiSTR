@@ -6,6 +6,7 @@ import os
 import random
 import sys
 from Bio import SeqIO
+import re
 
 oldBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
 newBedFile = "..\\FilteredViewed\\Grch38\\grch38.adapt.bed"
@@ -20,11 +21,15 @@ def getBedFile(oldBedFile):
             splitline = line.split("\t")
             if len(splitline) > 3:
                 splitline[4] = splitline[4].strip().upper()
-                if splitline[0] not in bedfile_d.keys():
-                    bedfile_d[str(splitline[0])] = list()
-                    bedfile_d[str(splitline[0])].append(splitline)
+                id = re.search("(\d*)",splitline[0]) #this line should enable to find the 1 in the "chr1" annotation
+                if id[0] is not None:
+                    if id not in bedfile_d.keys():
+                        bedfile_d[str(id[0])] = list()
+                        bedfile_d[str(id[0])].append(splitline)
+                    else:
+                        bedfile_d[str(id[0])].append(splitline)  # chr    from Pos    to Pos      lenMotif    motif
                 else:
-                    bedfile_d[str(splitline[0])].append(splitline)  # chr    from Pos    to Pos      lenMotif    motif
+                    print("Bedfile reader does not recognize the chromosome id")
     return bedfile_d
 
 # write out the new coordinates. The adapted bedfile. To find the regions and to
@@ -34,7 +39,7 @@ def printBedModifications(bedfile_l_copy, newBedFile):
         for chr in bedfile_l_copy:
             for line in chr:  # not recording bad mathces in new bedfile
                 if line[1] != 0 and line[2] != 0:  # thats the ones where pattern was not found
-                    lines = str(line[0]) + "\t" + str(line[1]) + "\t" + str(line[2]) + "\t" + str(line[3]) + "\t" + str(line[4] + "\n")
+                    lines = str(line[0]) + "\t" + str(line[1]) + "\t" + str(line[2]) + "\t" + str(line[3]) + "\t" + str(line[4]) + "\t" + str(line[5] + "\n")
                     outBedfile.write(lines)
                 else:
                     count += 1
@@ -387,203 +392,4 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
         printBedModifications(bedfile_total, newBedFile)
 
 main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 2, 0.01, 10, 0.5)
-
-if len(sys.argv) < 6:
-    print("Please give fastafilename +dir to the ref [1] and new Fastafilename that will be created [2], the old bedfile [3], "
-          "the  name and dir where the new bedfile should be [4], "
-          "and a number between >0.0 && <1.0 indicating the changes of STR to the original ref file [5]")
-    print(
-        "Additional: 'd' oder 'h' for diploid or haploid approach [6], chance of mutation >0.0 && <1.0 [7], how much rarer an indel is than a mutation (0-100, comma possible) [8], homozygousity_rate >0.0 && <1.0 [9]")
-else:
-    for i in sys.argv:
-        print(i)
-    if len(sys.argv) > 6:
-        print("more than 6 parameters")
-        if sys.argv[6].isalpha():
-            print("sys.argv[6].isalpha()")
-            run = 1
-            if sys.argv[6] == "d":
-                print("sys.arg[6]: you assigned 'd' therefore run is diploid.")
-                run = 2
-            else:
-                print("sys.arg[6]: run is haploid. 'h' or sth else was given.")
-            if len(sys.argv) > 7:
-                print("more than 7 parameters")
-                canBeCast = True
-                try:
-                    float(sys.argv[7])
-                except ValueError:
-                    print("Not a float")
-                    canBeCast = False
-                if canBeCast:
-                    print("sys.argv[7].isfloat")
-                    chanceOfMutation = float(sys.argv[7])
-                    if len(sys.argv) > 8:
-                        print("more than 8 parameters")
-                        canBeCast = True
-                        try:
-                            float(sys.argv[8])
-                        except ValueError:
-                            print("Not a float")
-                            canBeCast = False
-                        if canBeCast:  # can [8] be cast
-                            print("sys.argv[8].isfloat")
-                            indelLessTmutation = float(sys.argv[8])
-                            if len(sys.argv) > 9:  # len > 9
-                                print("more than 9 parameters")
-                                canBeCast = True
-                                try:
-                                    float(sys.argv[9])
-                                except ValueError:
-                                    print("Not a float")
-                                    canBeCast = False
-                                if canBeCast:
-                                    print("sys.argv[9].isfloat")
-                                    homozygous = float(sys.argv[9])
-                                    if 0.0 <= homozygous <= 1.0:
-                                        print("in field 9 homozygous possibilty assigned was: ", homozygous)
-                                        print("How much rarer is an Indel than Mutation, according to assignment: ",
-                                              indelLessTmutation)
-                                        if 0.0 <= chanceOfMutation <= 1.0:
-                                            print("your assigned chance of mutation rate ", chanceOfMutation)
-                                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
-                                                              sys.argv[5],
-                                                              run,
-                                                              chanceOfMutation, indelLessTmutation, homozygous)
-                                        else:
-                                            print(
-                                                "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
-                                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
-                                                              sys.argv[5],
-                                                              run,
-                                                              0.01, indelLessTmutation, homozygous)
-
-                                    else:
-                                        print(
-                                            "wrong format. homozygous possibilty needs a value > 0.0 and smaller <=1.0. default is 0")
-                                        print("How much rarer is an Indel than Mutation, according to assignment: ",
-                                              indelLessTmutation)
-                                        if 0.0 <= chanceOfMutation <= 1.0:
-                                            print("your assigned chance of mutation rate ", chanceOfMutation)
-                                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
-                                                              sys.argv[5],
-                                                              run,
-                                                              chanceOfMutation, indelLessTmutation, 0)
-                                        else:
-                                            print(
-                                                "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
-                                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
-                                                              sys.argv[5],
-                                                              run,
-                                                              0.01, indelLessTmutation, 0)
-                                else:  # 9 was not cast.
-                                    print(
-                                        "wrong format. homozygous possibilty needs a value > 0.0 and smaller <=1.0. default is 0")
-                                    print("How much rarer is an Indel than Mutation, according to assignment: ",
-                                          indelLessTmutation)
-                                    if 0.0 <= chanceOfMutation <= 1.0:
-                                        print("your assigned chance of mutation rate ", chanceOfMutation)
-                                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
-                                                          sys.argv[5],
-                                                          run,
-                                                          chanceOfMutation, indelLessTmutation, 0)
-                                    else:
-                                        print(
-                                            "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
-                                        main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3],
-                                                          sys.argv[5],
-                                                          run,
-                                                          0.01, indelLessTmutation, 0)
-                            else:  # len not 0 9
-                                print(
-                                    "in field 9 homozygous possibilty was missing. here the default is 0")
-                                print("How much rarer is an Indel than Mutation, according to assignment: ",
-                                      indelLessTmutation)
-                                if 0.0 <= chanceOfMutation <= 1.0:
-                                    print("your assigned chance of mutation rate ", chanceOfMutation)
-                                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
-                                                      run,
-                                                      chanceOfMutation, indelLessTmutation, 0)
-                                else:
-                                    print(
-                                        "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
-                                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
-                                                      run,
-                                                      0.01, indelLessTmutation, 0)
-                        else:  # [8] can not be cast. therefore default. And 7 fields ok and can be run. but check of range nessesary
-                            print("wrong format. in field 8 a number is needed to express how much rarer an indel"
-                                  "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-                            if 0.0 <= chanceOfMutation <= 1.0:
-                                print("your assigned chance of mutation rate ", chanceOfMutation)
-                                print("Default is 10 times rarer")
-                                print(
-                                    "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
-                                                  run, chanceOfMutation, 10, 0)
-                            else:
-                                print(
-                                    "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
-                                print("Default is 10 times rarer")
-                                print(
-                                    "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5],
-                                                  run, 0.01, 10, 0)
-                    else:  # 7 fields. but and chance of mutation was casted float. But is it in range?
-                        if 0.0 <= chanceOfMutation <= 1.0:
-                            print("your assigned chance of mutation rate ", chanceOfMutation)
-                            print("in field 8 a number is needed to express how much rarer an indel"
-                                  "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-                            print("Default is 10 times rarer")
-                            print(
-                                "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run,
-                                              chanceOfMutation, 10, 0)
-                        else:
-                            print(
-                                "Your chance of mutation was not a value between 0 and 1, therefore mutation rate is now at 0.01 == 1%")
-                            print("in field 8 a number is needed to express how much rarer an indel"
-                                  "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-                            print("Default is 10 times rarer")
-                            print(
-                                "in field 9 homozygous possibilty was missing. if 'd' was chosen, here the default is 0")
-                            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run,
-                                              0.01, 10, 0)
-                else:  # 7 cannot be cast
-                    print("sys.argv[7] is not float, therefore default mutation rate is at 0.01 == 1%")
-                    print("in field [8] a number is needed to express how much rarer an indel"
-                          "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-                    print("Default is 10 times rarer")
-                    print("in field [9] homozygous possibilty was missing. here the default is 0")
-                    main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01, 10, 0)
-            else:  # 7 fielts
-                print(
-                    "len < 7: 0.01 (1%) chance of mutation, as you did not give a parameter for chance of mutation[7]")
-                print("in field [8] a number is needed to express how much rarer an indel"
-                      "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-                print("Default is 10 times rarer")
-                print("in field [9] homozygous possibilty was missing. here the default is 0")
-                main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], run, 0.01, 10, 0)
-        else:
-            print(
-                "sys.argv[6] is not the right format (string: 'd' or 'h'), therefore run is default haploid and with 0.01 == 1% mutationrate [7]")
-            print("in field [8] a number is needed to express how much rarer an indel"
-                  "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-            print("Default is 10 times rarer")
-            print("in field [9] homozygous possibilty was missing. here the default is 0")
-            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01, 10, 0)
-    else:  # default
-        if os.path.isfile(sys.argv[1]) and os.path.isfile(sys.argv[3]):
-            print("given 5 parameters, therefore run is default haploid [6] and with 0.01 == 1% mutationrate [7]")
-            print("in field [8] a number is needed to express how much rarer an indel"
-                  "should be than a mutation. like mutation = 1% but indel 10 or 9.9 times rarer.")
-            print("Default is 10 times rarer")
-            print("in field [9] homozygous possibilty was missing. here the default is 0")
-            main_manipulation(sys.argv[2], sys.argv[1], sys.argv[4], sys.argv[3], sys.argv[5], 1, 0.01, 10, 0)
-            # [0]./simulator2.py [1]../../reference/hs37d5.chr22.fa  [2]hs37d5.chr22.new1.fa [3]../bedfiles/hs37_ver8.chr22.bed [4]hs37_ver8.chr22.new1.bed [5]0.20
-        else:
-            if not os.path.isfile(sys.argv[1]):
-                print(sys.argv[1], " is not a file")
-            elif not os.path.isfile(sys.argv[3]):
-                print(sys.argv[3], " is not a file")
-
 
