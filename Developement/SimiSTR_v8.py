@@ -42,6 +42,8 @@ def getBedFile(inputBedFile):
                 # First three are mandatory, fourth is the sequence (name), we need at least 4
                 if len(bedElements) >= 4:
                     [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:4]
+                    motif = bedElements[4].strip()
+                    chromosomeNr = getChromosomeNumber(chromosome)
                     # sequence in CAPs
                     sequence = sequence.upper()
                     if chromosome not in bedfile_d:
@@ -53,19 +55,31 @@ def getBedFile(inputBedFile):
 def isBedHeader(line):
     # from https://en.wikipedia.org/wiki/BED_(file_format)#Header
     # and http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1
-    if line.startswith("#") or line.startswith("track") or startswith("browser"):
+    if line.startswith("#") or line.startswith("track") or line.startswith("browser"):
         return True
 
+def getChromosomeNumber(chromosome):
+    chrNr = 0
+    if type(chromosome) is not int:
+        chr = re.search("(\d*)", chromosome)
+        if chr is not None:
+            chrNr = chr
+        else:
+            print("Check the first column in your assigned input bed file!")
+    else:
+        chrNr= chromosome
+    return chrNr
 
 
-# write out the new coordinates. The adapted bedfile. To find the regions and to
+# write out the new coordinates of the adapted bed file.
 def printBedModifications(bedfile_l_copy, newBedFile):
     with open(newBedFile, 'w') as outBedfile:
         count = 0
         for chr in bedfile_l_copy:
             for line in chr:  # not recording bad mathces in new bedfile
                 if line[1] != 0 and line[2] != 0:  # thats the ones where pattern was not found
-                    lines = str(line[0]) + "\t" + str(line[1]) + "\t" + str(line[2]) + "\t" + str(line[3]) + "\t" + str(line[4]) + "\t" + str(line[5] + "\n")
+                    lines = str(line[0]) + "\t" + str(line[1]) + "\t" + str(line[2]) + "\t" + str(line[3]) + "\t" \
+                            + str(line[4]) + "\t" + str(line[5] + "\n")
                     outBedfile.write(lines)
                 else:
                     count += 1
