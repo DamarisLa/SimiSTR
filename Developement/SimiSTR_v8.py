@@ -29,6 +29,34 @@ def getBedFile(oldBedFile):
                     print("Bedfile reader does not recognize the chromosome id")
     return bedfile_d
 
+def getBedFile(inputBedFile):
+    bedfile_d = dict()
+    with open(inputBedFile, 'r') as inBedFile:
+        for bedline in inBedFile:
+            """ 
+            Here you can first filter out the header information that can contain
+            '#', 'track' or 'browser' (http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1)
+            """
+            if not isBedHeader(bedline):
+                bedElements = bedline.split("\t")
+                # First three are mandatory, fourth is the sequence (name), we need at least 4
+                if len(bedElements) >= 4:
+                    [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:4]
+                    # sequence in CAPs
+                    sequence = sequence.upper()
+                    if chromosome not in bedfile_d:
+                        bedfile_d[chromosome] = [bedElements]
+                    else:
+                        bedfile_d[chromosome].append(bedElements)  # chr    from Pos    to Pos      lenMotif    motif
+        return bedfile_d
+
+def isBedHeader(line):
+    # from https://en.wikipedia.org/wiki/BED_(file_format)#Header
+    # and http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1
+    if line.startswith("#") or line.startswith("track") or startswith("browser"):
+        return True
+
+
 
 # write out the new coordinates. The adapted bedfile. To find the regions and to
 def printBedModifications(bedfile_l_copy, newBedFile):
