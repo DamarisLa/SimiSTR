@@ -10,9 +10,8 @@ import re
 import argparse
 
 
-
+# This reader collects all bed file entrances in a dictionary for easier access
 def getBedFile(oldBedFile):
-    #bedfile_l = list()
     bedfile_d = dict()
     with open(oldBedFile, 'r') as inBedFile:
         for line in inBedFile:
@@ -30,6 +29,7 @@ def getBedFile(oldBedFile):
                     print("Bedfile reader does not recognize the chromosome id")
     return bedfile_d
 
+
 # write out the new coordinates. The adapted bedfile. To find the regions and to
 def printBedModifications(bedfile_l_copy, newBedFile):
     with open(newBedFile, 'w') as outBedfile:
@@ -43,7 +43,7 @@ def printBedModifications(bedfile_l_copy, newBedFile):
                     count += 1
         print(count)
 
-
+# mutation of sequence by chance and less likely mutate by insertion or deletion
 def mutate(sequence, chanceOfMutation, indelsLessMutation):
     #sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
     offset2 = 0
@@ -122,6 +122,8 @@ def mutate(sequence, chanceOfMutation, indelsLessMutation):
     return sequence, offset2
 
 
+# look up if bedfile coordinates match position & pattern on position in reference/ assigned genome
+# of find correct position near by (+/- 20)
 def findStartPoint(seq, start, pattern, patternLen):
     seq_len = len(seq)
     partOfSeq_1 = (seq[start:start + patternLen])
@@ -135,6 +137,8 @@ def findStartPoint(seq, start, pattern, patternLen):
     noFit = False
     times = False
     while not startPointCorrect and not noFit:
+
+        #  => replace this start-position search by sth linear or with a smith waterman.
 
         if pattern != partOfSeq_1:  # pattern was not found on initial start point
             # will always go one further away from current start. trying both directions parallel
@@ -390,5 +394,5 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
         printBedModifications(bedfile_total, newBedFile)
 
-main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 2, 0.01, 10, 0.5)
+#main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, 1.00, 2, 0.01, 10, 0.5)
 
