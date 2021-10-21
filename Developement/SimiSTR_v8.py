@@ -53,12 +53,13 @@ class SimiSTR:
 
         return sequence, offsetOut
 
+    # needed be mutations function
     def calculateChanceForIndels(self, chanceOfSubstitution, indelsLessMutation):
         chanceForIndels = 0
         if indelsLessMutation != 0:  # to avoid division through zero
             chanceForIndels = chanceOfSubstitution / indelsLessMutation
         return chanceForIndels
-
+    # certain mutations are substitutions
     def substitutions(self, sequence, base):
         chance = random.random()
         if base + 1 < len(sequence):
@@ -91,12 +92,12 @@ class SimiSTR:
                 else:  # transversion
                     sequence = self.substitute(sequence, base, 'T')
         return sequence
-
+    # substitute one base by another
     def substitute(self,sequence,base, replacementBase):
         # [inclusive:exclusive] => [:base]=>exclusive+ base + [base+1:]
         sequence = sequence[:base] + replacementBase + sequence[base + 1:]
         return sequence
-
+    # certain mutations are insertions or deletions
     def indeletions(self,sequence,base, offset):
         if base + 1 < len(sequence):
             if random.random() < 0.5:  # insertion occurs in 50% of indel cases
@@ -113,11 +114,11 @@ class SimiSTR:
                 sequence = self.deletion(sequence,base)
                 offset -= 1
         return sequence, offset
-
+    # insert a certain base
     def insertion(self, sequence,base, insertionBase):
         sequence = sequence[:base] + insertionBase + sequence[base:]  # insertion
         return sequence
-
+    # delete a certain base
     def deletion(self, sequence, base):
         sequence = sequence[:base] + sequence[base + 1:]
         return sequence
