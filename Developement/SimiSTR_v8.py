@@ -220,9 +220,9 @@ class SimiSTR:
         sWriter = SimiSTR_Writer(self.output_bedfile)
 
         # cast inputs
+        #expansion_chance = float(self.expansion_possibility) # maybe not necessary anymore should be float due to argparse
+        #snv_chance = float(self.snv_chance) # maybe not necessary anymore should be float due to argparse
 
-        expansion_chance = float(self.expansion_possibility)
-        snv_chance = float(self.snv_chance)
         # safe bedfile as lists.
         bedfile_d = sReader.getBedFile()
         # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
