@@ -1,13 +1,11 @@
 # simulates STR changes compared to a reference genome
 # hd stands for haploid and diploid, as in this version haploid or diploid genomes can be simulated
-import argparse
+
 import copy
-import os
 import random
-import sys
 from Bio import SeqIO
 import re
-from argparse
+import argparse
 
 
 
@@ -203,28 +201,28 @@ class SimiSTR:
     # main function manipulate Fasta
     def main_manipulation(self):
         # Initialize Reader & Writer
-        sReader = SimiSTR_Reader(inputBedFile)
-        sWriter = SimiSTR_Writer(outputBedFile)
+        sReader = SimiSTR_Reader(self.input_bedfile)
+        sWriter = SimiSTR_Writer(self.output_bedfile)
 
         # cast inputs
-        chanceOfChange = float(chanceOfChange)
-        chanceOfMutationPerBase = float(chanceOfMutationPerBase)
+
+        expansion_chance = float(self.expansion_possibility)
+        snv_chance = float(self.snv_chance)
         # safe bedfile as lists.
         bedfile_d = sReader.getBedFile()
         # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
         bedfile_total = list()
 
-        with open(outputFastaFile, 'w') as outFastaFile:
+        with open(self.output_fasta, 'w') as outFastaFile:
             writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
-            with open(inputFastaFile, 'r') as inFastaFile:  # read fastaFile
+            with open(self.input_fasta, 'r') as inFastaFile:  # read fastaFile
                 for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
                     sequence = (record.seq).upper()
                     recordLen = len(sequence)  # old length
                     print("old length", recordLen)
                     homozygousity_d = dict()
                     allele = 1
-                    for chr in range(0,
-                                     nrOfChr):  # per chromosome a new to be created chromosome #eigther only 0 oder 0 and 1
+                    for chr in range(0, self.diploidity):  # per chromosome a new to be created chromosome #eigther only "0"(haploid) oder "0 and 1" (diploid)
                         record2 = copy.deepcopy(record)  # changes only on deep copies.
                         sequence2 = copy.deepcopy(sequence)  # changes only on deep copies.
                         # have an offset, that tells how much all following coordinates will be later or earlier
@@ -255,7 +253,7 @@ class SimiSTR:
                                     patternLen = int(shortTR[3])
                                     pattern = shortTR[4].strip()
 
-                                    if allele > 1 and random.random() < homozygousity_rate:  # should be the second allele and inside the homozygosity rate
+                                    if allele > 1 and random.random() < self.homozygousity:  # should be the second allele and inside the homozygosity rate
                                         # if below chance then copy allele 1
                                         # homozy = True
                                         chrnr2 = chrnr
@@ -311,12 +309,22 @@ class SimiSTR:
 
                                             partOfSeqNew = pattern * numberOfRepeats
                                             # if STRs should be changed
-                                            if random.random() <= chanceOfChange:
+                                            if random.random() <= expansion_chance:
                                                 # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
                                                 # if you want to simulate an increase of repeats, do anything between
+                                                expansion_factor_minus = 0
+                                                if self.max_reduction == -1:
+                                                    expansion_factor_minus = numberOfRepeats
+                                                else:
+                                                    if self.max_reduction < numberOfRepeats:
+                                                        expansion_factor_minus = self.max_reduction
+                                                    else:
+                                                        expansion_factor_minus = numberOfRepeats
 
-                                                manipulation = random.randint(0, 5) if random.random() < 0.5 else (-1) * (
-                                                    random.randint(0, numberOfRepeats))
+                                                #here the mutations gets randomly calculated.
+                                                manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (
+                                                    random.randint(0, expansion_factor_minus))
+
                                                 numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
 
                                                 # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
@@ -328,8 +336,7 @@ class SimiSTR:
                                                 # entrance_c[2] = patternEndNew
 
                                             # mutate new sequence
-                                            partOfSeqNew, offset2 = self.mutate(partOfSeqNew, chanceOfMutationPerBase,
-                                                                           indelsLessMutation)
+                                            partOfSeqNew, offset2 = self.mutate(partOfSeqNew, snv_chance, self.less_indels)
 
                                             # debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
                                             # cut current sequence replace
@@ -399,10 +406,10 @@ outputBedFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
 
 parser = argparse.ArgumentParser(description="Run SimiSTR to change Expansionlength of STRs.")
 
-parser.add_argument('-if','--input_fasta', type=str, metavar='', required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
-parser.add_argument('-of','--output_fasta', type=str, metavar='', required=True, help="Path+Name for newly generated Fasta File with expasion changes")
-parser.add_argument('-ibf','--input_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing regions of known STRs in given Input Fasta")
-parser.add_argument('-obf','--output_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
+parser.add_argument('-if','--input_fasta', type=argparse.FileType('r'), metavar='', required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
+parser.add_argument('-of','--output_fasta', type=argparse.FileType('w'), metavar='', required=True, help="Path+Name for newly generated Fasta File with expasion changes")
+parser.add_argument('-ibf','--input_bedfile', type=argparse.FileType('r'), metavar='', required=True, help="Path+Name to Bedfile containing regions of known STRs in given Input Fasta")
+parser.add_argument('-obf','--output_bedfile', type=argparse.FileType('w'), metavar='', required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
 parser.add_argument('-expp','--expansion_possibility', metavar='', required=True, type=float, help="How many regions should be STR expansion length manipulated")
 parser.add_argument('-dip','--diploidity', type=float, metavar='', required=True, help="Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
 parser.add_argument('-snv','--snv_chance', type=float, metavar='', required=True, help="[0.000-1.000] is the chance of a SNV.")
