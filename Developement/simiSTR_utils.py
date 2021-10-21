@@ -19,12 +19,12 @@ class SimiSTR_Reader:
                 if not self.__isBedHeader(bedline):
                     bedElements = bedline.split("\t")
                     # First three are mandatory, fourth is the sequence (name), we need at least 4
-                    if len(bedElements) >= 4:
-                        [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:4]
-                        bedElements[4] = bedElements[4].strip() #this is needed as motif should be a string without "\n" or else
-                        chromosomeNr = self.__getChromosomeNumber(chromosome)
+                    if len(bedElements) >= 5:
+                        [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:5]
                         # sequence in CAPs
-                        sequence = sequence.upper()
+                        #sequence = sequence.upper()
+                        bedElements[4] = bedElements[4].strip().upper() #this is needed as motif should be a string without "\n" or else
+                        chromosomeNr = self.__getChromosomeNumber(chromosome)
                         if chromosomeNr not in bedfile_d:
                             bedfile_d[chromosomeNr] = [bedElements]
                         else:
@@ -40,9 +40,10 @@ class SimiSTR_Reader:
     def __getChromosomeNumber(self, chromosome):
         chrNr = 0
         if type(chromosome) is not int:
-            chr = re.search("(\d*)", chromosome)
-            if chr is not None:
-                chrNr = chr
+            print(chromosome)
+            chr = [int(s) for s in re.findall(r'\d+',chromosome)]
+            if chr is not []:
+                chrNr = chr[0]
             else:
                 print("Check the first column in your assigned input bed file!")
         else:

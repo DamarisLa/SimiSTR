@@ -16,12 +16,13 @@ from simiSTR_utils import SimiSTR_Reader
 
 class SimiSTR:
 
-    def __init__(self, outputFasta, inputFasta, outputBed, inputBed, expansion_possibility, diploidity,
-                 snv_chance, less_indels, homozygousity, max_add=5, max_reduction=-1):
-        self.input_fasta = outputFasta
-        self.output_fasta = inputFasta
-        self.input_bedfile = inputBed
-        self.output_bedfile = outputBed
+    def __init__(self, input_fasta, output_fasta, input_bedfile, output_bedfile,
+                  expansion_possibility, diploidity, snv_chance, less_indels,
+                  homozygousity, max_add=5, max_reduction=-1):
+        self.input_fasta = input_fasta
+        self.output_fasta = output_fasta
+        self.input_bedfile = input_bedfile
+        self.output_bedfile = output_bedfile
         self.expansion_possibility = expansion_possibility
         self.max_add = max_add
         self.max_reduction = max_reduction
@@ -245,12 +246,16 @@ class SimiSTR:
                         # naming of haploid and or diploid chromosome entrances.
                         nameOfChr = record2.name
                         idOfChr = record2.id
-                        id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
-                        if id[0] is not None:
+                        #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
+
+                        id = [int(s) for s in re.findall(r'\d+', idOfChr)]
+                        if id is not []:
+                            chrNr = id[0]
+
                             nameOfChr = nameOfChr + "_" + str(allele)
                             idOfChr = idOfChr + "_" + str(allele)
                             record2.name = nameOfChr
-                            record2.id = idOfChr
+                            record2.id = id[0]
 
                             id = str(record.id)
                             if id in bedfile_d.keys():
@@ -324,7 +329,7 @@ class SimiSTR:
 
                                             partOfSeqNew = pattern * numberOfRepeats
                                             # if STRs should be changed
-                                            if random.random() <= expansion_chance:
+                                            if random.random() <= self.expansion_possibility:
                                                 # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
                                                 # if you want to simulate an increase of repeats, do anything between
                                                 expansion_factor_minus = 0
@@ -351,7 +356,7 @@ class SimiSTR:
                                                 # entrance_c[2] = patternEndNew
 
                                             # mutate new sequence
-                                            partOfSeqNew, offset2 = self.mutate(partOfSeqNew, snv_chance, self.less_indels)
+                                            partOfSeqNew, offset2 = self.mutate(partOfSeqNew, self.snv_chance, self.less_indels)
 
                                             # debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
                                             # cut current sequence replace
@@ -405,6 +410,8 @@ class SimiSTR:
                                 writer.write_header()
                                 writer.write_record(record2)
                                 bedfile_total.append(bedfile_l_copy)
+                        else:
+                            print("Check the first column in your assigned input bed file!")
 
             sWriter.printBedModifications(bedfile_total)
 
@@ -413,32 +420,26 @@ class SimiSTR:
 
 
 
-inputBedFile = "..\\FilteredViewed\\Grch38\\GangstrBedfiles\\randomSubset.hg38_ver13.sorted_noXY.bed"
-inputFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
 
-outputFasta = "..\\FilteredViewed\\Grch38\\grch38.adapt.bed"
-outputBedFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
 
 parser = argparse.ArgumentParser(description="Run SimiSTR to change Expansionlength of STRs.")
 
-parser.add_argument('-if','--input_fasta', type=argparse.FileType('r'), metavar='', required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
-parser.add_argument('-of','--output_fasta', type=argparse.FileType('w'), metavar='', required=True, help="Path+Name for newly generated Fasta File with expasion changes")
-parser.add_argument('-ibf','--input_bedfile', type=argparse.FileType('r'), metavar='', required=True, help="Path+Name to Bedfile containing regions of known STRs in given Input Fasta")
-parser.add_argument('-obf','--output_bedfile', type=argparse.FileType('w'), metavar='', required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
-parser.add_argument('-expp','--expansion_possibility', metavar='', required=True, type=float, help="How many regions should be STR expansion length manipulated")
-parser.add_argument('-dip','--diploidity', type=float, metavar='', required=True, help="Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
-parser.add_argument('-snv','--snv_chance', type=float, metavar='', required=True, help="[0.000-1.000] is the chance of a SNV.")
-parser.add_argument('-lid','--less_indels', type=int, metavar='', required=True, help="How much rarer should a insertion/deletion occur than a substitution.")
-parser.add_argument('-ho','--homozygousity', type=int, metavar='', required=True, help="How many regions should be homzygous. The rest will be heterozygous.")
-parser.add_argument('-ma','--max_add', type=int, metavar='', required=False, help="How many repeats can maximum be added [default: 5]")
-parser.add_argument('mr','--max_reduction', type=int,metavar='', required=False, help="How many repeats can maximum be removed. [default: full length]")
-args= parser.parse_args()
+parser.add_argument('-inf', '--input_fasta', type=str, metavar='', required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
+parser.add_argument('-outf', '--output_fasta', type=str, metavar='', required=True, help="Path+Name for newly generated Fasta File with expasion changes")
+parser.add_argument('-ibf', '--input_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing regions of known STRs in given Input Fasta")
+parser.add_argument('-obf', '--output_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
+parser.add_argument('-expp', '--expansion_possibility',type=float, metavar='', required=True,  help="How many regions should be STR expansion length manipulated")
+parser.add_argument('-dip', '--diploidity', type=float, metavar='', required=True, help="Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
+parser.add_argument('-snv', '--snv_chance', type=float, metavar='', required=True, help="[0.000-1.000] is the chance of a SNV.")
+parser.add_argument('-lid', '--less_indels', type=int, metavar='', required=True, help="How much rarer should a insertion/deletion occur than a substitution.")
+parser.add_argument('-ho', '--homozygousity', type=float, metavar='', required=True, help="How many regions should be homzygous. The rest will be heterozygous.")
+parser.add_argument('-ma', '--max_add', type=int, metavar='', required=False, help="How many repeats can maximum be added [default: 5]")
+parser.add_argument('-mr', '--max_reduction', type=int,metavar='', required=False, help="How many repeats can maximum be removed. [default: full length]")
+args = parser.parse_args()
 
-def main():
+
+if __name__ == '__main__':
     sim = SimiSTR(args.input_fasta, args.output_fasta, args.input_bedfile, args.output_bedfile,
                   args.expansion_possibility, args.diploidity, args.snv_chance, args.less_indels,
                   args.homozygousity, args.max_add, args.max_reduction)
     sim.main_manipulation()
-
-if __name__ == '__main__':
-    main()
