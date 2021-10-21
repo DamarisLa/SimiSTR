@@ -31,82 +31,96 @@ class SimiSTR:
         self.homozygousity = homozygousity
 
     # mutation of sequence by chance and less likely mutate by insertion or deletion
-    def mutate(self, sequence, chanceOfMutation, indelsLessMutation):
-        #sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
-        offset2 = 0
+    def mutate(self, sequence, chanceOfSubstitution, indelsLessMutation):
+        #this counts how much longer or shorter the sequence gets through the indels
+        offsetIn = 0
+        offsetOut = 0
+        #this calculations avoid dividsion through zero
+        chanceForIndels = self.calculateChanceForIndels(chanceOfSubstitution,indelsLessMutation)
+
+        # here every base in the given region gets called +
+        # and per random decision manipulated by substitution, insertion, deletion
+        for base in range(0,len(sequence)):
+            randomSubstitution = random.random() # random number for substitituion
+            randomIndel = random.random() # random number for insertions / deletions
+            if randomSubstitution < chanceOfSubstitution:
+                #substitute a base on this position
+                sequence = self.substitutions(sequence, base)
+            elif randomIndel < chanceForIndels:  # zb 1% / 10  = 0.1%
+                #insert or deletion following base in sequence and calculate the resulting offset
+                sequence, offsetOut = self.indeletions(sequence, base, offsetIn)
+                offsetOut += offsetOut
+
+        return sequence, offsetOut
+
+    def calculateChanceForIndels(self, chanceOfSubstitution, indelsLessMutation):
         chanceForIndels = 0
         if indelsLessMutation != 0:  # to avoid division through zero
-            chanceForIndels = chanceOfMutation / indelsLessMutation
-        for base in range(0,len(sequence)):
-            chance2 = random.random()
-            chance3 = random.random()
-            if chance2 < chanceOfMutation:
-                chance = random.random()
-                if base+1 < len(sequence):
-                    if sequence[base] == "A":
-                        if chance < 0.85:
-                            #sequence_2 += "G"                                  #replace
-                            sequence = sequence[:base] + 'G' + sequence[base+1:] #[inclusive:exclusive] => [:base]=>exclusive+ base + [base+1:]=>
-                        elif chance < 0.95:
-                            #sequence_2 += "T"
-                            sequence = sequence[:base] + 'T' + sequence[base+1:]
-                        else:
-                            #sequence_2 += "C"
-                            sequence = sequence[:base] + 'C' + sequence[base+1:]
-                    elif sequence[base]  == "T":
-                        if chance < 0.85:
-                            #sequence_2 += "C"
-                            sequence = sequence[:base] + 'C' + sequence[base+1:]
-                        elif chance < 0.95:
-                            #sequence_2 += "A"
-                            sequence = sequence[:base] + 'A' + sequence[base+1:]
-                        else:
-                            #sequence_2 += "G"
-                            sequence = sequence[:base] + 'G' + sequence[base+1:]
-                    elif sequence[base]  == "C":
-                        if chance < 0.85:
-                            #sequence_2 += "T"
-                            sequence = sequence[:base] + 'T' + sequence[base+1:]
-                        elif chance < 0.95:
-                            #sequence_2 += "G"
-                            sequence = sequence[:base] + 'G' + sequence[base+1:]
-                        else:
-                            #sequence_2 += "A"
-                            sequence = sequence[:base] + 'A' + sequence[base+1:]
-                    else:  # i == "G":
-                        if chance < 0.85:
-                            #sequence_2 += "A"
-                            sequence = sequence[:base] + 'A' + sequence[base+1:]
-                        elif chance < 0.95:
-                            #sequence_2 += "C"
-                            sequence = sequence[:base] + 'C' + sequence[base+1:]
-                        else:
-                            #sequence_2 += "T"
-                            sequence = sequence[:base] + 'T' + sequence[base+1:]
-            elif chance3 < chanceForIndels:  # zb 1% / 10  = 0.1%
-                if base+1 < len(sequence):
-                    if random.random() < 0.5:  # insertion
-                        #sequence_2 += base
-                        if random.random() < 0.25:
-                            #sequence_2 += "A"
-                            sequence = sequence[:base] + 'G' + sequence[base:] #insertion
-                        elif random.random() < 0.5:
-                            #sequence_2 += "C"
-                            sequence = sequence[:base] + 'C' + sequence[base:]
-                        elif random.random() < 0.75:
-                            #sequence_2 += "G"
-                            sequence = sequence[:base] + 'G' + sequence[base:]
-                        else:
-                            #sequence_2 += "T"
-                            sequence = sequence[:base] + 'T' + sequence[base:]
-                        offset2 += 1
-                    else:  # deletion
-                        #sequence_2 += ""
-                        sequence = sequence[:base] + sequence[base+1:]
-                        offset2 -= 1
-            #else:
-            #    sequence_2 += base
-        return sequence, offset2
+            chanceForIndels = chanceOfSubstitution / indelsLessMutation
+        return chanceForIndels
+
+    def substitutions(self, sequence, base):
+        chance = random.random()
+        if base + 1 < len(sequence):
+            if sequence[base] == "A":
+                if chance < 0.85:  # transition
+                    sequence = self.substitute(sequence,base,'G')
+                elif chance < 0.95:  # transversion
+                    sequence = self.substitute(sequence,base,'T')
+                else:  # transversion
+                    sequence = self.substitute(sequence,base,'C')
+            elif sequence[base] == "T":
+                if chance < 0.85:  # transition
+                    sequence = self.substitute(sequence,base,'C')
+                elif chance < 0.95:  # transversion
+                    sequence = self.substitute(sequence, base, 'A')
+                else:  # transversion
+                    sequence = self.substitute(sequence, base, 'G')
+            elif sequence[base] == "C":
+                if chance < 0.85:  # transition
+                    sequence = self.substitute(sequence, base, 'T')
+                elif chance < 0.95:  # transversion
+                    sequence = self.substitute(sequence, base, 'G')
+                else:  # transversion
+                    sequence = self.substitute(sequence, base, 'A')
+            else:  # base == "G":
+                if chance < 0.85: # transition
+                    sequence = self.substitute(sequence, base, 'A')
+                elif chance < 0.95:  # transversion
+                    sequence = self.substitute(sequence, base, 'C')
+                else:  # transversion
+                    sequence = self.substitute(sequence, base, 'T')
+        return sequence
+
+    def substitute(self,sequence,base, replacementBase):
+        # [inclusive:exclusive] => [:base]=>exclusive+ base + [base+1:]
+        sequence = sequence[:base] + replacementBase + sequence[base + 1:]
+        return sequence
+
+    def indeletions(self,sequence,base, offset):
+        if base + 1 < len(sequence):
+            if random.random() < 0.5:  # insertion occurs in 50% of indel cases
+                if random.random() < 0.25: #insertion of G
+                    sequence = self.insertion(sequence,base, 'G')
+                elif random.random() < 0.5: #insertion of C
+                    sequence = self.insertion(sequence,base, 'C')
+                elif random.random() < 0.75: #insertion of A
+                    sequence = self.insertion(sequence,base, 'A')
+                else: #insertion of T
+                    sequence = self.insertion(sequence, base, 'T')
+                offset += 1
+            else:  # deletion occurs in the other 50% of indel cases
+                sequence = self.deletion(sequence,base)
+                offset -= 1
+        return sequence, offset
+
+    def insertion(self, sequence,base, insertionBase):
+        sequence = sequence[:base] + insertionBase + sequence[base:]  # insertion
+        return sequence
+
+    def deletion(self, sequence, base):
+        sequence = sequence[:base] + sequence[base + 1:]
+        return sequence
 
 
     # look up if bedfile coordinates match position & pattern on position in reference/ assigned genome
