@@ -16,13 +16,13 @@ class SimiSTR_Reader:
                 Here you can first filter out the header information that can contain
                 '#', 'track' or 'browser' (http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1)
                 """
-                if not self.isBedHeader(bedline):
+                if not self.__isBedHeader(bedline):
                     bedElements = bedline.split("\t")
                     # First three are mandatory, fourth is the sequence (name), we need at least 4
                     if len(bedElements) >= 4:
                         [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:4]
                         bedElements[4] = bedElements[4].strip() #this is needed as motif should be a string without "\n" or else
-                        chromosomeNr = self.getChromosomeNumber(chromosome)
+                        chromosomeNr = self.__getChromosomeNumber(chromosome)
                         # sequence in CAPs
                         sequence = sequence.upper()
                         if chromosomeNr not in bedfile_d:
@@ -31,13 +31,13 @@ class SimiSTR_Reader:
                             bedfile_d[chromosomeNr].append(bedElements)  # chr    from Pos    to Pos      lenMotif    motif
             return bedfile_d
 
-    def isBedHeader(self, line):
+    def __isBedHeader(self, line):
         # from https://en.wikipedia.org/wiki/BED_(file_format)#Header
         # and http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1
         if line.startswith("#") or line.startswith("track") or line.startswith("browser"):
             return True
 
-    def getChromosomeNumber(self, chromosome):
+    def __getChromosomeNumber(self, chromosome):
         chrNr = 0
         if type(chromosome) is not int:
             chr = re.search("(\d*)", chromosome)

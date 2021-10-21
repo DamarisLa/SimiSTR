@@ -1,13 +1,14 @@
 # simulates STR changes compared to a reference genome
 # hd stands for haploid and diploid, as in this version haploid or diploid genomes can be simulated
-
+import argparse
 import copy
 import os
 import random
 import sys
 from Bio import SeqIO
 import re
-from argparse import ArgumentParser
+from argparse
+
 
 
 from simiSTR_utils import SimiSTR_Writer
@@ -16,6 +17,20 @@ from simiSTR_utils import SimiSTR_Reader
 
 
 class SimiSTR:
+
+    def __init__(self, outputFasta, inputFasta, outputBed, inputBed, expansion_possibility, diploidity,
+                 snv_chance, less_indels, homozygousity, max_add=5, max_reduction=-1):
+        self.input_fasta = outputFasta
+        self.output_fasta = inputFasta
+        self.input_bedfile = inputBed
+        self.output_bedfile = outputBed
+        self.expansion_possibility = expansion_possibility
+        self.max_add = max_add
+        self.max_reduction = max_reduction
+        self.diploidity = diploidity
+        self.snv_chance = snv_chance
+        self.less_indels= less_indels
+        self.homozygousity = homozygousity
 
     # mutation of sequence by chance and less likely mutate by insertion or deletion
     def mutate(self, sequence, chanceOfMutation, indelsLessMutation):
@@ -186,8 +201,7 @@ class SimiSTR:
 
 
     # main function manipulate Fasta
-    def main_manipulation(self, outputFastaFile, inputFastaFile, outputBedFile, inputBedFile, chanceOfChange, nrOfChr,
-                          chanceOfMutationPerBase, indelsLessMutation, homozygousity_rate):
+    def main_manipulation(self):
         # Initialize Reader & Writer
         sReader = SimiSTR_Reader(inputBedFile)
         sWriter = SimiSTR_Writer(outputBedFile)
@@ -383,11 +397,26 @@ inputFastaFile = "..\\FilteredViewed\\Grch38\\grch38_minchrs_rnamed.fa"
 outputFasta = "..\\FilteredViewed\\Grch38\\grch38.adapt.bed"
 outputBedFile = "..\\FilteredViewed\\Grch38\\grch38.rand_adapt.fa"
 
+parser = argparse.ArgumentParser(description="Run SimiSTR to change Expansionlength of STRs.")
+
+parser.add_argument('-if','--input_fasta', type=str, metavar='', required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
+parser.add_argument('-of','--output_fasta', type=str, metavar='', required=True, help="Path+Name for newly generated Fasta File with expasion changes")
+parser.add_argument('-ibf','--input_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing regions of known STRs in given Input Fasta")
+parser.add_argument('-obf','--output_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
+parser.add_argument('-expp','--expansion_possibility', metavar='', required=True, type=float, help="How many regions should be STR expansion length manipulated")
+parser.add_argument('-dip','--diploidity', type=float, metavar='', required=True, help="Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
+parser.add_argument('-snv','--snv_chance', type=float, metavar='', required=True, help="[0.000-1.000] is the chance of a SNV.")
+parser.add_argument('-lid','--less_indels', type=int, metavar='', required=True, help="How much rarer should a insertion/deletion occur than a substitution.")
+parser.add_argument('-ho','--homozygousity', type=int, metavar='', required=True, help="How many regions should be homzygous. The rest will be heterozygous.")
+parser.add_argument('-ma','--max_add', type=int, metavar='', required=False, help="How many repeats can maximum be added [default: 5]")
+parser.add_argument('mr','--max_reduction', type=int,metavar='', required=False, help="How many repeats can maximum be removed. [default: full length]")
+args= parser.parse_args()
 
 def main():
-    #args = get_args()
-    sim = SimiSTR()
-    sim.main_manipulation(outputFasta, inputFastaFile, outputBedFile, inputBedFile, 1.00, 2, 0.01, 10, 0.5)
+    sim = SimiSTR(args.input_fasta, args.output_fasta, args.input_bedfile, args.output_bedfile,
+                  args.expansion_possibility, args.diploidity, args.snv_chance, args.less_indels,
+                  args.homozygousity, args.max_add, args.max_reduction)
+    sim.main_manipulation()
 
 if __name__ == '__main__':
     main()
