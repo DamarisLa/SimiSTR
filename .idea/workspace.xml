@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Testcase/input_bedfile.bed" afterDir="false" />
-    </list>
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -51,6 +49,7 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Uni_prog\InternshipFiles\" />
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern\Testcase" />
       <recent name="D:\Uni_prog\InternshipFiles\STRintern" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -327,14 +326,7 @@
       <workItem from="1634653706527" duration="8000" />
       <workItem from="1634814701563" duration="27742000" />
       <workItem from="1634905927882" duration="12037000" />
-      <workItem from="1634920654136" duration="940000" />
-    </task>
-    <task id="LOCAL-00030" summary="simulator.py new reader for new format. &#10;simulator_homozygous.py for testing&#10;simulator_homozygous2.py for cluster">
-      <created>1626125953367</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1626125953367</updated>
+      <workItem from="1634920654136" duration="1464000" />
     </task>
     <task id="LOCAL-00031" summary="bedfile in dictionary. Try to gain time">
       <created>1626355812395</created>
@@ -672,7 +664,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634921499906</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="solving #2 Add a Testcase">
+      <created>1634921669465</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1634921669465</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
