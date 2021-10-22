@@ -433,7 +433,7 @@ parser.add_argument('-outf', '--output_fasta', type=str, metavar='', required=Tr
 parser.add_argument('-ibf', '--input_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing regions of known STRs in given Input Fasta")
 parser.add_argument('-obf', '--output_bedfile', type=str, metavar='', required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
 parser.add_argument('-expp', '--expansion_possibility',type=float, metavar='', required=True,  help="How many regions should be STR expansion length manipulated")
-parser.add_argument('-dip', '--diploidity', type=float, metavar='', required=True, help="Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
+parser.add_argument('-dip', '--diploidity', type=int, metavar='', required=True, help="Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
 parser.add_argument('-snv', '--snv_chance', type=float, metavar='', required=True, help="[0.000-1.000] is the chance of a SNV.")
 parser.add_argument('-lid', '--less_indels', type=int, metavar='', required=True, help="How much rarer should a insertion/deletion occur than a substitution.")
 parser.add_argument('-ho', '--homozygousity', type=float, metavar='', required=True, help="How many regions should be homzygous. The rest will be heterozygous.")
