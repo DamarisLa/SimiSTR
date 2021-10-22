@@ -18,7 +18,7 @@ class SimiSTR:
 
     def __init__(self, input_fasta, output_fasta, input_bedfile, output_bedfile,
                   expansion_possibility, diploidity, snv_chance, less_indels,
-                  homozygousity, max_add=5, max_reduction=-1):
+                  homozygousity, max_add=5, max_reduction=-1, gangSTRflag=0):
         self.input_fasta = input_fasta
         self.output_fasta = output_fasta
         self.input_bedfile = input_bedfile
@@ -30,6 +30,7 @@ class SimiSTR:
         self.snv_chance = snv_chance
         self.less_indels= less_indels
         self.homozygousity = homozygousity
+        self.gangstr_flag = gangSTRflag
 
     # mutation of sequence by chance and less likely mutate by insertion or deletion
     def snv_mutation(self, sequence, chanceOfSubstitution, indelsLessMutation):
@@ -224,8 +225,7 @@ class SimiSTR:
                 expansion_factor_minus = numberOfRepeats
 
         # here the mutations gets randomly calculated.
-        manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (
-            random.randint(0, expansion_factor_minus))
+        manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (random.randint(0, expansion_factor_minus))
 
         numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
 
@@ -292,7 +292,10 @@ class SimiSTR:
                                     shortTR = bedfile_l[bedfEntrance]
                                     chrnr = shortTR[0]  # which chromosome
                                     chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
-                                    patternStart = offset + int(shortTR[1])  # - 1 #-1 for gangstr bedfiles
+                                    if self.gangstr_flag:
+                                        patternStart = offset + int(shortTR[1]) - 1 #-1 for gangstr bedfiles
+                                    else:
+                                        patternStart = offset + int(shortTR[1])
                                     patternEnd = offset + int(shortTR[2])
                                     patternLen = int(shortTR[3])
                                     pattern = shortTR[4].strip()
@@ -313,7 +316,10 @@ class SimiSTR:
                                         entrance_c = bedfile_l_copy[bedfEntrance]
                                         entrance_cn = copy.deepcopy(entrance_c)
                                         entrance_cn[0] = chrnr_w
-                                        entrance_cn[1] = patternStart  # + 1 #+1 when working with gangstr files
+                                        if self.gangstr_flag:
+                                            entrance_cn[1] = patternStart + 1 #+1 when working with gangstr files
+                                        else:
+                                            entrance_cn[1] = patternStart
                                         entrance_cn[2] = patternStart + len(partOfSeq)
                                         oldSeqLen = (patternEnd - patternStart)
                                         change3 = len(partOfSeq) - oldSeqLen
@@ -331,11 +337,6 @@ class SimiSTR:
                                         # if noFit: patternStart and patternEnd stay as they are, but will not be noted in new
                                         #           bedfile. And offset most not be changed.
 
-                                        # debugHelpPartOfSeq = sequence2[patternStart - 30:patternEnd + 30]
-                                        # debugHelpPartOfSeq1 = sequence2[patternStart:patternEnd]
-                                        # debugHelpPartOfSeq2 = sequence2[correctStart - 30:correctEnd + 30]
-                                        # debugHelpPartOfSeq3 = sequence2[correctStart:correctEnd]
-                                        # print(helppattern,"\n",debugHelpPartOfSeq,"\n",debugHelpPartOfSeq1,"\n",debugHelpPartOfSeq2,"\n",debugHelpPartOfSeq3,"\n")
 
                                         # preparation to change bedfile
                                         # entrance = bedfile_l[bedfEntrance]
@@ -393,10 +394,12 @@ class SimiSTR:
                                             entrance = bedfile_l[bedfEntrance]
                                             entrance_c = copy.deepcopy(entrance)  # only change the copy
                                             entrance_c[0] = chrnr_w
-                                            entrance_c[1] = patternStart  # + 1 when working
+                                            if self.gangstr_flag:
+                                                entrance_c[1] = patternStart + 1 # when working with one-based files
+                                            else:
+                                                entrance_c[1] = patternStart
                                             entrance_c[2] = patternEndNew
-                                            # if patternEndNew < patternStart+1:
-                                            #    entrance_c[2] = patternStart+1
+
 
                                         # changes in bedfile
                                         #if allele == 1:  # only change the first entrance of the copy (first chromosome)
@@ -439,11 +442,12 @@ parser.add_argument('-lid', '--less_indels', type=int, metavar='', required=True
 parser.add_argument('-ho', '--homozygousity', type=float, metavar='', required=True, help="How many regions should be homzygous. The rest will be heterozygous.")
 parser.add_argument('-ma', '--max_add', type=int, metavar='', required=False, help="How many repeats can maximum be added [default: 5]")
 parser.add_argument('-mr', '--max_reduction', type=int,metavar='', required=False, help="How many repeats can maximum be removed. [default: full length]")
+parser.add_argument('-g', '--gangstr_flag', type=int,metavar='', required=False, help="GangstrFile=1, else=0 [default: 0]")
 args = parser.parse_args()
 
 
 if __name__ == '__main__':
     sim = SimiSTR(args.input_fasta, args.output_fasta, args.input_bedfile, args.output_bedfile,
                   args.expansion_possibility, args.diploidity, args.snv_chance, args.less_indels,
-                  args.homozygousity, args.max_add, args.max_reduction)
+                  args.homozygousity, args.max_add, args.max_reduction, args.gangstr_flag)
     sim.main_manipulation()
