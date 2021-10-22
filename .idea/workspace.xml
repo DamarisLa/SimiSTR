@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="" />
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Testcase/input_bedfile.bed" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/input_bedfile.bed" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -326,21 +328,7 @@
       <workItem from="1634653706527" duration="8000" />
       <workItem from="1634814701563" duration="27742000" />
       <workItem from="1634905927882" duration="12037000" />
-      <workItem from="1634920654136" duration="1464000" />
-    </task>
-    <task id="LOCAL-00031" summary="bedfile in dictionary. Try to gain time">
-      <created>1626355812395</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1626355812395</updated>
-    </task>
-    <task id="LOCAL-00032" summary="v7.3 bedfile-writer an dictionary angepasst. Und bedfile_update-Zeilen überarbeitet für dictionary">
-      <created>1627159297652</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1627159297652</updated>
+      <workItem from="1634920654136" duration="1554000" />
     </task>
     <task id="LOCAL-00033" summary="bedfile to json writer">
       <created>1627921733939</created>
@@ -671,7 +659,21 @@
       <option name="project" value="LOCAL" />
       <updated>1634921669465</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="solving #2 Add a Testcase">
+      <created>1634922132365</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1634922132365</updated>
+    </task>
+    <task id="LOCAL-00081" summary="solving #2 Add a Testcase">
+      <created>1634922162266</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1634922162266</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
