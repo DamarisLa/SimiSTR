@@ -25,9 +25,10 @@ class SimiSTR_Reader:
                         motif = motif.strip().upper() #this is needed as motif should be a string without "\n" or else
                         chromosomeNr = self.__getChromosomeNumber(chromosome)
                         if chromosomeNr not in bedfile_d:
-                            bedfile_d[chromosomeNr] = [chromosome, startPosition, endPosition, motifLength, motif]
+                            bedfile_d[chromosomeNr] = []
+                            bedfile_d[chromosomeNr].append([chromosomeNr, startPosition, endPosition, motifLength, motif])
                         else:
-                            bedfile_d[chromosomeNr].append([chromosome, startPosition, endPosition, motifLength, motif])
+                            bedfile_d[chromosomeNr].append([chromosomeNr, startPosition, endPosition, motifLength, motif])
             return bedfile_d
 
     def __isBedHeader(self, line):

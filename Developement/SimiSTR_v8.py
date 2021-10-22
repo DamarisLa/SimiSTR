@@ -273,6 +273,7 @@ class SimiSTR:
                         #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
 
                         id = [int(s) for s in re.findall(r'\d+', idOfChr)]
+                        print(id)
                         if id is not []:
                             chrNr = id[0]
 
@@ -281,7 +282,7 @@ class SimiSTR:
                             record2.name = nameOfChr
                             record2.id = id[0]
 
-                            id = str(record.id)
+                            id = record2.id
                             if id in bedfile_d.keys():
                                 bedfile_l = bedfile_d[id]
                                 bedfile_l_copy = copy.deepcopy(bedfile_l)
