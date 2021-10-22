@@ -59,13 +59,16 @@ class SimiSTR_Writer:
     def printBedModifications(self, bedfile_l_copy):
         with open(self.outputBed, 'w') as outBedfile:
             count = 0
-            for chr in bedfile_l_copy:
-                for line in chr:  # not recording bad mathces in new bedfile
-                    if line[1] != 0 and line[2] != 0:  # thats the ones where pattern was not found
-                        lines = str(line[0]) + "\t" + str(line[1]) + "\t" + str(line[2]) + "\t" + str(line[3]) + "\t" \
-                                + str(line[4]) + "\t" + str(line[5] + "\n")
-                        outBedfile.write(lines)
-                    else:
-                        count += 1
-            print(count)
+            for entrance in bedfile_l_copy:
+                for line in entrance:  # not recording bad mathces in new bedfile
+                    if len(line)>= 6:
+                        [chromosome, startPosition, endPosition, motifLength, motif, extraOutput] = [str(s) for s in line[0:6]]
+                        # a regions start and end was found, prepare line for new bedfile
+                        if startPosition != 0 and endPosition != 0:
+                            printString = chromosome + "\t" + startPosition + "\t" + endPosition + "\t" \
+                                          + motifLength + "\t" + motif + "\t" + extraOutput + "\n"
+                            outBedfile.write(printString)
+                        else:
+                            count += 1
+            print("Not found regions (unchanged): ",count)
 
