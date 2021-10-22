@@ -51,16 +51,13 @@ class SimiSTR:
                 #insert or deletion following base in sequence and calculate the resulting offset
                 sequence, offsetOut = self.indeletion(sequence, base_idx, offsetIn)
                 offsetOut += offsetOut
-
         return sequence, offsetOut
-
     # needed be mutations function
     def calculateChanceForIndels(self, chanceOfSubstitution, indelsLessMutation):
         chanceForIndels = 0
         if indelsLessMutation != 0:  # to avoid division through zero
             chanceForIndels = chanceOfSubstitution / indelsLessMutation
         return chanceForIndels
-
     # certain amount of snv are substitutions
     def substitutions(self, sequence, base_idx):
         rand_num = random.random()
@@ -96,7 +93,6 @@ class SimiSTR:
             replacementBase = 'A' if rand_num < 0.5 else 'G'
         sequence = sequence[:base] + replacementBase + sequence[base + 1:]
         return sequence
-
     # certain mutations are insertions or deletions
     def indeletion(self, sequence, base_idx, offset):
         if base_idx + 1 < len(sequence):
@@ -107,7 +103,6 @@ class SimiSTR:
                 sequence = self.deletion(sequence, base_idx)
                 offset -= 1
         return sequence, offset
-
     # insert a certain base
     def insertion(self, sequence, base_idx):
         chanceForCertainBase = random.random()
@@ -122,7 +117,6 @@ class SimiSTR:
             insertionBase = 'T'
         sequence = sequence[:base_idx] + insertionBase + sequence[base_idx:]  # insertion
         return sequence
-
     # delete a certain base
     def deletion(self, sequence, base):
         sequence = sequence[:base] + sequence[base + 1:]
@@ -136,8 +130,8 @@ class SimiSTR:
         partOfSeq_1 = (seq[start:start + patternLen])
         startpoint = start  # if start is 1000
         endpoint = start + patternLen
-        startpoint_mem = startpoint
-        endpoint_mem = endpoint
+        startpoint_memory = startpoint
+        endpoint_memory = endpoint
         startPointCorrect = False
         lower = False
         number = -1  # -1
@@ -165,8 +159,8 @@ class SimiSTR:
                     if abs(number) > 30:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
                         noFit = True
                         number = -1
-                        startpoint = startpoint_mem
-                        endpoint = endpoint_mem
+                        startpoint = startpoint_memory
+                        endpoint = endpoint_memory
 
             else:  # if a pattern is found
                 startPointCorrect = True  # found startpoint
@@ -201,8 +195,8 @@ class SimiSTR:
                 endpoint = check_right
 
                 if endpoint - startpoint == patternLen:  # length only one time the pattern
-                    endpoint_mem = endpoint
-                    startpoint_mem = startpoint
+                    endpoint_memory = endpoint
+                    startpoint_memory = startpoint
                     if not times:
                         if number < 0:
                             number += 9
@@ -217,6 +211,32 @@ class SimiSTR:
 
         return startpoint, endpoint, noFit
 
+    def STRexpansion(self, numberOfRepeats, patternLen, pattern):
+        # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
+        # if you want to simulate an increase of repeats, do anything between
+        expansion_factor_minus = 0
+        if self.max_reduction == -1:
+            expansion_factor_minus = numberOfRepeats
+        else:
+            if self.max_reduction < numberOfRepeats:
+                expansion_factor_minus = self.max_reduction
+            else:
+                expansion_factor_minus = numberOfRepeats
+
+        # here the mutations gets randomly calculated.
+        manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (
+            random.randint(0, expansion_factor_minus))
+
+        numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
+
+        # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
+        # offset += (patternEndNew - patternEnd)  # remember for following
+        change = (manipulation * patternLen)
+        # offset += change
+        partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
+        # patternEndNew = patternEnd + change
+        # entrance_c[2] = patternEndNew
+        return partOfSeqNew
 
     # main function manipulate Fasta
     def main_manipulation(self):
@@ -330,41 +350,21 @@ class SimiSTR:
                                             # general information
                                             partOfSeq_4 = sequence2[patternStart:patternEnd]
                                             numberOfRepeats = int(len(partOfSeq_4) / patternLen)
-
+                                            # region-sequence if no STR Expansion will occur
                                             partOfSeqNew = pattern * numberOfRepeats
-                                            # if STRs should be changed
-                                            if random.random() <= self.expansion_possibility:
-                                                # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
-                                                # if you want to simulate an increase of repeats, do anything between
-                                                expansion_factor_minus = 0
-                                                if self.max_reduction == -1:
-                                                    expansion_factor_minus = numberOfRepeats
-                                                else:
-                                                    if self.max_reduction < numberOfRepeats:
-                                                        expansion_factor_minus = self.max_reduction
-                                                    else:
-                                                        expansion_factor_minus = numberOfRepeats
 
-                                                #here the mutations gets randomly calculated.
-                                                manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (
-                                                    random.randint(0, expansion_factor_minus))
-
-                                                numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
-
-                                                # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-                                                # offset += (patternEndNew - patternEnd)  # remember for following
-                                                change = (manipulation * patternLen)
-                                                # offset += change
-                                                partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
-                                                # patternEndNew = patternEnd + change
-                                                # entrance_c[2] = patternEndNew
+                                            # STRs EXPANSION
+                                            chanceForExpansion = random.random()
+                                            if chanceForExpansion <= self.expansion_possibility:
+                                                # region-sequence get recalculated with new length
+                                                partOfSeqNew = self.STRexpansion(numberOfRepeats,patternLen,pattern)
 
                                             # mutate new sequence
                                             partOfSeqNew, offset2 = self.snv_mutation(partOfSeqNew, self.snv_chance, self.less_indels)
 
                                             # debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
                                             # cut current sequence replace
-                                            patternEndNew += offset2
+                                            #patternEndNew += offset2
                                             # sequence2 = sequence2[:patternStart] + "" + sequence2[
                                             #                                            patternEnd:]  # cuts part inbetween
                                             # debugHelpPartOfSeq8 = sequence2[patternStart - 3:patternEnd + 3]
