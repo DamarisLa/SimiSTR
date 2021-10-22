@@ -22,13 +22,12 @@ class SimiSTR_Reader:
                     if len(bedElements) >= 5:
                         [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:5]
                         # sequence in CAPs
-                        #sequence = sequence.upper()
-                        bedElements[4] = bedElements[4].strip().upper() #this is needed as motif should be a string without "\n" or else
+                        motif = motif.strip().upper() #this is needed as motif should be a string without "\n" or else
                         chromosomeNr = self.__getChromosomeNumber(chromosome)
                         if chromosomeNr not in bedfile_d:
-                            bedfile_d[chromosomeNr] = [bedElements]
+                            bedfile_d[chromosomeNr] = [chromosome, startPosition, endPosition, motifLength, motif]
                         else:
-                            bedfile_d[chromosomeNr].append(bedElements)  # chr    from Pos    to Pos      lenMotif    motif
+                            bedfile_d[chromosomeNr].append([chromosome, startPosition, endPosition, motifLength, motif])
             return bedfile_d
 
     def __isBedHeader(self, line):
