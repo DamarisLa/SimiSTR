@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Testcase/input_bedfile.bed" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/input_bedfile.bed" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1s2SxMXPO30u3o0BP8ZQr7GiFZd" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Uni_prog\InternshipFiles\" />
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern\Testcase" />
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern\Testcase" />
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern\OldVersions" />
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern\Developement" />
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern" />
+      <recent name="D:\Uni_prog\InternshipFiles\STRintern\BedFileParser" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.test2">
+    <configuration name="SimiSTR_v8" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="STRintern" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\STRintern\Developement\SimiSTR_v8.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="simiSTR_utils" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="STRintern" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Developement" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/simiSTR_utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="simulator_homozygous2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="STRintern" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/OldVersions" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\STRintern\OldVersions\simulator_homozygous2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="simulator_homozygous2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="STRintern" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\STRintern\Developement\simulator_homozygous2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test2" type="PythonConfigurationType" factoryName="Python">
+      <module name="STRintern" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\damar\AppData\Local\Programs\Python\Python38\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Developement" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/SimiSTR_v8.py" />
+      <option name="PARAMETERS" value="-outf  D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38.rand_adapt.fa -inf  D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38_minchrs.fa  -obf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\grch38.adapt.bed -ibf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\randomSubset.hg38_ver13.sorted_noXY.chr.bed -expp 1.0 -dip 2 -snv 0.5 -lid 10 -ho 0.5" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test.sh" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="STRintern" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Developement" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\STRintern\Developement\test.sh" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test.sh" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/Developement/test.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/Developement" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.test2" />
+      <item itemvalue="Python.SimiSTR_v8" />
+      <item itemvalue="Python.simulator_homozygous2" />
+      <item itemvalue="Python.test.sh" />
+      <item itemvalue="Python.simiSTR_utils" />
+      <item itemvalue="Shell Script.test.sh" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.simiSTR_utils" />
+        <item itemvalue="Shell Script.test.sh" />
+        <item itemvalue="Python.test.sh" />
+        <item itemvalue="Python.SimiSTR_v8" />
+        <item itemvalue="Python.simulator_homozygous2" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="" />
+      <created>1620069436695</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1620069436695</updated>
+      <workItem from="1620069439485" duration="1152000" />
+      <workItem from="1620143140549" duration="2635000" />
+      <workItem from="1620149922217" duration="4599000" />
+      <workItem from="1620205305929" duration="386000" />
+      <workItem from="1620229883318" duration="7539000" />
+      <workItem from="1620303677579" duration="22000" />
+      <workItem from="1620327168624" duration="7093000" />
+      <workItem from="1620389294632" duration="9956000" />
+      <workItem from="1620478375543" duration="200000" />
+      <workItem from="1620651459279" duration="835000" />
+      <workItem from="1620757518043" duration="6542000" />
+      <workItem from="1620765699212" duration="983000" />
+      <workItem from="1620823783024" duration="6489000" />
+      <workItem from="1620836090705" duration="12682000" />
+      <workItem from="1620996803771" duration="29529000" />
+      <workItem from="1621360942299" duration="1055000" />
+      <workItem from="1621370170083" duration="2905000" />
+      <workItem from="1621429828413" duration="9718000" />
+      <workItem from="1621855746798" duration="1538000" />
+      <workItem from="1621857675956" duration="4945000" />
+      <workItem from="1622111512657" duration="1336000" />
+      <workItem from="1622117627838" duration="3181000" />
+      <workItem from="1622559566604" duration="1316000" />
+      <workItem from="1622816918925" duration="15339000" />
+      <workItem from="1623003109782" duration="5734000" />
+      <workItem from="1623085255881" duration="7396000" />
+      <workItem from="1623177921484" duration="5856000" />
+      <workItem from="1623188406086" duration="15000" />
+      <workItem from="1623261632824" duration="8015000" />
+      <workItem from="1623334698022" duration="15961000" />
+      <workItem from="1623418545581" duration="12409000" />
+      <workItem from="1623515322907" duration="21839000" />
+      <workItem from="1623675080791" duration="25163000" />
+      <workItem from="1623767824478" duration="15294000" />
+      <workItem from="1623791436806" duration="1779000" />
+      <workItem from="1623860207519" duration="753000" />
+      <workItem from="1624043227084" duration="8027000" />
+      <workItem from="1624267284346" duration="12650000" />
+      <workItem from="1624447435641" duration="18931000" />
+      <workItem from="1624702927669" duration="16987000" />
+      <workItem from="1624894599080" duration="21401000" />
+      <workItem from="1625059357151" duration="12581000" />
+      <workItem from="1625155980935" duration="689000" />
+      <workItem from="1625157185860" duration="5892000" />
+      <workItem from="1625261971764" duration="10000" />
+      <workItem from="1625261998979" duration="3000" />
+      <workItem from="1625475991437" duration="29498000" />
+      <workItem from="1625660716906" duration="30038000" />
+      <workItem from="1625747050000" duration="11168000" />
+      <workItem from="1625842815207" duration="7501000" />
+      <workItem from="1625922029069" duration="15471000" />
+      <workItem from="1626093672293" duration="7700000" />
+      <workItem from="1626344901538" duration="5042000" />
+      <workItem from="1626356505416" duration="1601000" />
+      <workItem from="1626384571343" duration="12054000" />
+      <workItem from="1626436514072" duration="2351000" />
+      <workItem from="1626531374983" duration="34492000" />
+      <workItem from="1626864883212" duration="5631000" />
+      <workItem from="1627076907242" duration="8132000" />
+      <workItem from="1627134894912" duration="8429000" />
+      <workItem from="1627159198986" duration="130000" />
+      <workItem from="1627385903922" duration="23000" />
+      <workItem from="1627907134426" duration="4002000" />
+      <workItem from="1627921684481" duration="3818000" />
+      <workItem from="1627943121105" duration="125000" />
+      <workItem from="1627994180206" duration="215000" />
+      <workItem from="1627994507873" duration="31000" />
+      <workItem from="1628083714417" duration="4593000" />
+      <workItem from="1628891534988" duration="655000" />
+      <workItem from="1628952171025" duration="760000" />
+      <workItem from="1629214012287" duration="900000" />
+      <workItem from="1629378058327" duration="6378000" />
+      <workItem from="1629640348576" duration="14698000" />
+      <workItem from="1629668151603" duration="48000" />
+      <workItem from="1629711957600" duration="611000" />
+      <workItem from="1633330913207" duration="104000" />
+      <workItem from="1633335054529" duration="1722000" />
+      <workItem from="1633955750730" duration="682000" />
+      <workItem from="1633983496063" duration="1788000" />
+      <workItem from="1634019577296" duration="1715000" />
+      <workItem from="1634033955347" duration="118000" />
+      <workItem from="1634059904341" duration="1057000" />
+      <workItem from="1634067672300" duration="4991000" />
+      <workItem from="1634109498077" duration="1701000" />
+      <workItem from="1634117771440" duration="1602000" />
+      <workItem from="1634129084122" duration="118000" />
+      <workItem from="1634304305683" duration="16337000" />
+      <workItem from="1634336392245" duration="535000" />
+      <workItem from="1634632798940" duration="264000" />
+      <workItem from="1634653706527" duration="8000" />
+      <workItem from="1634814701563" duration="27742000" />
+      <workItem from="1634905927882" duration="12037000" />
+      <workItem from="1634920654136" duration="1554000" />
+    </task>
+    <task id="LOCAL-00033" summary="bedfile to json writer">
+      <created>1627921733939</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1627921733939</updated>
+    </task>
+    <task id="LOCAL-00034" summary="bedfile to json writer&#10;added intentations">
+      <created>1627943160210</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1627943160210</updated>
+    </task>
+    <task id="LOCAL-00035" summary="bedfile to json writer&#10;added indentations">
+      <created>1627943219161</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1627943219161</updated>
+    </task>
+    <task id="LOCAL-00036" summary="transistion of gangstr-bedfile to pacmon-bedfile. this parser adds another column with the copy of the sequence from the reference">
+      <created>1628088026104</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1628088026104</updated>
+    </task>
+    <task id="LOCAL-00037" summary="transistion of gangstr-bedfile to pacmon-bedfile. this parser adds another column with the copy of the sequence from the reference">
+      <created>1629214903082</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1629214903082</updated>
+    </task>
+    <task id="LOCAL-00038" summary="splits diploid fasta with underscore named records into two haploid datasets">
+      <created>1629383224542</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1629383224542</updated>
+    </task>
+    <task id="LOCAL-00039" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2">
+      <created>1629383371547</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1629383371547</updated>
+    </task>
+    <task id="LOCAL-00040" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run it by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
+      <created>1629383788115</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1629383788115</updated>
+    </task>
+    <task id="LOCAL-00041" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
+      <created>1629383869671</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1629383869671</updated>
+    </task>
+    <task id="LOCAL-00042" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
+      <created>1629383952896</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1629383952896</updated>
+    </task>
+    <task id="LOCAL-00043" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
+      <created>1629640439657</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1629640439657</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Change of structure. &#10;BedFileParser are helpful for STR Tool, and debugging, but not nessesary for simulations">
+      <created>1629641225650</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1629641225650</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Excluded unnessasary code">
+      <created>1629641286171</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1629641286171</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Excluded unnessasary code">
+      <created>1629641400310</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1629641400310</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Name Update">
+      <created>1629641905121</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1629641905121</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Name Update">
+      <created>1629648496273</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1629648496273</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Usage Update">
+      <created>1629649489672</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1629649489672</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Old versions added">
+      <created>1629650290357</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1629650290357</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Old versions corrections">
+      <created>1629660491876</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1629660491876</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Old versions corrections">
+      <created>1629662013043</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1629662013043</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Old versions corrections">
+      <created>1634072651504</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1634072651504</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Old versions corrections">
+      <created>1634306083600</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1634306083600</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Old versions corrections">
+      <created>1634306108673</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1634306108673</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Redevelopment">
+      <created>1634307328786</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1634307328786</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Redevelopment">
+      <created>1634318167196</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1634318167196</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Redevelopment">
+      <created>1634318957024</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1634318957024</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Redevelopment">
+      <created>1634319806999</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1634319806999</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Redevelopment">
+      <created>1634320892958</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1634320892958</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Redevelopment">
+      <created>1634322979722</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1634322979722</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Redevelopment">
+      <created>1634323225151</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1634323225151</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Redevelopment">
+      <created>1634330798910</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1634330798910</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Re- Development">
+      <created>1634334207800</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1634334207800</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Re- Development">
+      <created>1634336407002</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1634336407004</updated>
+    </task>
+    <task id="LOCAL-00066" summary="re-development: adding argparse draft">
+      <created>1634832874905</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1634832874905</updated>
+    </task>
+    <task id="LOCAL-00067" summary="re-development: adding argparse draft">
+      <created>1634833132232</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1634833132232</updated>
+    </task>
+    <task id="LOCAL-00068" summary="re-development: changing some variables">
+      <created>1634835817567</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1634835817567</updated>
+    </task>
+    <task id="LOCAL-00069" summary="re-development: modifying mutation function into small self-speaking functions">
+      <created>1634838228072</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1634838228072</updated>
+    </task>
+    <task id="LOCAL-00070" summary="re-development: modifying mutation function into small self-speaking functions">
+      <created>1634838345476</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1634838345476</updated>
+    </task>
+    <task id="LOCAL-00071" summary="re-development: modifying mutation function into small self-speaking functions">
+      <created>1634838493479</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1634838493479</updated>
+    </task>
+    <task id="LOCAL-00072" summary="re-development: debugging">
+      <created>1634855270459</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1634855270459</updated>
+    </task>
+    <task id="LOCAL-00073" summary="re-development: debugging">
+      <created>1634855318630</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1634855318630</updated>
+    </task>
+    <task id="LOCAL-00074" summary="solving #11 utils:getBedFile">
+      <created>1634906188895</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1634906188895</updated>
+    </task>
+    <task id="LOCAL-00075" summary="solving #14 substitution function">
+      <created>1634914876853</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1634914876853</updated>
+    </task>
+    <task id="LOCAL-00076" summary="solving #17 STE Expansion in Function">
+      <created>1634918637821</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1634918637821</updated>
+    </task>
+    <task id="LOCAL-00077" summary="solving #2 Add a Testcase">
+      <created>1634919739982</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1634919739982</updated>
+    </task>
+    <task id="LOCAL-00078" summary="solving #2 Add a Testcase">
+      <created>1634921499906</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1634921499906</updated>
+    </task>
+    <task id="LOCAL-00079" summary="solving #2 Add a Testcase">
+      <created>1634921669465</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1634921669465</updated>
+    </task>
+    <task id="LOCAL-00080" summary="solving #2 Add a Testcase">
+      <created>1634922132365</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1634922132365</updated>
+    </task>
+    <task id="LOCAL-00081" summary="solving #2 Add a Testcase">
+      <created>1634922162266</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1634922162266</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/work-branch" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/inProgress" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="v7.3 bedfile-writer an dictionary angepasst. Und bedfile_update-Zeilen überarbeitet für dictionary" />
+    <MESSAGE value="bedfile to json writer" />
+    <MESSAGE value="bedfile to json writer&#10;added intentations" />
+    <MESSAGE value="bedfile to json writer&#10;added indentations" />
+    <MESSAGE value="transistion of gangstr-bedfile to pacmon-bedfile. this parser adds another column with the copy of the sequence from the reference" />
+    <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets" />
+    <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2" />
+    <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run it by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)" />
+    <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)" />
+    <MESSAGE value="Change of structure. &#10;BedFileParser are helpful for STR Tool, and debugging, but not nessesary for simulations" />
+    <MESSAGE value="Excluded unnessasary code" />
+    <MESSAGE value="Name Update" />
+    <MESSAGE value="Usage Update" />
+    <MESSAGE value="Old versions added" />
+    <MESSAGE value="Old versions corrections" />
+    <MESSAGE value="Redevelopment" />
+    <MESSAGE value="Re- Development" />
+    <MESSAGE value="re-development: adding argparse draft" />
+    <MESSAGE value="re-development: changing some variables" />
+    <MESSAGE value="re-development: modifying mutation function into small self-speaking functions" />
+    <MESSAGE value="re-development: debugging" />
+    <MESSAGE value="solving #11 utils:getBedFile" />
+    <MESSAGE value="solving #14 substitution function" />
+    <MESSAGE value="solving #17 STE Expansion in Function" />
+    <MESSAGE value="solving #2 Add a Testcase" />
+    <option name="LAST_COMMIT_MESSAGE" value="solving #2 Add a Testcase" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/BedFileParser/bedFileRefReader.py</url>
+          <line>21</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/BedFileParser/bedFileRefReaderNewF.py</url>
+          <line>44</line>
+          <option name="timeStamp" value="124" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/BedFileParser/bedFileRefReaderNewF.py</url>
+          <line>36</line>
+          <option name="timeStamp" value="125" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/BedFileParser/bedFileRefReader.py</url>
+          <line>43</line>
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/BedFileParser/catalog_json_writer.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/BedFileParser/bedFileRefToPacmonBed.py</url>
+          <line>37</line>
+          <option name="timeStamp" value="174" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>264</line>
+          <option name="timeStamp" value="177" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>393</line>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>147</line>
+          <option name="timeStamp" value="184" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>46</line>
+          <option name="timeStamp" value="185" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="186" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/simiSTR_utils.py</url>
+          <line>25</line>
+          <option name="timeStamp" value="196" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/STRintern$STRsimulator_v7.coverage" NAME="STRsimulator_v7 Coverage Results" MODIFIED="1634118449316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$Test.coverage" NAME="test.sh Coverage Results" MODIFIED="1634848143599" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$test.coverage" NAME="test2 Coverage Results" MODIFIED="1634854882580" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$simulator_hd.coverage" NAME="simulator_hd Coverage Results" MODIFIED="1625578238292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$catalog_json_writer.coverage" NAME="catalog_json_writer Coverage Results" MODIFIED="1628952195407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous2__1_.coverage" NAME="simulator_homozygous2 (1) Coverage Results" MODIFIED="1634060179567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1634918978075" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$bedFileRefReader.coverage" NAME="bedFileRefReader Coverage Results" MODIFIED="1628087150526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1629654032430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/OldVersions" />
+    <SUITE FILE_PATH="coverage/STRintern$bedFileRefReaderNewF.coverage" NAME="bedFileRefReaderNewF Coverage Results" MODIFIED="1626114812899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous2.coverage" NAME="simulator_homozygous2 Coverage Results" MODIFIED="1634059969515" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/OldVersions" />
+    <SUITE FILE_PATH="coverage/STRintern$bedFileRefReaderForensic.coverage" NAME="bedFileRefReaderForensic Coverage Results" MODIFIED="1624284323075" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$splitFasta.coverage" NAME="splitFasta Coverage Results" MODIFIED="1629383231465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$simiSTR_utils.coverage" NAME="simiSTR_utils Coverage Results" MODIFIED="1634854099439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous.coverage" NAME="simulator_homozygous Coverage Results" MODIFIED="1626791123298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$bedFileRefToPacmonBed.coverage" NAME="bedFileRefToPacmonBed Coverage Results" MODIFIED="1629214688041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/STRintern$shortenRef.coverage" NAME="shortenRef Coverage Results" MODIFIED="1620334475586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
