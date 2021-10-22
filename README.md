@@ -46,9 +46,7 @@ There is a folder attached with other versions, that might contain readers deali
     
 #### Important: [GangSTR Bedfile](https://github.com/gymreklab/GangSTR#tr-regions---regions) 
 The main function need a calculation startposition-1 when reading and start position +1 when working with GangSTR bedfiles. 
-- line nr 248 #-1 , when NOT working WITH gangstr-bedfiles. 
-- line nr 248 -1 and 360 + 1  , when working WITH gangstr-bedfiles.
-- line nr 269 and 360 # +1, when NOT working WITH gangstr-bedfiles. 
+Please set the GangSTR flag as 1 in case a gangstr-file is used, else it is assumed that the startpositions in the bedfile are 0-based.
 !It is important to be aware of the meaning of the start-position in the bedfile one uses, and adapt the code if nessesary!
 
 ### Future Improvements
