@@ -35,7 +35,7 @@ The simulator works on assembled genomes, as well as on only one or more assembl
 #### Important: Input Bedfile, needs to be sorted in region-start and region-end ( f.e. bedtools sort -i myfile.bed > myfile.sorted.bed )
 - Current Version expects fasta and bedfiles with Chromosome-names without "chr". 
 There is a folder attached with other versions, that might contain readers dealing with "chr" naming. [OldVersions](https://github.com/DamarisLa/STRsimulator/tree/main/OldVersions) 
-- Bedfile should not have a header
+- Bedfile should not have a header and  be tab-delimited
 - Further Input fasta should have the columns:
 - ChromosomeNr; RegionStart; RegionEnd; MotifLength; Motif
 - f.e. :
