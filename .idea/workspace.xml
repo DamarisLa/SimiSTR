@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Developement/simiSTR_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/simiSTR_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -257,13 +256,13 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.test2" />
       <item itemvalue="Python.test3" />
       <item itemvalue="Python.test4" />
-      <item itemvalue="Python.test2" />
       <item itemvalue="Python.SimiSTR_v8" />
+      <item itemvalue="Python.simiSTR_utils" />
       <item itemvalue="Python.simulator_homozygous2" />
       <item itemvalue="Python.test.sh" />
-      <item itemvalue="Python.simiSTR_utils" />
       <item itemvalue="Shell Script.test.sh" />
     </list>
     <recent_temporary>
@@ -376,21 +375,9 @@
       <workItem from="1634653706527" duration="8000" />
       <workItem from="1634814701563" duration="27742000" />
       <workItem from="1634905927882" duration="12037000" />
-      <workItem from="1634920654136" duration="9903000" />
-    </task>
-    <task id="LOCAL-00039" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2">
-      <created>1629383371547</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1629383371547</updated>
-    </task>
-    <task id="LOCAL-00040" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run it by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
-      <created>1629383788115</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1629383788115</updated>
+      <workItem from="1634920654136" duration="10045000" />
+      <workItem from="1634939645098" duration="967000" />
+      <workItem from="1635428788525" duration="12675000" />
     </task>
     <task id="LOCAL-00041" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
       <created>1629383869671</created>
@@ -721,7 +708,21 @@
       <option name="project" value="LOCAL" />
       <updated>1634929222842</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="tests">
+      <created>1634932807176</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1634932807176</updated>
+    </task>
+    <task id="LOCAL-00089" summary="tests">
+      <created>1634932844146</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1634932844146</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -767,7 +768,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="bedfile to json writer&#10;added indentations" />
     <MESSAGE value="transistion of gangstr-bedfile to pacmon-bedfile. this parser adds another column with the copy of the sequence from the reference" />
     <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets" />
     <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2" />
@@ -792,7 +792,8 @@
     <MESSAGE value="correction in read_function" />
     <MESSAGE value="run tests&#10;correction in read_function" />
     <MESSAGE value="#20 Gangstr- file flag" />
-    <option name="LAST_COMMIT_MESSAGE" value="#20 Gangstr- file flag" />
+    <MESSAGE value="tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -829,12 +830,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
-          <line>395</line>
+          <line>378</line>
           <option name="timeStamp" value="178" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
-          <line>453</line>
+          <line>436</line>
           <option name="timeStamp" value="199" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -844,8 +845,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
-          <line>292</line>
+          <line>289</line>
           <option name="timeStamp" value="211" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>219</line>
+          <option name="timeStamp" value="212" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/simiSTR_utils.py</url>
+          <line>30</line>
+          <option name="timeStamp" value="213" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -864,7 +875,7 @@
     <SUITE FILE_PATH="coverage/STRintern$simulator_hd.coverage" NAME="simulator_hd Coverage Results" MODIFIED="1625578238292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$catalog_json_writer.coverage" NAME="catalog_json_writer Coverage Results" MODIFIED="1628952195407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous2__1_.coverage" NAME="simulator_homozygous2 (1) Coverage Results" MODIFIED="1634060179567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/STRintern$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1634924277491" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1635430730021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefReader.coverage" NAME="bedFileRefReader Coverage Results" MODIFIED="1628087150526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1629654032430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/OldVersions" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefReaderNewF.coverage" NAME="bedFileRefReaderNewF Coverage Results" MODIFIED="1626114812899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -874,7 +885,7 @@
     <SUITE FILE_PATH="coverage/STRintern$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1634929856911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$simiSTR_utils.coverage" NAME="simiSTR_utils Coverage Results" MODIFIED="1634854099439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous.coverage" NAME="simulator_homozygous Coverage Results" MODIFIED="1626791123298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/STRintern$test4.coverage" NAME="test4 Coverage Results" MODIFIED="1634932505361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$test4.coverage" NAME="test4 Coverage Results" MODIFIED="1635430771888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefToPacmonBed.coverage" NAME="bedFileRefToPacmonBed Coverage Results" MODIFIED="1629214688041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$shortenRef.coverage" NAME="shortenRef Coverage Results" MODIFIED="1620334475586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

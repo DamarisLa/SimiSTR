@@ -128,38 +128,39 @@ class SimiSTR:
     # of find correct position near by (+/- 20)
     def findStartPoint(self, seq, start, pattern, patternLen):
         seq_len = len(seq)
+        # initial sequence, startpoint till endpoint at end of patternlength
         partOfSeq_1 = (seq[start:start + patternLen])
         startpoint = start  # if start is 1000
         endpoint = start + patternLen
+        # in case it was not found
         startpoint_memory = startpoint
         endpoint_memory = endpoint
+        # flags that help find pattern at correct start with correct length
         startPointCorrect = False
-        lower = False
-        number = -1  # -1
+        upstream = False
+        offset = -1  # -1 # offset from initial start
         noFit = False
-        times = False
+        stopTrying = False
+
         while not startPointCorrect and not noFit:
-
-            #  => replace this start-position search by sth linear or with a smith waterman.
-
             if pattern != partOfSeq_1:  # pattern was not found on initial start point
                 # will always go one further away from current start. trying both directions parallel
-                startpoint = startpoint + number  # start is 999, 1001, 998, 1002 usw.
+                startpoint = startpoint + offset  # start is 999, 1001, 998, 1002 usw.
                 partOfSeq_1 = seq[startpoint:startpoint + patternLen]
                 if partOfSeq_1 == pattern:  # found
-                    number = -1  # reset and leave
+                    offset = -1  # reset and leave
                 else:
-                    if lower:  # true
-                        number += 1  # 3
-                        number *= (-1)  # -3
-                        lower = False  # false
-                    else:  # false
-                        number *= (-1)  # 1 .... 3
-                        number += 1  # 2 .... 4
-                        lower = True  # true
-                    if abs(number) > 30:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
+                    if upstream:
+                        offset += 1  # 3
+                        offset *= (-1)  # -3
+                        upstream = False  # switch to downstream for next round
+                    else:  #downstream
+                        offset *= (-1)  # 1 .... 3
+                        offset += 1  # 2 .... 4
+                        upstream = True  # switch to upstream for next round
+                    if abs(offset) > 30:  # no possible patternstart or STR within +/- 10 positions distance of bedfile-patternstart
                         noFit = True
-                        number = -1
+                        offset = -1 #reset
                         startpoint = startpoint_memory
                         endpoint = endpoint_memory
 
@@ -171,42 +172,43 @@ class SimiSTR:
                 # maybe later change to another comparison algorithm that takes costs into account (Blast)
 
                 # __ Leftside check __ #
-                check_left = patternStart - patternLen
-                goLeft = True
-                while check_left >= 0 and goLeft:
-                    partOfSeq_2 = seq[check_left:check_left + patternLen]
+                check_upstream = patternStart - patternLen
+                goUpstream = True
+                while check_upstream >= 0 and goUpstream:
+                    partOfSeq_2 = seq[check_upstream:check_upstream + patternLen]
                     if partOfSeq_2 == pattern:  # still matching
-                        check_left = check_left - patternLen  # maybe your can even go further left
+                        check_upstream = check_upstream - patternLen  # maybe your can even go further left
                     else:
                         goLeft = False  # stop checking further left
-                        check_left = check_left + patternLen  # because last position did not match, so go back to last
+                        check_upstream = check_upstream + patternLen  # because last position did not match, so go back to last
                         # one working
 
                 # __ Rightside check __ #
-                check_right = check_left
-                goRight = True
-                while check_right + patternLen <= seq_len and goRight:
-                    partOfSeq_3 = seq[check_right:check_right + patternLen]
+                check_downstream = check_upstream
+                goDownstream = True
+                while check_downstream + patternLen <= seq_len and goDownstream:
+                    partOfSeq_3 = seq[check_downstream:check_downstream + patternLen]
                     if partOfSeq_3 == pattern:  # still matching
-                        check_right = check_right + patternLen  # maybe your can even go further left
+                        check_downstream = check_downstream + patternLen  # maybe your can even go further left
                     else:
                         goRight = False  # stop checking further right
 
-                startpoint = check_left
-                endpoint = check_right
+                startpoint = check_upstream
+                endpoint = check_downstream
 
                 if endpoint - startpoint == patternLen:  # length only one time the pattern
                     endpoint_memory = endpoint
                     startpoint_memory = startpoint
-                    if not times:
-                        if number < 0:
-                            number += 9
+                    if not stopTrying:
+                        #set the offset further off the regions searched already
+                        if offset < 0:
+                            offset += 9
                         else:
-                            number -= 9
+                            offset -= 9
                         startPointCorrect = False
-                        startpoint += number
+                        startpoint += offset
                         partOfSeq_1 = seq[startpoint:startpoint + patternLen]
-                        times = True
+                        stopTrying = True
                     else:
                         startPointCorrect = True
 
@@ -224,19 +226,14 @@ class SimiSTR:
             else:
                 expansion_factor_minus = numberOfRepeats
 
-        # here the mutations gets randomly calculated.
+        # here the expansion length gets randomly calculated.
         manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (random.randint(0, expansion_factor_minus))
 
         numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
-
-        # patternEndNew = patternStart + numberOfRepeatsNew * patternLen  # current end
-        # offset += (patternEndNew - patternEnd)  # remember for following
         change = (manipulation * patternLen)
-        # offset += change
         partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
-        # patternEndNew = patternEnd + change
-        # entrance_c[2] = patternEndNew
-        return partOfSeqNew
+
+        return partOfSeqNew, change
 
     # main function manipulate Fasta
     def main_manipulation(self):
@@ -275,12 +272,12 @@ class SimiSTR:
                         id = [int(s) for s in re.findall(r'\d+', idOfChr)]
                         print(id)
                         if id is not []:
-                            chrNr = id[0]
+                            chrNr = id[0] # id is a list the size 1 from the regex
 
                             nameOfChr = nameOfChr + "_" + str(allele)
                             idOfChr = idOfChr + "_" + str(allele)
                             record2.name = nameOfChr
-                            record2.id = id[0]
+                            record2.id = chrNr
 
                             id = record2.id
                             if id in bedfile_d.keys():
@@ -292,20 +289,23 @@ class SimiSTR:
                                                           bedfile_l_length):  # go through all coordinates in the bedfile.
                                     shortTR = bedfile_l[bedfEntrance]
                                     chrnr = shortTR[0]  # which chromosome
-                                    chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
-                                    if self.gangstr_flag:
-                                        patternStart = offset + int(shortTR[1]) - 1 #-1 for gangstr bedfiles
-                                    else:
-                                        patternStart = offset + int(shortTR[1])
+                                    chrnr_w = str(chrnr) + "_" + str(allele)  # this number will be written down in the out-bedfile
+
+                                    patternStart = offset + int(shortTR[1])
                                     patternEnd = offset + int(shortTR[2])
                                     patternLen = int(shortTR[3])
                                     pattern = shortTR[4].strip()
 
-                                    if allele > 1 and random.random() < self.homozygousity:  # should be the second allele and inside the homozygosity rate
-                                        # if below chance then copy allele 1
-                                        # homozy = True
-                                        chrnr2 = chrnr
-                                        ps = shortTR[1]
+                                    """Cause Gangstr files have a different start point"""
+                                    if self.gangstr_flag:
+                                        patternStart = offset + int(shortTR[1]) - 1 #-1 for gangstr bedfiles
+
+                                    if allele > 1 and random.random() < self.homozygousity:
+                                        # should be the second allele and inside the homozygosity rate
+                                        # if below chance then copy allele 1 == homozygous
+                                        chrnr2 = chrnr  #original chromosome
+                                        ps = shortTR[1] #patternstart
+                                        # dictionary on position chromosome+ps gives back the sequence from the first allele
                                         partOfSeq = homozygousity_d[chrnr2, ps]
 
                                         # cut current sequence replace
@@ -314,36 +314,32 @@ class SimiSTR:
                                         # insert new sequence
                                         sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[
                                                                                            patternStart:]  # fills part inbetween
-                                        entrance_c = bedfile_l_copy[bedfEntrance]
-                                        entrance_cn = copy.deepcopy(entrance_c)
-                                        entrance_cn[0] = chrnr_w
+
+                                        entrance_allele1 = bedfile_l_copy[bedfEntrance]
+                                        entrance_allele2 = copy.deepcopy(entrance_allele1)
+                                        entrance_allele2[0] = chrnr_w   # chrNr
+                                        entrance_allele2[1] = patternStart # allele2 start
+                                        """allele2 pattern start for gangstr"""
                                         if self.gangstr_flag:
-                                            entrance_cn[1] = patternStart + 1 #+1 when working with gangstr files
-                                        else:
-                                            entrance_cn[1] = patternStart
-                                        entrance_cn[2] = patternStart + len(partOfSeq)
+                                            entrance_allele2[1] = patternStart + 1 #+1 when working with gangstr files
+
+                                        entrance_allele2[2] = patternStart + len(partOfSeq) # allele 2 pattern end new
+
+                                        #calculate new offset
                                         oldSeqLen = (patternEnd - patternStart)
-                                        change3 = len(partOfSeq) - oldSeqLen
-                                        # print("Change: ",change3)
-                                        offset += change3
-                                        # print("offset: ", offset)
-                                        bedfile_l_copy[bedfEntrance] = entrance_cn
-                                    else:  #
+                                        offset_allele2 = len(partOfSeq) - oldSeqLen
+                                        offset += offset_allele2
+                                        bedfile_l_copy[bedfEntrance] = entrance_allele2
+                                    else:
+                                        # this is the first or first and only allele getting mutated
                                         chrnr2 = chrnr
-                                        ps = shortTR[1]
+                                        ps = shortTR[1]  #ps patternstart
+                                        # create entrance to safe the allele for second allele if necessary
                                         homozygousity_d[chrnr2, ps] = ""
                                         # find correct startpoit or if bedfile-entrance does not fit to sequence on that position
                                         correctStart, correctEnd, noFit = self.findStartPoint(sequence2, patternStart, pattern,
                                                                                          patternLen)  # seq,start,pattern,patternLen
-                                        # if noFit: patternStart and patternEnd stay as they are, but will not be noted in new
-                                        #           bedfile. And offset most not be changed.
 
-
-                                        # preparation to change bedfile
-                                        # entrance = bedfile_l[bedfEntrance]
-                                        # entrance_c = copy.deepcopy(entrance)  # only change the copy
-
-                                        # partOfSeq_4 = sequence2[patternStart:patternEnd]  # just for debugging
                                         if not noFit:  # it fits and has a start
                                             # assign correct ends
                                             patternStart = correctStart
@@ -359,52 +355,39 @@ class SimiSTR:
                                             chanceForExpansion = random.random()
                                             if chanceForExpansion <= self.expansion_possibility:
                                                 # region-sequence get recalculated with new length
-                                                partOfSeqNew = self.STRexpansion(numberOfRepeats,patternLen,pattern)
+                                                partOfSeqNew, change = self.STRexpansion(numberOfRepeats,patternLen,pattern)
 
                                             # mutate new sequence
                                             partOfSeqNew, offset2 = self.snv_mutation(partOfSeqNew, self.snv_chance, self.less_indels)
 
-                                            # debugHelpPartOfSeq9 = sequence2[patternStart - 3:patternEnd + 3]
-                                            # cut current sequence replace
-                                            #patternEndNew += offset2
-                                            # sequence2 = sequence2[:patternStart] + "" + sequence2[
-                                            #                                            patternEnd:]  # cuts part inbetween
-                                            # debugHelpPartOfSeq8 = sequence2[patternStart - 3:patternEnd + 3]
-                                            # insert new sequence
-                                            # sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[
-                                            #                                                      patternStart:]  # fills part inbetween
                                             sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
                                             patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
-                                            # debugHelpPartOfSeq6 = sequence2[patternStart - 3:patternEndNew + 3]
-
-                                            # just to see in debugging that string replacement works
-                                            # debugHelpPartOfSeq7 = sequence2[patternStart:patternEndNew]
                                             offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
                                             offset += offsettemp
                                         if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                             entrance = bedfile_l[bedfEntrance]
                                             print("no fit, entrance: ", entrance)
-                                            entrance_c = copy.deepcopy(entrance)
-                                            entrance_c[0] = -1
-                                            entrance_c[1] = 0  # mark it as 0 later don't put it in new bedfile
-                                            entrance_c[2] = 0
+                                            entrance_allele1 = copy.deepcopy(entrance)
+                                            entrance_allele1[0] = -1
+                                            entrance_allele1[1] = 0  # mark it as 0 later don't put it in new bedfile
+                                            entrance_allele1[2] = 0
                                         else:
                                             if allele == 1:
                                                 homozygousity_d[chrnr2, ps] = partOfSeqNew
                                             # preparation to change bedfile
                                             entrance = bedfile_l[bedfEntrance]
-                                            entrance_c = copy.deepcopy(entrance)  # only change the copy
-                                            entrance_c[0] = chrnr_w
+                                            entrance_allele1 = copy.deepcopy(entrance)  # only change the copy
+                                            entrance_allele1[0] = chrnr_w
                                             if self.gangstr_flag:
-                                                entrance_c[1] = patternStart + 1 # when working with one-based files
+                                                entrance_allele1[1] = patternStart + 1 # when working with one-based files
                                             else:
-                                                entrance_c[1] = patternStart
-                                            entrance_c[2] = patternEndNew
+                                                entrance_allele1[1] = patternStart
+                                            entrance_allele1[2] = patternEndNew
 
 
                                         # changes in bedfile
                                         #if allele == 1:  # only change the first entrance of the copy (first chromosome)
-                                        bedfile_l_copy[bedfEntrance] = entrance_c
+                                        bedfile_l_copy[bedfEntrance] = entrance_allele1
                                         #else:  # append the entrances of the second chromosome
                                         #    bedfile_l_copy.append(entrance_c)
 
