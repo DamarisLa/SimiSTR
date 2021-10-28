@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="tests">
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -377,14 +376,7 @@
       <workItem from="1634905927882" duration="12037000" />
       <workItem from="1634920654136" duration="10045000" />
       <workItem from="1634939645098" duration="967000" />
-      <workItem from="1635428788525" duration="12675000" />
-    </task>
-    <task id="LOCAL-00041" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
-      <created>1629383869671</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1629383869671</updated>
+      <workItem from="1635428788525" duration="12853000" />
     </task>
     <task id="LOCAL-00042" summary="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)">
       <created>1629383952896</created>
@@ -722,7 +714,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634932844146</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="cleaned code&#10;worked on  simiSTRv8: findStartPoint #16">
+      <created>1635450198305</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1635450198305</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -768,7 +767,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="transistion of gangstr-bedfile to pacmon-bedfile. this parser adds another column with the copy of the sequence from the reference" />
     <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets" />
     <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2" />
     <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run it by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)" />
@@ -793,7 +791,8 @@
     <MESSAGE value="run tests&#10;correction in read_function" />
     <MESSAGE value="#20 Gangstr- file flag" />
     <MESSAGE value="tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="tests" />
+    <MESSAGE value="cleaned code&#10;worked on  simiSTRv8: findStartPoint #16" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleaned code&#10;worked on  simiSTRv8: findStartPoint #16" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
