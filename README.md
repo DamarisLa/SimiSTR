@@ -21,16 +21,53 @@ The simulator works on assembled genomes, as well as on only one or more assembl
 - Python modules used: os, sys, random, copy and Bio (SeqIO)
 
 ## Usage
--      python  ./STRsimulator_v7.py \
->    - “ref.fasta” \ ________________________# **obligation** (Reference Fasta)
->    - “name_for_out.fasta” \ ____________# **obligation** (Result Fata)
->    - “in_regionfile.bed” \ _______________# **obligation** (! Important: need to be sorted !) (Bedfile)
->    - “name_for_out_regionfile.bed” \ ___# **obligation** (Result Bedfile – contains info about changes)
->    - [0.00-1.00] \ 	________________________# **obligation** (as in 0-100% chance a STR expansion gets modified)
->    - "[d|h]" \ ____________________________# h = haploid | d = diploid
->    - [0.00-1.00] \ _______________________# chance for each base in region to be mutated (as in 0-100%)
->    - [0-100 or more] \ __________________# Indels times more unlikely than substitution (float, everything possible)
->    - [0.00-1.00] \ _______________________# percentage of homozygous regions (as in 0-100%)
+```
+usage: SimiSTR_v8.py [-h] -inf INPUT_FASTA -outf OUTPUT_FASTA -ibf
+                     INPUT_BEDFILE -obf OUTPUT_BEDFILE -expp
+                     EXPANSION_POSSIBILITY -dip {1,2} -snv SNV_CHANCE -lid
+                     LESS_INDELS -ho HOMOZYGOUSITY [-ma MAX_ADD]
+                     [-mr MAX_REDUCTION] [-g {0,1}]
+
+Run SimiSTR to change Expansionlength of STRs.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -inf INPUT_FASTA, --input_fasta INPUT_FASTA
+                        Path+Name to Fasta File that is template that needs
+                        STR expansion changes
+  -outf OUTPUT_FASTA, --output_fasta OUTPUT_FASTA
+                        Path+Name for newly generated Fasta File with
+                        expansion changes
+  -ibf INPUT_BEDFILE, --input_bedfile INPUT_BEDFILE
+                        Path+Name to Bedfile containing regions of known STRs
+                        of given Input Fasta
+  -obf OUTPUT_BEDFILE, --output_bedfile OUTPUT_BEDFILE
+                        Path+Name to Bedfile containing information about
+                        applied changes in given STR regions
+  -expp EXPANSION_POSSIBILITY, --expansion_possibility EXPANSION_POSSIBILITY
+                        [0.000-1.000] How many regions should be STR expansion
+                        length manipulated
+  -dip {1,2}, --diploidity {1,2}
+                        [1-2] Diploid= 2 , Haploid= 1. Multiploid is not yet
+                        implemented
+  -snv SNV_CHANCE, --snv_chance SNV_CHANCE
+                        [0.000-1.000] is the chance of a SNV.
+  -lid LESS_INDELS, --less_indels LESS_INDELS
+                        [int] How much rarer should a insertion/deletion occur
+                        than a substitution.
+  -ho HOMOZYGOUSITY, --homozygousity HOMOZYGOUSITY
+                        [0.000-1.000] How many regions should be homzygous.
+                        The rest will be heterozygous.
+  -ma MAX_ADD, --max_add MAX_ADD
+                        [int] How many repeats per STR can maximum be added
+                        [default: 5]
+  -mr MAX_REDUCTION, --max_reduction MAX_REDUCTION
+                        [int] How many repeats per STR can maximum be removed.
+                        [default: full length]
+  -g {0,1}, --gangstr_flag {0,1}
+                        [0-1] GangstrFile=1, else=0 [default: 0]
+```                        
+                        
 
 #### Important: Input Bedfile, needs to be sorted in region-start and region-end ( f.e. bedtools sort -i myfile.bed > myfile.sorted.bed )
 - Current Version expects fasta and bedfiles with Chromosome-names without "chr". 
