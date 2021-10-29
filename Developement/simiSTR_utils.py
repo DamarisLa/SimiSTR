@@ -24,10 +24,14 @@ class SimiSTR_Reader:
                         # sequence in CAPs
                         motif = motif.strip().upper() #this is needed as motif should be a string without "\n" or else
                         chromosomeNr = self.__getChromosomeNumber(chromosome)
+                        expBaseNrchange = 0  # nr of bases changed through expansion change
+                        noOfSubstitution = 0
+                        nrOfIndels = [0,0]
                         if chromosomeNr not in bedfile_d:
-                            bedfile_d[chromosomeNr] = [chromosome, startPosition, endPosition, motifLength, motif]
+                            bedfile_d[chromosomeNr] = []
+                            bedfile_d[chromosomeNr].append([chromosomeNr, startPosition, endPosition, motifLength, motif, expBaseNrchange,noOfSubstitution, nrOfIndels])
                         else:
-                            bedfile_d[chromosomeNr].append([chromosome, startPosition, endPosition, motifLength, motif])
+                            bedfile_d[chromosomeNr].append([chromosomeNr, startPosition, endPosition, motifLength, motif, expBaseNrchange,noOfSubstitution, nrOfIndels])
             return bedfile_d
 
     def __isBedHeader(self, line):
@@ -61,12 +65,13 @@ class SimiSTR_Writer:
             count = 0
             for entrance in bedfile_l_copy:
                 for line in entrance:  # not recording bad mathces in new bedfile
-                    if len(line)>= 6:
-                        [chromosome, startPosition, endPosition, motifLength, motif, extraOutput] = [str(s) for s in line[0:6]]
+                    if len(line)>= 8:
+                        [chromosomeNr, startPosition, endPosition, motifLength, motif, expBaseNrchange,noOfSubstitution, nrOfIndels] = [str(s) for s in line[0:8]]
                         # a regions start and end was found, prepare line for new bedfile
                         if startPosition != 0 and endPosition != 0:
-                            printString = chromosome + "\t" + startPosition + "\t" + endPosition + "\t" \
-                                          + motifLength + "\t" + motif + "\t" + extraOutput + "\n"
+                            printString = chromosomeNr + "\t" + startPosition + "\t" + endPosition + "\t" \
+                                          + motifLength + "\t" + motif + "\t" + expBaseNrchange + "\t" \
+                                          + noOfSubstitution + "\t" + nrOfIndels + "\n"
                             outBedfile.write(printString)
                         else:
                             count += 1
