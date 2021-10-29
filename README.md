@@ -14,9 +14,9 @@ Further can the simulation file (.fasta) be created as
     - the percentage of regions that should be homozygous can be set [0.00-1.00].
 
 Expansion is randomly adding or removing repeats of a pattern in a STR- regions. 
-It removes by default 0 - "all available" repeats of the pattern 
-It adds by default 0 - 5 repeats of the pattern
-The parameters -mr (--max_reduction) and -ma (--max_add) allow to adapt the maximum change. However its never possible to remove more than the whole STRregion. 
+- It removes  by default [0 - "all available"]  repeats of the pattern 
+- It adds     by default [0 - 5]                repeats of the pattern
+- The parameters -mr (--max_reduction) and -ma (--max_add) allow to adapt the maximum change. However its never possible to remove more than the whole STRregion. 
 
 The simulator works on assembled genomes, as well as on only one or more assembled chromosomes, if the bed-file contains such entrances likewise (anything else could run errorfree, but will not manipulate anything, as manipulations only occur in the known regions). 
 
