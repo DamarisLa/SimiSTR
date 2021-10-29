@@ -26,7 +26,7 @@ class SimiSTR:
         self.expansion_possibility = expansion_possibility
         self.max_add = max_add
         self.max_reduction = max_reduction
-        self.diploidity = diploidity
+        self.diploidity = diploidity if diploidity is not None else 1
         self.snv_chance = snv_chance
         self.less_indels= less_indels
         self.homozygousity = homozygousity
@@ -35,8 +35,8 @@ class SimiSTR:
     # mutation of sequence by chance and less likely mutate by insertion or deletion
     def snv_mutation(self, sequence, chanceOfSubstitution, indelsLessMutation):
         #this counts how much longer or shorter the sequence gets through the indels
-        offsetIn = 0
-        offsetOut = 0
+        nrOfIndels = [0,0] # [insertions, deletions]
+        nrOfSubstitutions = 0
         #this calculations avoid dividsion through zero
         chanceForIndels = self.calculateChanceForIndels(chanceOfSubstitution,indelsLessMutation)
 
@@ -45,28 +45,32 @@ class SimiSTR:
         for base_idx in range(0,len(sequence)):
             randomSubstitution = random.random() # random number for substitituion
             randomIndel = random.random() # random number for insertions / deletions
-            if randomSubstitution < chanceOfSubstitution:
+            if randomSubstitution < chanceOfSubstitution and base_idx+1 < len(sequence):
                 #substitute a base on this position
-                sequence = self.substitutions(sequence, base_idx)
-            elif randomIndel < chanceForIndels:  # zb 1% / 10  = 0.1%
+                sequence, nrOfSubstitutions = self.substitutions(sequence, base_idx, nrOfSubstitutions)
+            if randomIndel < chanceForIndels and base_idx+1 < len(sequence):  # zb 1% / 10  = 0.1%
                 #insert or deletion following base in sequence and calculate the resulting offset
-                sequence, offsetOut = self.indeletion(sequence, base_idx, offsetIn)
-                offsetOut += offsetOut
-        return sequence, offsetOut
+                sequence, nrOfIndels = self.indeletion(sequence, base_idx, nrOfIndels)
+
+        return sequence, nrOfSubstitutions, nrOfIndels
+
+
     # needed be mutations function
     def calculateChanceForIndels(self, chanceOfSubstitution, indelsLessMutation):
         chanceForIndels = 0
         if indelsLessMutation != 0:  # to avoid division through zero
             chanceForIndels = chanceOfSubstitution / indelsLessMutation
         return chanceForIndels
+
     # certain amount of snv are substitutions
-    def substitutions(self, sequence, base_idx):
+    def substitutions(self, sequence, base_idx,  nrOfSubstitutions):
         rand_num = random.random()
         chanceForTransition = 0.85
-        sequence = self.transition(sequence, base_idx) if rand_num < chanceForTransition else self.transversion(sequence, base_idx)
-        return sequence
+        sequence, nrOfSubstitutions = self.transition(sequence, base_idx,nrOfSubstitutions) if rand_num < chanceForTransition else self.transversion(sequence, base_idx,nrOfSubstitutions)
+        return sequence, nrOfSubstitutions
+
     # certain amount of snv are transisitons
-    def transition(self, sequence, base_idx):
+    def transition(self, sequence, base_idx, nrOfSubstitutions):
         base = sequence[base_idx]
         replacementBase = ''
         if base == 'A':
@@ -77,10 +81,11 @@ class SimiSTR:
             replacementBase = 'A'
         else: #base == 'T'
             replacementBase = 'C'
-        sequence = sequence[:base] + replacementBase + sequence[base + 1:]
-        return sequence
+        sequence_new = sequence[:base_idx] + replacementBase + sequence[base_idx + 1:]
+        return sequence_new, (nrOfSubstitutions+1)
     # cretain amount of snv are transversions
-    def transversion(self, sequence, base_idx):
+
+    def transversion(self, sequence, base_idx, nrOfSubstitutions):
         rand_num = random.random()
         base = sequence[base_idx]
         replacementBase = ''
@@ -92,18 +97,21 @@ class SimiSTR:
             replacementBase = 'C' if rand_num < 0.5 else 'T'
         else: #base == 'T'
             replacementBase = 'A' if rand_num < 0.5 else 'G'
-        sequence = sequence[:base] + replacementBase + sequence[base + 1:]
-        return sequence
+        sequence = sequence[:base_idx] + replacementBase + sequence[base_idx + 1:]
+        return sequence, (nrOfSubstitutions+1)
+
     # certain mutations are insertions or deletions
-    def indeletion(self, sequence, base_idx, offset):
+    def indeletion(self, sequence, base_idx, nrOfIndel):
+        nrOfInsertions,nrOfDeletion = nrOfIndel[0],nrOfIndel[1]
         if base_idx + 1 < len(sequence):
             if random.random() < 0.5:  # insertion occurs in 50% of indel cases
                 sequence = self.insertion(sequence,base_idx)
-                offset += 1
+                nrOfInsertions += 1
             else:  # deletion occurs in the other 50% of indel cases
                 sequence = self.deletion(sequence, base_idx)
-                offset -= 1
-        return sequence, offset
+                nrOfDeletion += 1
+        return sequence, [nrOfInsertions,nrOfDeletion]
+
     # insert a certain base
     def insertion(self, sequence, base_idx):
         chanceForCertainBase = random.random()
@@ -118,9 +126,10 @@ class SimiSTR:
             insertionBase = 'T'
         sequence = sequence[:base_idx] + insertionBase + sequence[base_idx:]  # insertion
         return sequence
+
     # delete a certain base
-    def deletion(self, sequence, base):
-        sequence = sequence[:base] + sequence[base + 1:]
+    def deletion(self, sequence, base_idx):
+        sequence = sequence[:base_idx] + sequence[base_idx + 1:]
         return sequence
 
 
@@ -179,7 +188,7 @@ class SimiSTR:
                     if partOfSeq_2 == pattern:  # still matching
                         check_upstream = check_upstream - patternLen  # maybe your can even go further left
                     else:
-                        goLeft = False  # stop checking further left
+                        goUpstream = False  # stop checking further left
                         check_upstream = check_upstream + patternLen  # because last position did not match, so go back to last
                         # one working
 
@@ -189,9 +198,9 @@ class SimiSTR:
                 while check_downstream + patternLen <= seq_len and goDownstream:
                     partOfSeq_3 = seq[check_downstream:check_downstream + patternLen]
                     if partOfSeq_3 == pattern:  # still matching
-                        check_downstream = check_downstream + patternLen  # maybe your can even go further left
+                        check_downstream = check_downstream + patternLen  # maybe your can even go further right
                     else:
-                        goRight = False  # stop checking further right
+                        goDownstream = False  # stop checking further right
 
                 startpoint = check_upstream
                 endpoint = check_downstream
@@ -221,7 +230,7 @@ class SimiSTR:
         if self.max_reduction == -1:
             expansion_factor_minus = numberOfRepeats
         else:
-            if self.max_reduction < numberOfRepeats:
+            if self.max_reduction <= numberOfRepeats:
                 expansion_factor_minus = self.max_reduction
             else:
                 expansion_factor_minus = numberOfRepeats
@@ -230,10 +239,10 @@ class SimiSTR:
         manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (random.randint(0, expansion_factor_minus))
 
         numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
-        change = (manipulation * patternLen)
+        baseNrchange = (manipulation * patternLen)
         partOfSeqNew = pattern * numberOfRepeatsNew  # new middle sequence
 
-        return partOfSeqNew, change
+        return partOfSeqNew, baseNrchange
 
     # main function manipulate Fasta
     def main_manipulation(self):
@@ -258,8 +267,7 @@ class SimiSTR:
                     recordLen = len(sequence)  # old length
                     print("old length", recordLen)
                     homozygousity_d = dict()
-                    allele = 1
-                    for chr in range(0, self.diploidity):  # per chromosome a new to be created chromosome #eigther only "0"(haploid) oder "0 and 1" (diploid)
+                    for allele in range(1, (self.diploidity+1)):  # per allele create a chromosome #eigther only "1"(haploid) oder "1 and 2" (diploid)
                         record2 = copy.deepcopy(record)  # changes only on deep copies.
                         sequence2 = copy.deepcopy(sequence)  # changes only on deep copies.
                         # have an offset, that tells how much all following coordinates will be later or earlier
@@ -285,9 +293,9 @@ class SimiSTR:
                                 bedfile_l_copy = copy.deepcopy(bedfile_l)
                                 bedfile_l_length = len(bedfile_l)
 
-                                for bedfEntrance in range(0,
+                                for bedfile_idx in range(0,
                                                           bedfile_l_length):  # go through all coordinates in the bedfile.
-                                    shortTR = bedfile_l[bedfEntrance]
+                                    shortTR = bedfile_l[bedfile_idx]
                                     chrnr = shortTR[0]  # which chromosome
                                     chrnr_w = str(chrnr) + "_" + str(allele)  # this number will be written down in the out-bedfile
 
@@ -315,7 +323,7 @@ class SimiSTR:
                                         sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[
                                                                                            patternStart:]  # fills part inbetween
 
-                                        entrance_allele1 = bedfile_l_copy[bedfEntrance]
+                                        entrance_allele1 = bedfile_l_copy[bedfile_idx]
                                         entrance_allele2 = copy.deepcopy(entrance_allele1)
                                         entrance_allele2[0] = chrnr_w   # chrNr
                                         entrance_allele2[1] = patternStart # allele2 start
@@ -324,12 +332,17 @@ class SimiSTR:
                                             entrance_allele2[1] = patternStart + 1 #+1 when working with gangstr files
 
                                         entrance_allele2[2] = patternStart + len(partOfSeq) # allele 2 pattern end new
+                                        # entrance_allele2[3] == patternlength stays the same
+                                        # entrance_allele2[4] == pattern stays the same
 
                                         #calculate new offset
                                         oldSeqLen = (patternEnd - patternStart)
                                         offset_allele2 = len(partOfSeq) - oldSeqLen
                                         offset += offset_allele2
-                                        bedfile_l_copy[bedfEntrance] = entrance_allele2
+
+                                        entrance_allele2[5] = offset_allele2
+                                        #entrance_allele2[6] = snvs dont exist more than on allele 1 cause homozygous
+                                        bedfile_l_copy[bedfile_idx] = entrance_allele2
                                     else:
                                         # this is the first or first and only allele getting mutated
                                         chrnr2 = chrnr
@@ -355,27 +368,32 @@ class SimiSTR:
                                             chanceForExpansion = random.random()
                                             if chanceForExpansion <= self.expansion_possibility:
                                                 # region-sequence get recalculated with new length
-                                                partOfSeqNew, change = self.STRexpansion(numberOfRepeats,patternLen,pattern)
+                                                partOfSeqNew, expBaseNrchange = self.STRexpansion(numberOfRepeats,patternLen,pattern)
 
                                             # mutate new sequence
-                                            partOfSeqNew, offset2 = self.snv_mutation(partOfSeqNew, self.snv_chance, self.less_indels)
+                                            partOfSeqNew, noOfSubstitution, nrOfIndels = self.snv_mutation(partOfSeqNew, self.snv_chance, self.less_indels)
 
                                             sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
                                             patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
                                             offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
                                             offset += offsettemp
                                         if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
-                                            entrance = bedfile_l[bedfEntrance]
+                                            entrance = bedfile_l[bedfile_idx]
                                             print("no fit, entrance: ", entrance)
                                             entrance_allele1 = copy.deepcopy(entrance)
                                             entrance_allele1[0] = -1
                                             entrance_allele1[1] = 0  # mark it as 0 later don't put it in new bedfile
                                             entrance_allele1[2] = 0
+                                            # NOT FOUND SO NOT MANIPULATED
+                                            # entrance_allele1[3] == patternlength does not exist
+                                            # entrance_allele1[4] == pattern does not exist
+                                            # entrance_allele1[5] = offset does not exist
+                                            # entrance_allele1[6] = snvs dont exist
                                         else:
                                             if allele == 1:
                                                 homozygousity_d[chrnr2, ps] = partOfSeqNew
                                             # preparation to change bedfile
-                                            entrance = bedfile_l[bedfEntrance]
+                                            entrance = bedfile_l[bedfile_idx]
                                             entrance_allele1 = copy.deepcopy(entrance)  # only change the copy
                                             entrance_allele1[0] = chrnr_w
                                             if self.gangstr_flag:
@@ -384,10 +402,16 @@ class SimiSTR:
                                                 entrance_allele1[1] = patternStart
                                             entrance_allele1[2] = patternEndNew
 
+                                            # entrance_allele1[3] == patternLen stays the same
+                                            # entrance_allele1[4] == pattern stays the same
+                                            entrance_allele1[5] = expBaseNrchange #nr of bases changed through expansion change
+                                            entrance_allele1[6] = noOfSubstitution
+                                            entrance_allele1[7] = nrOfIndels #insertion, deletion
+
 
                                         # changes in bedfile
                                         #if allele == 1:  # only change the first entrance of the copy (first chromosome)
-                                        bedfile_l_copy[bedfEntrance] = entrance_allele1
+                                        bedfile_l_copy[bedfile_idx] = entrance_allele1
                                         #else:  # append the entrances of the second chromosome
                                         #    bedfile_l_copy.append(entrance_c)
 

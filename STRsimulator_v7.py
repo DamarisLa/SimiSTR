@@ -243,9 +243,9 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                         bedfile_l_copy = copy.deepcopy(bedfile_l)
                         bedfile_l_length = len(bedfile_l)
 
-                        for bedfEntrance in range(0,
+                        for bedfile_idx in range(0,
                                                   bedfile_l_length):  # go through all coordinates in the bedfile.
-                            shortTR = bedfile_l[bedfEntrance]
+                            shortTR = bedfile_l[bedfile_idx]
                             chrnr = shortTR[0]  # which chromosome
                             chrnr_w = chrnr + "_" + str(allele)  # this number will be written down
                             patternStart = offset + int(shortTR[1])  # - 1 #-1 for gangstr bedfiles
@@ -266,7 +266,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 # insert new sequence
                                 sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[
                                                                                    patternStart:]  # fills part inbetween
-                                entrance_c = bedfile_l_copy[bedfEntrance]
+                                entrance_c = bedfile_l_copy[bedfile_idx]
                                 entrance_cn = copy.deepcopy(entrance_c)
                                 entrance_cn[0] = chrnr_w
                                 entrance_cn[1] = patternStart  # + 1 #+1 when working with gangstr files
@@ -276,7 +276,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                 # print("Change: ",change3)
                                 offset += change3
                                 # print("offset: ", offset)
-                                bedfile_l_copy[bedfEntrance] = entrance_cn
+                                bedfile_l_copy[bedfile_idx] = entrance_cn
                             else:  #
                                 chrnr2 = chrnr
                                 ps = shortTR[1]
@@ -347,7 +347,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
                                     offset += offsettemp
                                 if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
-                                    entrance = bedfile_l[bedfEntrance]
+                                    entrance = bedfile_l[bedfile_idx]
                                     print("no fit, entrance: ", entrance)
                                     entrance_c = copy.deepcopy(entrance)
                                     entrance_c[0] = -1
@@ -357,7 +357,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
                                     if allele == 1:
                                         homozygousity_d[chrnr2, ps] = partOfSeqNew
                                     # preparation to change bedfile
-                                    entrance = bedfile_l[bedfEntrance]
+                                    entrance = bedfile_l[bedfile_idx]
                                     entrance_c = copy.deepcopy(entrance)  # only change the copy
                                     entrance_c[0] = chrnr_w
                                     entrance_c[1] = patternStart  # + 1 when working
@@ -367,7 +367,7 @@ def main_manipulation(newFastaFile, oldFastaFile, newBedFile, oldBedFile, chance
 
                                 # changes in bedfile
                                 #if allele == 1:  # only change the first entrance of the copy (first chromosome)
-                                bedfile_l_copy[bedfEntrance] = entrance_c
+                                bedfile_l_copy[bedfile_idx] = entrance_c
                                 #else:  # append the entrances of the second chromosome
                                 #    bedfile_l_copy.append(entrance_c)
 
