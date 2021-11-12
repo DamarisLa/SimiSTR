@@ -1,0 +1,5 @@
+.idea
+.rsync-ignore
+deplyCluster.sh
+resultadoRsync.txt
+Development/__pycache__/*

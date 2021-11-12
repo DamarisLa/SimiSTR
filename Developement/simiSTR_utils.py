@@ -1,6 +1,20 @@
 
-
+import sys
 import re
+
+def logger(msg, msgtype):
+    # three types:
+    #   info
+    #   warning
+    #   error
+
+    if msgtype == "error":
+        sys.stderr.write(f'[ERROR] {msg} \n')
+    elif msgtype == "warning":
+        sys.stderr.write(f'[WARNING] {msg} \n')
+    else :
+        sys.stdout.write(f'[INFO] {msg} \n')
+
 
 class SimiSTR_Reader:
     def __init__(self,inputBedFile):
@@ -12,7 +26,7 @@ class SimiSTR_Reader:
         bedfile_d = dict()
         with open(self.inputBedFile, 'r') as inBedFile:
             for bedline in inBedFile:
-                """ 
+                """
                 Here you can first filter out the header information that can contain
                 '#', 'track' or 'browser' (http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1)
                 """
@@ -23,15 +37,15 @@ class SimiSTR_Reader:
                         [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:5]
                         # sequence in CAPs
                         motif = motif.strip().upper() #this is needed as motif should be a string without "\n" or else
-                        chromosomeNr = self.__getChromosomeNumber(chromosome)
+                        #chromosomeNr = self.__getChromosomeNumber(chromosome) # no need?
                         expBaseNrchange = 0  # nr of bases changed through expansion change
                         noOfSubstitution = 0
                         nrOfIndels = [0,0]
-                        if chromosomeNr not in bedfile_d:
-                            bedfile_d[chromosomeNr] = []
-                            bedfile_d[chromosomeNr].append([chromosomeNr, startPosition, endPosition, motifLength, motif, expBaseNrchange,noOfSubstitution, nrOfIndels])
+                        if chromosome not in bedfile_d:
+                            bedfile_d[chromosome] = []
+                            bedfile_d[chromosome].append([chromosome, startPosition, endPosition, motifLength, motif, expBaseNrchange,noOfSubstitution, nrOfIndels])
                         else:
-                            bedfile_d[chromosomeNr].append([chromosomeNr, startPosition, endPosition, motifLength, motif, expBaseNrchange,noOfSubstitution, nrOfIndels])
+                            bedfile_d[chromosome].append([chromosome, startPosition, endPosition, motifLength, motif, expBaseNrchange,noOfSubstitution, nrOfIndels])
             return bedfile_d
 
     def __isBedHeader(self, line):
@@ -43,12 +57,12 @@ class SimiSTR_Reader:
     def __getChromosomeNumber(self, chromosome):
         chrNr = 0
         if type(chromosome) is not int:
-            print(chromosome)
+            logger(f'bedfile {chromosome}', "info")
             chr = [int(s) for s in re.findall(r'\d+',chromosome)]
             if chr is not []:
                 chrNr = chr[0]
             else:
-                print("Check the first column in your assigned input bed file!")
+                logger("Check the first column in your assigned input bed file!", "warning")
         else:
             chrNr= chromosome
         return chrNr
@@ -75,5 +89,4 @@ class SimiSTR_Writer:
                             outBedfile.write(printString)
                         else:
                             count += 1
-            print("Not found regions (unchanged): ",count)
-
+            logger(f'Not found regions (unchanged): {count}', "warning") # check if error
