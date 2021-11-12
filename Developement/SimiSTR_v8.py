@@ -18,7 +18,7 @@ class SimiSTR:
 
     def __init__(self, input_fasta, output_fasta, input_bedfile, output_bedfile,
                   expansion_possibility, diploidity, snv_chance, less_indels,
-                  homozygousity, max_add=5, max_reduction=-1, gangSTRflag=0):
+                  homozygousity, max_add, max_reduction, gangSTRflag):
         self.input_fasta = input_fasta
         self.output_fasta = output_fasta
         self.input_bedfile = input_bedfile
@@ -453,9 +453,9 @@ parser.add_argument('-dip', '--diploidity', type=int, choices=range(1, 3),  requ
 parser.add_argument('-snv', '--snv_chance', type=float,  required=True, help="[0.000-1.000] is the chance of a SNV.")
 parser.add_argument('-lid', '--less_indels', type=int,  required=True, help="[int] How much rarer should a insertion/deletion occur than a substitution.")
 parser.add_argument('-ho', '--homozygousity', type=float,  required=True, help="[0.000-1.000] How many regions should be homzygous. The rest will be heterozygous.")
-parser.add_argument('-ma', '--max_add', type=int,  required=False, help="[int] How many repeats per STR can maximum be added [default: 5]")
-parser.add_argument('-mr', '--max_reduction', type=int, required=False, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
-parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
+parser.add_argument('-ma', '--max_add', type=int,  required=False,default=5, help="[int] How many repeats per STR can maximum be added [default: 5]")
+parser.add_argument('-mr', '--max_reduction', type=int, required=False,default=-1, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
+parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),default=0,  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
 args = parser.parse_args()
 
 
