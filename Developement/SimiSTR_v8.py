@@ -270,6 +270,7 @@ class SimiSTR:
                 for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
                     sequence = (record.seq).upper()
                     recordLen = len(sequence)  # old length
+                    print(record.id)
                     print("old length", recordLen)
                     homozygousity_d = dict()
                     for allele in range(1, (self.diploidity+1)):  # per allele create a chromosome #eigther only "1"(haploid) oder "1 and 2" (diploid)
@@ -281,10 +282,18 @@ class SimiSTR:
                         nameOfChr = record2.name
                         idOfChr = record2.id
                         #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
-
+                        # finds numbers in the id
                         id = [int(s) for s in re.findall(r'\d+', idOfChr)]
-                        print(id)
-                        if id is not []:
+                        # for X and Y chromosome
+                        if id is None or len(id) <= 0:
+                            id = [str(s) for s in re.findall(r'\w+', idOfChr)]
+                        if id is not None and id[0] is not None:
+                            print(id)
+                            if type(id[0]) is str and not id[0].isnumeric():
+                                if "X" in id[0] or "x" in id[0]:
+                                    id = "X"
+                                elif "Y" in id[0] or "y" in id[0]:
+                                    id = "Y"
                             chrNr = id[0] # id is a list the size 1 from the regex
 
                             nameOfChr = nameOfChr + "_" + str(allele)
@@ -384,7 +393,7 @@ class SimiSTR:
                                             offset += offsettemp
                                         if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                             entrance = bedfile_l[bedfile_idx]
-                                            print("no fit, entrance: ", entrance)
+                                            print("Entrance: {0} from your bedfile couldn't be located in the given genome.".format(entrance))
                                             entrance_allele1 = copy.deepcopy(entrance)
                                             entrance_allele1[0] = -1
                                             entrance_allele1[1] = 0  # mark it as 0 later don't put it in new bedfile

@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="commented condtitions for reductions">
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Developement/simiSTR_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/simiSTR_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testcase/output_bedfile.bed" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/output_bedfile.bed" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Testcase/output_fastachr22.fa" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/output_fastachr22.fa" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +156,6 @@
       <method v="2" />
     </configuration>
     <configuration name="test2" type="PythonConfigurationType" factoryName="Python">
-      <module name="STRintern" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -164,9 +166,10 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/SimiSTR_v8.py" />
-      <option name="PARAMETERS" value="-outf  D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38.rand_adapt.fa -inf  D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38_minchrs.fa  -obf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\grch38.adapt.bed -ibf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\randomSubset.hg38_ver13.sorted_noXY.chr.bed -expp 1.0 -dip 2 -snv 0.5 -lid 10 -ho 0.5" />
+      <option name="PARAMETERS" value="-outf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38.rand_adapt.fa -inf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38_minchrs.fa -obf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\grch38.adapt.bed -ibf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\randomSubset.hg38_ver13.sorted_noXY.chr.testmod.bed -expp 1.0 -dip 2 -snv 0.5 -lid 10 -ho 0.5" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -404,14 +407,7 @@
       <workItem from="1635505801024" duration="16289000" />
       <workItem from="1636113245130" duration="279000" />
       <workItem from="1636211575414" duration="1630000" />
-      <workItem from="1636718647991" duration="7072000" />
-    </task>
-    <task id="LOCAL-00048" summary="Name Update">
-      <created>1629648496273</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1629648496273</updated>
+      <workItem from="1636718647991" duration="15743000" />
     </task>
     <task id="LOCAL-00049" summary="Usage Update">
       <created>1629649489672</created>
@@ -749,7 +745,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636722981273</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="error correction in default values">
+      <created>1636726534013</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1636726534013</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -795,7 +798,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Change of structure. &#10;BedFileParser are helpful for STR Tool, and debugging, but not nessesary for simulations" />
     <MESSAGE value="Excluded unnessasary code" />
     <MESSAGE value="Name Update" />
     <MESSAGE value="Usage Update" />
@@ -820,7 +822,8 @@
     <MESSAGE value="cleaned code&#10;test runs&#10;worked on  &#10;-simiSTRv8: findStartPoint #16&#10;-utils: printBedModifications #13 &#10;-make reader Id stable #3" />
     <MESSAGE value="cleaned code&#10;test runs" />
     <MESSAGE value="commented condtitions for reductions" />
-    <option name="LAST_COMMIT_MESSAGE" value="commented condtitions for reductions" />
+    <MESSAGE value="error correction in default values" />
+    <option name="LAST_COMMIT_MESSAGE" value="error correction in default values" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -862,12 +865,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
-          <line>444</line>
+          <line>453</line>
           <option name="timeStamp" value="230" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
-          <line>465</line>
+          <line>474</line>
           <option name="timeStamp" value="231" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -882,8 +885,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
-          <line>286</line>
-          <option name="timeStamp" value="235" />
+          <line>288</line>
+          <option name="timeStamp" value="242" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/simiSTR_utils.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="251" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>292</line>
+          <option name="timeStamp" value="252" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -902,7 +915,7 @@
     <SUITE FILE_PATH="coverage/STRintern$simulator_hd.coverage" NAME="simulator_hd Coverage Results" MODIFIED="1625578238292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$catalog_json_writer.coverage" NAME="catalog_json_writer Coverage Results" MODIFIED="1628952195407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous2__1_.coverage" NAME="simulator_homozygous2 (1) Coverage Results" MODIFIED="1634060179567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/STRintern$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1636726509639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1636740156739" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefReader.coverage" NAME="bedFileRefReader Coverage Results" MODIFIED="1628087150526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1629654032430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/OldVersions" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefReaderNewF.coverage" NAME="bedFileRefReaderNewF Coverage Results" MODIFIED="1626114812899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
