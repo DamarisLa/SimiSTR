@@ -7,10 +7,9 @@ from Bio import SeqIO
 import re
 import argparse
 
-
-
 from simiSTR_utils import SimiSTR_Writer
 from simiSTR_utils import SimiSTR_Reader
+from simiSTR_utils import logger
 
 
 
@@ -270,8 +269,10 @@ class SimiSTR:
                 for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
                     sequence = (record.seq).upper()
                     recordLen = len(sequence)  # old length
-                    print(record.id)
-                    print("old length", recordLen)
+
+                    logger(f'{record.id}', "info")
+                    logger(f'old length {recordLen}', "info")
+
                     homozygousity_d = dict()
                     for allele in range(1, (self.diploidity+1)):  # per allele create a chromosome #eigther only "1"(haploid) oder "1 and 2" (diploid)
                         record2 = copy.deepcopy(record)  # changes only on deep copies.
@@ -281,6 +282,7 @@ class SimiSTR:
                         # naming of haploid and or diploid chromosome entrances.
                         nameOfChr = record2.name
                         idOfChr = record2.id
+
                         #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
                         # finds numbers in the id
                         id = [int(s) for s in re.findall(r'\d+', idOfChr)]
@@ -295,6 +297,13 @@ class SimiSTR:
                                 elif "Y" in id[0] or "y" in id[0]:
                                     id = "Y"
                             chrNr = id[0] # id is a list the size 1 from the regex
+
+                        # both are str, no need to change,
+                        # @TODO Luis
+                        #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
+                        #if idOfChr != "":
+                        #    chrNr = idOfChr
+
 
                             nameOfChr = nameOfChr + "_" + str(allele)
                             idOfChr = idOfChr + "_" + str(allele)
@@ -378,6 +387,9 @@ class SimiSTR:
                                             # region-sequence if no STR Expansion will occur
                                             partOfSeqNew = pattern * numberOfRepeats
 
+                                            # missing default value for false
+                                            expBaseNrchange = 0
+
                                             # STRs EXPANSION
                                             chanceForExpansion = random.random()
                                             if chanceForExpansion <= self.expansion_possibility:
@@ -393,7 +405,10 @@ class SimiSTR:
                                             offset += offsettemp
                                         if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                             entrance = bedfile_l[bedfile_idx]
-                                            print("Entrance: {0} from your bedfile couldn't be located in the given genome.".format(entrance))
+
+                                            logger("Entrance: {0} from your bedfile couldn't be located in the given genome.".format(entrance), "warning")
+                                            logger(f'no fit, entrance: {entrance}', "warning")
+
                                             entrance_allele1 = copy.deepcopy(entrance)
                                             entrance_allele1[0] = -1
                                             entrance_allele1[1] = 0  # mark it as 0 later don't put it in new bedfile
@@ -435,40 +450,37 @@ class SimiSTR:
                                 record2.id = idOfChr
                                 record2.name = nameOfChr
                                 newrecordlen = len(sequence2)
-                                print("new length sequence: ", newrecordlen)
+                                logger(f'new length sequence: {newrecordlen}', "info")
                                 writer.write_header()
                                 writer.write_record(record2)
                                 bedfile_total.append(bedfile_l_copy)
                         else:
-                            print("Check the first column in your assigned input bed file!")
+                            logger(f'Check the first column in your assigned input bed file!', "error")
 
             sWriter.printBedModifications(bedfile_total)
 
 
 
 
-
-
-
-
-parser = argparse.ArgumentParser(description="Run SimiSTR to change Expansionlength of STRs.")
-
-parser.add_argument('-inf', '--input_fasta', type=str,  required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
-parser.add_argument('-outf', '--output_fasta', type=str,  required=True, help="Path+Name for newly generated Fasta File with expansion changes")
-parser.add_argument('-ibf', '--input_bedfile', type=str,  required=True, help="Path+Name to Bedfile containing regions of known STRs of given Input Fasta")
-parser.add_argument('-obf', '--output_bedfile', type=str,  required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
-parser.add_argument('-expp', '--expansion_possibility',type=float,  required=True,  help="[0.000-1.000] How many regions should be STR expansion length manipulated")
-parser.add_argument('-dip', '--diploidity', type=int, choices=range(1, 3),  required=True, help="[1-2] Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
-parser.add_argument('-snv', '--snv_chance', type=float,  required=True, help="[0.000-1.000] is the chance of a SNV.")
-parser.add_argument('-lid', '--less_indels', type=int,  required=True, help="[int] How much rarer should a insertion/deletion occur than a substitution.")
-parser.add_argument('-ho', '--homozygousity', type=float,  required=True, help="[0.000-1.000] How many regions should be homzygous. The rest will be heterozygous.")
-parser.add_argument('-ma', '--max_add', type=int,  required=False,default=5, help="[int] How many repeats per STR can maximum be added [default: 5]")
-parser.add_argument('-mr', '--max_reduction', type=int, required=False,default=-1, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
-parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),default=0,  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
-args = parser.parse_args()
+def get_args():
+    parser = argparse.ArgumentParser(description="Run SimiSTR to change Expansionlength of STRs.")
+    parser.add_argument('-inf', '--input_fasta', type=str,  required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
+    parser.add_argument('-outf', '--output_fasta', type=str,  required=True, help="Path+Name for newly generated Fasta File with expansion changes")
+    parser.add_argument('-ibf', '--input_bedfile', type=str,  required=True, help="Path+Name to Bedfile containing regions of known STRs of given Input Fasta")
+    parser.add_argument('-obf', '--output_bedfile', type=str,  required=True, help="Path+Name to Bedfile containing information about applied changes in given STR regions")
+    parser.add_argument('-expp', '--expansion_possibility',type=float,  required=True,  help="[0.000-1.000] How many regions should be STR expansion length manipulated")
+    parser.add_argument('-dip', '--diploidity', type=int, choices=range(1, 3),  required=True, help="[1-2] Diploid= 2 , Haploid= 1. Multiploid is not yet implemented" )
+    parser.add_argument('-snv', '--snv_chance', type=float,  required=True, help="[0.000-1.000] is the chance of a SNV.")
+    parser.add_argument('-lid', '--less_indels', type=int,  required=True, help="[int] How much rarer should a insertion/deletion occur than a substitution.")
+    parser.add_argument('-ho', '--homozygousity', type=float,  required=True, help="[0.000-1.000] How many regions should be homzygous. The rest will be heterozygous.")
+    parser.add_argument('-ma', '--max_add', type=int,  required=False,default=5, help="[int] How many repeats per STR can maximum be added [default: 5]")
+    parser.add_argument('-mr', '--max_reduction', type=int, required=False,default=-1, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
+    parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),default=0,  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
+    args = parser.parse_args()
 
 
 if __name__ == '__main__':
+    args = get_args()
     sim = SimiSTR(args.input_fasta, args.output_fasta, args.input_bedfile, args.output_bedfile,
                   args.expansion_possibility, args.diploidity, args.snv_chance, args.less_indels,
                   args.homozygousity, args.max_add, args.max_reduction, args.gangstr_flag)
