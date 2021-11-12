@@ -7,7 +7,6 @@
     <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Testcase/output_bedfile.bed" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/output_bedfile.bed" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Testcase/output_fastachr22.fa" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/output_fastachr22.fa" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -65,7 +64,7 @@
       <recent name="D:\Uni_prog\InternshipFiles\STRintern\BedFileParser" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_h">
+  <component name="RunManager" selected="Python.test2">
     <configuration name="SimiSTR_v8" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="STRintern" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -403,14 +402,10 @@
       <workItem from="1634920654136" duration="10045000" />
       <workItem from="1634939645098" duration="967000" />
       <workItem from="1635428788525" duration="13010000" />
-      <workItem from="1635505801024" duration="15391000" />
-    </task>
-    <task id="LOCAL-00046" summary="Excluded unnessasary code">
-      <created>1629641400310</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1629641400310</updated>
+      <workItem from="1635505801024" duration="16289000" />
+      <workItem from="1636113245130" duration="279000" />
+      <workItem from="1636211575414" duration="1630000" />
+      <workItem from="1636718647991" duration="3561000" />
     </task>
     <task id="LOCAL-00047" summary="Name Update">
       <created>1629641905121</created>
@@ -748,7 +743,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635521578621</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="cleaned code&#10;test runs">
+      <created>1635522536905</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1635522536905</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -794,7 +796,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run it by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)" />
     <MESSAGE value="splits diploid fasta with underscore named records into two haploid datasets&#10;1_1&#10;1_2&#10;2_1&#10;2_2&#10;3_1&#10;3_2&#10;4_1&#10;4_2 &#10;into:&#10;1_1&#10;2_1&#10;3_1&#10;4_1&#10;and &#10;1_2&#10;2_2&#10;3_2&#10;4_2&#10;Import: 1 Fasta&#10;Output: 2 Fastas (Hap01 and Hap02)&#10;Run by: python splitFasta.py &quot;diploid.fa&quot; (.fa instead of .fasta)" />
     <MESSAGE value="Change of structure. &#10;BedFileParser are helpful for STR Tool, and debugging, but not nessesary for simulations" />
     <MESSAGE value="Excluded unnessasary code" />
@@ -819,7 +820,8 @@
     <MESSAGE value="cleaned code&#10;worked on  simiSTRv8: findStartPoint #16" />
     <MESSAGE value="cleaned code&#10;worked on  &#10;-simiSTRv8: findStartPoint #16&#10;-utils: printBedModifications #13 &#10;-make reader Id stable #3" />
     <MESSAGE value="cleaned code&#10;test runs&#10;worked on  &#10;-simiSTRv8: findStartPoint #16&#10;-utils: printBedModifications #13 &#10;-make reader Id stable #3" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaned code&#10;test runs&#10;worked on  &#10;-simiSTRv8: findStartPoint #16&#10;-utils: printBedModifications #13 &#10;-make reader Id stable #3" />
+    <MESSAGE value="cleaned code&#10;test runs" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleaned code&#10;test runs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -861,8 +863,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
-          <line>439</line>
+          <line>444</line>
           <option name="timeStamp" value="230" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>465</line>
+          <option name="timeStamp" value="231" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <line>236</line>
+          <option name="timeStamp" value="233" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -881,7 +893,7 @@
     <SUITE FILE_PATH="coverage/STRintern$simulator_hd.coverage" NAME="simulator_hd Coverage Results" MODIFIED="1625578238292" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$catalog_json_writer.coverage" NAME="catalog_json_writer Coverage Results" MODIFIED="1628952195407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous2__1_.coverage" NAME="simulator_homozygous2 (1) Coverage Results" MODIFIED="1634060179567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/STRintern$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1635517533508" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1636722858446" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefReader.coverage" NAME="bedFileRefReader Coverage Results" MODIFIED="1628087150526" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1629654032430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/OldVersions" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefReaderNewF.coverage" NAME="bedFileRefReaderNewF Coverage Results" MODIFIED="1626114812899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -890,9 +902,9 @@
     <SUITE FILE_PATH="coverage/STRintern$splitFasta.coverage" NAME="splitFasta Coverage Results" MODIFIED="1629383231465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1634929856911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$simiSTR_utils.coverage" NAME="simiSTR_utils Coverage Results" MODIFIED="1634854099439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
-    <SUITE FILE_PATH="coverage/STRintern$test_h.coverage" NAME="test_h Coverage Results" MODIFIED="1635521764312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$test_h.coverage" NAME="test_h Coverage Results" MODIFIED="1636719091177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous.coverage" NAME="simulator_homozygous Coverage Results" MODIFIED="1626791123298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/STRintern$test4.coverage" NAME="test4 Coverage Results" MODIFIED="1635521755988" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/STRintern$test4.coverage" NAME="test4 Coverage Results" MODIFIED="1636719441124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefToPacmonBed.coverage" NAME="bedFileRefToPacmonBed Coverage Results" MODIFIED="1629214688041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$shortenRef.coverage" NAME="shortenRef Coverage Results" MODIFIED="1620334475586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

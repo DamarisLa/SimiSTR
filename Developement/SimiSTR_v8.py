@@ -227,13 +227,18 @@ class SimiSTR:
         # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
         # if you want to simulate an increase of repeats, do anything between
         expansion_factor_minus = 0
+
+        # if no parameter transmitted for max possible reduction of STR repeats.
         if self.max_reduction == -1:
+            #then the maximum possible reduction is
             expansion_factor_minus = numberOfRepeats
         else:
-            if self.max_reduction <= numberOfRepeats:
+            #if a parameter was assigned, assigned max_reduction has to be smaller then the the current repeatlength of the STR
+            if self.max_reduction < numberOfRepeats:
                 expansion_factor_minus = self.max_reduction
-            else:
+            else: #else reduce maximum the full number of repeats
                 expansion_factor_minus = numberOfRepeats
+
 
         # here the expansion length gets randomly calculated.
         manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (random.randint(0, expansion_factor_minus))
