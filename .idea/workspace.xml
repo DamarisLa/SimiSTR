@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Developement/simiSTR_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/simiSTR_utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Testcase/output_bedfile.bed" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/output_bedfile.bed" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Testcase/output_fastachr22.fa" beforeDir="false" afterPath="$PROJECT_DIR$/Testcase/output_fastachr22.fa" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +62,7 @@
       <recent name="D:\Uni_prog\InternshipFiles\STRintern\BedFileParser" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test2">
+  <component name="RunManager" selected="Python.test3">
     <configuration name="SimiSTR_v8" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="STRintern" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -407,14 +403,7 @@
       <workItem from="1635505801024" duration="16289000" />
       <workItem from="1636113245130" duration="279000" />
       <workItem from="1636211575414" duration="1630000" />
-      <workItem from="1636718647991" duration="15743000" />
-    </task>
-    <task id="LOCAL-00049" summary="Usage Update">
-      <created>1629649489672</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1629649489672</updated>
+      <workItem from="1636718647991" duration="18102000" />
     </task>
     <task id="LOCAL-00050" summary="Old versions added">
       <created>1629650290357</created>
@@ -752,7 +741,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636726534013</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="error correction.&#10;Including X and Y chromosomes into id- possibilities.">
+      <created>1636743691929</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1636743691929</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -798,7 +794,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Excluded unnessasary code" />
     <MESSAGE value="Name Update" />
     <MESSAGE value="Usage Update" />
     <MESSAGE value="Old versions added" />
@@ -823,7 +818,8 @@
     <MESSAGE value="cleaned code&#10;test runs" />
     <MESSAGE value="commented condtitions for reductions" />
     <MESSAGE value="error correction in default values" />
-    <option name="LAST_COMMIT_MESSAGE" value="error correction in default values" />
+    <MESSAGE value="error correction.&#10;Including X and Y chromosomes into id- possibilities." />
+    <option name="LAST_COMMIT_MESSAGE" value="error correction.&#10;Including X and Y chromosomes into id- possibilities." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
