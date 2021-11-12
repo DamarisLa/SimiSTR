@@ -57,10 +57,23 @@ class SimiSTR_Reader:
     def __getChromosomeNumber(self, chromosome):
         chrNr = 0
         if type(chromosome) is not int:
+
             logger(f'bedfile {chromosome}', "info")
             chr = [int(s) for s in re.findall(r'\d+',chromosome)]
-            if chr is not []:
-                chrNr = chr[0]
+
+            # for X and Y chromosome
+            if chr is None or len(chr) <= 0:
+                chr = [str(s) for s in re.findall(r'\w+', chromosome)]
+            if chr is not None and chr[0] is not None:
+                #print(chr)
+                if type(chr[0]) is str and not chr[0].isnumeric():
+                    if "X" in chr[0] or "x" in chr[0]:
+                        chrNr = "X"
+                    elif "Y" in chr[0] or "y" in chr[0]:
+                        chrNr = "Y"
+                else:
+                    chrNr = chr[0]
+                print(chrNr)
             else:
                 logger("Check the first column in your assigned input bed file!", "warning")
         else:

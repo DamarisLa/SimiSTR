@@ -17,7 +17,7 @@ class SimiSTR:
 
     def __init__(self, input_fasta, output_fasta, input_bedfile, output_bedfile,
                   expansion_possibility, diploidity, snv_chance, less_indels,
-                  homozygousity, max_add=5, max_reduction=-1, gangSTRflag=0):
+                  homozygousity, max_add, max_reduction, gangSTRflag):
         self.input_fasta = input_fasta
         self.output_fasta = output_fasta
         self.input_bedfile = input_bedfile
@@ -226,13 +226,18 @@ class SimiSTR:
         # if you want to simulate a reduction you cannot reduce more than the available number of repeats.
         # if you want to simulate an increase of repeats, do anything between
         expansion_factor_minus = 0
+
+        # if no parameter transmitted for max possible reduction of STR repeats.
         if self.max_reduction == -1:
+            #then the maximum possible reduction is
             expansion_factor_minus = numberOfRepeats
         else:
-            if self.max_reduction <= numberOfRepeats:
+            #if a parameter was assigned, assigned max_reduction has to be smaller then the the current repeatlength of the STR
+            if self.max_reduction < numberOfRepeats:
                 expansion_factor_minus = self.max_reduction
-            else:
+            else: #else reduce maximum the full number of repeats
                 expansion_factor_minus = numberOfRepeats
+
 
         # here the expansion length gets randomly calculated.
         manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (random.randint(0, expansion_factor_minus))
@@ -264,7 +269,10 @@ class SimiSTR:
                 for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
                     sequence = (record.seq).upper()
                     recordLen = len(sequence)  # old length
+
+                    logger(f'{record.id}', "info")
                     logger(f'old length {recordLen}', "info")
+
                     homozygousity_d = dict()
                     for allele in range(1, (self.diploidity+1)):  # per allele create a chromosome #eigther only "1"(haploid) oder "1 and 2" (diploid)
                         record2 = copy.deepcopy(record)  # changes only on deep copies.
@@ -274,11 +282,28 @@ class SimiSTR:
                         # naming of haploid and or diploid chromosome entrances.
                         nameOfChr = record2.name
                         idOfChr = record2.id
-                        # both are str, no need to change,
 
                         #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
-                        if idOfChr != "":
-                            chrNr = idOfChr
+                        # finds numbers in the id
+                        id = [int(s) for s in re.findall(r'\d+', idOfChr)]
+                        # for X and Y chromosome
+                        if id is None or len(id) <= 0:
+                            id = [str(s) for s in re.findall(r'\w+', idOfChr)]
+                        if id is not None and id[0] is not None:
+                            print(id)
+                            if type(id[0]) is str and not id[0].isnumeric():
+                                if "X" in id[0] or "x" in id[0]:
+                                    id = "X"
+                                elif "Y" in id[0] or "y" in id[0]:
+                                    id = "Y"
+                            chrNr = id[0] # id is a list the size 1 from the regex
+
+                        # both are str, no need to change,
+                        # @TODO Luis
+                        #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
+                        #if idOfChr != "":
+                        #    chrNr = idOfChr
+
 
                             nameOfChr = nameOfChr + "_" + str(allele)
                             idOfChr = idOfChr + "_" + str(allele)
@@ -380,7 +405,10 @@ class SimiSTR:
                                             offset += offsettemp
                                         if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                                             entrance = bedfile_l[bedfile_idx]
+
+                                            logger("Entrance: {0} from your bedfile couldn't be located in the given genome.".format(entrance), "warning")
                                             logger(f'no fit, entrance: {entrance}', "warning")
+
                                             entrance_allele1 = copy.deepcopy(entrance)
                                             entrance_allele1[0] = -1
                                             entrance_allele1[1] = 0  # mark it as 0 later don't put it in new bedfile
@@ -436,7 +464,6 @@ class SimiSTR:
 
 def get_args():
     parser = argparse.ArgumentParser(description="Run SimiSTR to change Expansionlength of STRs.")
-
     parser.add_argument('-inf', '--input_fasta', type=str,  required=True, help="Path+Name to Fasta File that is template that needs STR expansion changes")
     parser.add_argument('-outf', '--output_fasta', type=str,  required=True, help="Path+Name for newly generated Fasta File with expansion changes")
     parser.add_argument('-ibf', '--input_bedfile', type=str,  required=True, help="Path+Name to Bedfile containing regions of known STRs of given Input Fasta")
@@ -446,10 +473,10 @@ def get_args():
     parser.add_argument('-snv', '--snv_chance', type=float,  required=True, help="[0.000-1.000] is the chance of a SNV.")
     parser.add_argument('-lid', '--less_indels', type=int,  required=True, help="[int] How much rarer should a insertion/deletion occur than a substitution.")
     parser.add_argument('-ho', '--homozygousity', type=float,  required=True, help="[0.000-1.000] How many regions should be homzygous. The rest will be heterozygous.")
-    parser.add_argument('-ma', '--max_add', type=int,  required=False, help="[int] How many repeats per STR can maximum be added [default: 5]")
-    parser.add_argument('-mr', '--max_reduction', type=int, required=False, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
-    parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
-    return(parser.parse_args())
+    parser.add_argument('-ma', '--max_add', type=int,  required=False,default=5, help="[int] How many repeats per STR can maximum be added [default: 5]")
+    parser.add_argument('-mr', '--max_reduction', type=int, required=False,default=-1, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
+    parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),default=0,  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
+    args = parser.parse_args()
 
 
 if __name__ == '__main__':
