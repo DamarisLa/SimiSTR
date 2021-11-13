@@ -2,4 +2,4 @@
 .rsync-ignore
 deplyCluster.sh
 resultadoRsync.txt
-Development/__pycache__/*
+Developement/__pycache__/*
