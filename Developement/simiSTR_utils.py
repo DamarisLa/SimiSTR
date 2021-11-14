@@ -16,6 +16,18 @@ def logger(msg, msgtype):
         sys.stdout.write(f'[INFO] {msg} \n')
 
 
+class SimiSTR_bedfile:
+    def __init__(self, inputBedLine):
+        # bedfile entries: chr1	11100316	11100327	4	AAAC
+        [self.chromosome, start, end, motiflength, self.motif, self.expansion_length, self.nSNV, self.nINDEL] = inputBedLine
+        self.start = int(start)
+        self.end = int(end)
+        self.motiflength = int(motiflength)
+
+    def stringBedline(self):
+        return f'{self.chromosome}\t{self.start}\t{self.end}\t{self.motiflength}\t{self.motif}\t{self.expansion_length}\t{self.nSNV}\t{str(self.nINDEL)}\t'
+
+
 class SimiSTR_Reader:
     def __init__(self,inputBedFile):
         self.inputBedFile = inputBedFile
@@ -31,7 +43,7 @@ class SimiSTR_Reader:
                 '#', 'track' or 'browser' (http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1)
                 """
                 if not self.__isBedHeader(bedline):
-                    bedElements = bedline.split("\t")
+                    bedElements = bedline.rstrip("\n").split("\t")
                     # First three are mandatory, fourth is the sequence (name), we need at least 4
                     if len(bedElements) >= 5:
                         [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:5]
@@ -57,10 +69,23 @@ class SimiSTR_Reader:
     def __getChromosomeNumber(self, chromosome):
         chrNr = 0
         if type(chromosome) is not int:
+
             logger(f'bedfile {chromosome}', "info")
             chr = [int(s) for s in re.findall(r'\d+',chromosome)]
-            if chr is not []:
-                chrNr = chr[0]
+
+            # for X and Y chromosome
+            if chr is None or len(chr) <= 0:
+                chr = [str(s) for s in re.findall(r'\w+', chromosome)]
+            if chr is not None and chr[0] is not None:
+                #print(chr)
+                if type(chr[0]) is str and not chr[0].isnumeric():
+                    if "X" in chr[0] or "x" in chr[0]:
+                        chrNr = "X"
+                    elif "Y" in chr[0] or "y" in chr[0]:
+                        chrNr = "Y"
+                else:
+                    chrNr = chr[0]
+                print(chrNr)
             else:
                 logger("Check the first column in your assigned input bed file!", "warning")
         else:
