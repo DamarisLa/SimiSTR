@@ -9,50 +9,48 @@ import argparse
 
 from simiSTR_utils import SimiSTR_Writer
 from simiSTR_utils import SimiSTR_Reader
+from simiSTR_utils import SimiSTR_bedfile
 from simiSTR_utils import logger
 
 
 
 class SimiSTR:
 
-    def __init__(self, input_fasta, output_fasta, input_bedfile, output_bedfile,
-                  expansion_possibility, diploidity, snv_chance, less_indels,
-                  homozygousity, max_add, max_reduction, gangSTRflag):
-        self.input_fasta = input_fasta
-        self.output_fasta = output_fasta
-        self.input_bedfile = input_bedfile
-        self.output_bedfile = output_bedfile
-        self.expansion_possibility = expansion_possibility
-        self.max_add = max_add
-        self.max_reduction = max_reduction
-        self.diploidity = diploidity if diploidity is not None else 1
-        self.snv_chance = snv_chance
-        self.less_indels= less_indels
-        self.homozygousity = homozygousity
-        self.gangstr_flag = gangSTRflag
+    def __init__(self, user_args):
+        # user_args is of class argparse
+        self.input_fasta = user_args.input_fasta
+        self.output_fasta = user_args.output_fasta
+        self.input_bedfile = user_args.input_bedfile
+        self.output_bedfile = user_args.output_bedfile
+        self.expansion_possibility = user_args.expansion_possibility
+        self.max_add = user_args.max_add
+        self.max_reduction = user_args.max_reduction
+        self.snv_chance = user_args.snv_chance
+        # Luis: I changed it to a probability
+        self.indels_chance = self.calculateChanceForIndels(user_args.snv_chance, user_args.less_indels)
+        self.homozygousity = user_args.homozygousity
+        self.gangstr_flag = user_args.gangstr_flag
+        self.diploidity = user_args.diploidity if user_args.diploidity is not None else 1
 
     # mutation of sequence by chance and less likely mutate by insertion or deletion
-    def snv_mutation(self, sequence, chanceOfSubstitution, indelsLessMutation):
+    def snv_mutation(self, sequence):
+        # uses self.snv_chance and self.indels_chance
         #this counts how much longer or shorter the sequence gets through the indels
         nrOfIndels = [0,0] # [insertions, deletions]
         nrOfSubstitutions = 0
-        #this calculations avoid dividsion through zero
-        chanceForIndels = self.calculateChanceForIndels(chanceOfSubstitution,indelsLessMutation)
-
         # here every base in the given region gets called +
         # and per random decision manipulated by substitution, insertion, deletion
         for base_idx in range(0,len(sequence)):
             randomSubstitution = random.random() # random number for substitituion
             randomIndel = random.random() # random number for insertions / deletions
-            if randomSubstitution < chanceOfSubstitution and base_idx+1 < len(sequence):
+            if randomSubstitution < self.snv_chance and base_idx+1 < len(sequence):
                 #substitute a base on this position
                 sequence, nrOfSubstitutions = self.substitutions(sequence, base_idx, nrOfSubstitutions)
-            if randomIndel < chanceForIndels and base_idx+1 < len(sequence):  # zb 1% / 10  = 0.1%
+            if randomIndel < self.indels_chance and base_idx+1 < len(sequence):  # zb 1% / 10  = 0.1%
                 #insert or deletion following base in sequence and calculate the resulting offset
                 sequence, nrOfIndels = self.indeletion(sequence, base_idx, nrOfIndels)
 
         return sequence, nrOfSubstitutions, nrOfIndels
-
 
     # needed be mutations function
     def calculateChanceForIndels(self, chanceOfSubstitution, indelsLessMutation):
@@ -117,9 +115,9 @@ class SimiSTR:
         insertionBase = ''
         if chanceForCertainBase < 0.25:    # insertion of G
             insertionBase = 'G'
-        elif chanceForCertainBase < 0.5:   # insertion of C
+        elif chanceForCertainBase >= 0.25 and chanceForCertainBase < 0.5:   # insertion of C
             insertionBase = 'C'
-        elif chanceForCertainBase < 0.75:  # insertion of A
+        elif chanceForCertainBase >= 0.5 and chanceForCertainBase < 0.75:  # insertion of A
             insertionBase = 'A'
         else:                              # insertion of T
             insertionBase = 'T'
@@ -248,6 +246,7 @@ class SimiSTR:
 
         return partOfSeqNew, baseNrchange
 
+
     # main function manipulate Fasta
     def main_manipulation(self):
         # Initialize Reader & Writer
@@ -259,6 +258,7 @@ class SimiSTR:
         #snv_chance = float(self.snv_chance) # maybe not necessary anymore should be float due to argparse
 
         # safe bedfile as lists.
+        # bedfile_d = all the position in the bed file, id == chromomsome name
         bedfile_d = sReader.getBedFile()
         # copy that list or dict and always safe the changes of the offset, to memorize the new coordinates
         bedfile_total = list()
@@ -267,7 +267,7 @@ class SimiSTR:
             writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
             with open(self.input_fasta, 'r') as inFastaFile:  # read fastaFile
                 for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
-                    sequence = (record.seq).upper()
+                    sequence = (record.seq).upper()  # FIXME: this takes a lot of time, only upper the seq to be modified
                     recordLen = len(sequence)  # old length
 
                     logger(f'{record.id}', "info")
@@ -275,187 +275,141 @@ class SimiSTR:
 
                     homozygousity_d = dict()
                     for allele in range(1, (self.diploidity+1)):  # per allele create a chromosome #eigther only "1"(haploid) oder "1 and 2" (diploid)
-                        record2 = copy.deepcopy(record)  # changes only on deep copies.
-                        sequence2 = copy.deepcopy(sequence)  # changes only on deep copies.
+                        # FIXME: this uses a lot of time+ memory, recod has sequence inside of it,
+                        record2 = copy.deepcopy(record)  # changes only on deep copies. # FIXME: this takes a lot of time, only upper the seq to be modified
+                        sequence2 = copy.deepcopy(sequence)  # changes only on deep copies. # FIXME: this takes a lot of time, only upper the seq to be modified
                         # have an offset, that tells how much all following coordinates will be later or earlier
                         offset = 0  # original in the beginning
                         # naming of haploid and or diploid chromosome entrances.
-                        nameOfChr = record2.name
-                        idOfChr = record2.id
 
-                        #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
-                        # finds numbers in the id
-                        id = [int(s) for s in re.findall(r'\d+', idOfChr)]
-                        # for X and Y chromosome
-                        if id is None or len(id) <= 0:
-                            id = [str(s) for s in re.findall(r'\w+', idOfChr)]
-                        if id is not None and id[0] is not None:
-                            print(id)
-                            if type(id[0]) is str and not id[0].isnumeric():
-                                if "X" in id[0] or "x" in id[0]:
-                                    id = "X"
-                                elif "Y" in id[0] or "y" in id[0]:
-                                    id = "Y"
-                            chrNr = id[0] # id is a list the size 1 from the regex
+                        id = record2.id # use like this to avoid confusion ?
+                        record2.name = record2.name + "_" + str(allele)
+                        record2.id = record2.id + "_" + str(allele)
+                        if id in bedfile_d.keys():
+                            # bedfile_l is the list of all entrances in the bedfile for a ginve chromomsome (id)
+                            # e.g chr1 start end length motif ...
 
-                        # both are str, no need to change,
-                        # @TODO Luis
-                        #id = re.search("(\d*)",idOfChr)  # this line should enable to find the 1 in the "chr1" annotation
-                        #if idOfChr != "":
-                        #    chrNr = idOfChr
+                            # AQUI @Luis
+                            bedfile_l = bedfile_d[id]
+                            bedfile_l_copy = copy.deepcopy(bedfile_l)
+                            bedfile_idx = 0
+                            for bedfile_entry in bedfile_l:
+                                shortTR = SimiSTR_bedfile(bedfile_entry)
+                                chrnr = shortTR.chromosome
+                                chrnr_w = str(chrnr) + "_" + str(allele)
+                                """Cause Gangstr files have a different start point (index start in zero ? @Damaris)"""
+                                patternStart = offset + shortTR.start - 1  if self.gangstr_flag  else offset + shortTR.start
+                                patternEnd = offset + shortTR.end # TODO: @Damaris does it also affect the end?
+                                patternLen = shortTR.motiflength
+                                pattern = shortTR.motif
 
+                                if allele > 1 and random.random() < self.homozygousity:
+                                    # should be the second allele and inside the homozygosity rate
+                                    # if below chance then copy allele 1 == homozygous
+                                    chrnr2 = chrnr  #original chromosome
+                                    ps = patternStart #patternstart
+                                    # dictionary on position chromosome+ps gives back the sequence from the first allele
+                                    partOfSeq = homozygousity_d[chrnr2, ps]
 
-                            nameOfChr = nameOfChr + "_" + str(allele)
-                            idOfChr = idOfChr + "_" + str(allele)
-                            record2.name = nameOfChr
-                            record2.id = chrNr
+                                    # cut current sequence replace
+                                    sequence2 = sequence2[:patternStart] + "" + sequence2[patternEnd:]  # cuts part inbetween
+                                    # insert new sequence
+                                    sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[patternStart:]  # fills part inbetween
 
-                            id = record2.id
-                            if id in bedfile_d.keys():
-                                bedfile_l = bedfile_d[id]
-                                bedfile_l_copy = copy.deepcopy(bedfile_l)
-                                bedfile_l_length = len(bedfile_l)
+                                    shortTR_allele1 = SimiSTR_bedfile(bedfile_entry)
+                                    shortTR_allele2 = SimiSTR_bedfile(bedfile_entry)
+                                    shortTR_allele2.chromosome = chrnr_w
+                                    shortTR_allele2.start = patternStart # allele2 start
+                                    shortTR_allele2.end = patternStart + len(partOfSeq) # allele 2 pattern end new
 
-                                for bedfile_idx in range(0,
-                                                          bedfile_l_length):  # go through all coordinates in the bedfile.
-                                    shortTR = bedfile_l[bedfile_idx]
-                                    chrnr = shortTR[0]  # which chromosome
-                                    chrnr_w = str(chrnr) + "_" + str(allele)  # this number will be written down in the out-bedfile
+                                    #calculate new offset
+                                    oldSeqLen = (patternEnd - patternStart)
+                                    offset_allele2 = len(partOfSeq) - oldSeqLen
+                                    offset += offset_allele2
 
-                                    patternStart = offset + int(shortTR[1])
-                                    patternEnd = offset + int(shortTR[2])
-                                    patternLen = int(shortTR[3])
-                                    pattern = shortTR[4].strip()
+                                    shortTR_allele2.expansion_length = offset_allele2
+                                    #entrance_allele2[6] = snvs dont exist more than on allele 1 cause homozygous
+                                    bedfile_l_copy[bedfile_idx] = shortTR_allele2.stringBedline()
+                                else:
+                                    # this is the first or first and only allele getting mutated
+                                    chrnr2 = chrnr
+                                    ps = shortTR.start  #ps patternstart
+                                    # create entrance to safe the allele for second allele if necessary
+                                    homozygousity_d[chrnr2, ps] = ""
+                                    # find correct startpoit or if bedfile-entrance does not fit to sequence on that position
+                                    correctStart, correctEnd, noFit = self.findStartPoint(sequence2, patternStart, pattern,
+                                                                                     patternLen)  # seq,start,pattern,patternLen
 
-                                    """Cause Gangstr files have a different start point"""
-                                    if self.gangstr_flag:
-                                        patternStart = offset + int(shortTR[1]) - 1 #-1 for gangstr bedfiles
+                                    if not noFit:  # it fits and has a start
+                                        # assign correct ends
+                                        patternStart = correctStart
+                                        patternEnd = correctEnd
+                                        patternEndNew = correctEnd
+                                        # general information
+                                        partOfSeq_4 = sequence2[patternStart:patternEnd]
+                                        numberOfRepeats = int(len(partOfSeq_4) / patternLen)
+                                        # region-sequence if no STR Expansion will occur
+                                        partOfSeqNew = pattern * numberOfRepeats
 
-                                    if allele > 1 and random.random() < self.homozygousity:
-                                        # should be the second allele and inside the homozygosity rate
-                                        # if below chance then copy allele 1 == homozygous
-                                        chrnr2 = chrnr  #original chromosome
-                                        ps = shortTR[1] #patternstart
-                                        # dictionary on position chromosome+ps gives back the sequence from the first allele
-                                        partOfSeq = homozygousity_d[chrnr2, ps]
+                                        # missing default value for false
+                                        expBaseNrchange = 0
 
-                                        # cut current sequence replace
-                                        sequence2 = sequence2[:patternStart] + "" + sequence2[
-                                                                                    patternEnd:]  # cuts part inbetween
-                                        # insert new sequence
-                                        sequence2 = sequence2[:patternStart] + partOfSeq + sequence2[
-                                                                                           patternStart:]  # fills part inbetween
+                                        # STRs EXPANSION
+                                        chanceForExpansion = random.random()
+                                        if chanceForExpansion <= self.expansion_possibility:
+                                            # region-sequence get recalculated with new length
+                                            partOfSeqNew, expBaseNrchange = self.STRexpansion(numberOfRepeats,patternLen,pattern)
 
-                                        entrance_allele1 = bedfile_l_copy[bedfile_idx]
-                                        entrance_allele2 = copy.deepcopy(entrance_allele1)
-                                        entrance_allele2[0] = chrnr_w   # chrNr
-                                        entrance_allele2[1] = patternStart # allele2 start
-                                        """allele2 pattern start for gangstr"""
-                                        if self.gangstr_flag:
-                                            entrance_allele2[1] = patternStart + 1 #+1 when working with gangstr files
+                                        # mutate new sequence
+                                        partOfSeqNew, noOfSubstitution, nrOfIndels = self.snv_mutation(partOfSeqNew)
 
-                                        entrance_allele2[2] = patternStart + len(partOfSeq) # allele 2 pattern end new
-                                        # entrance_allele2[3] == patternlength stays the same
-                                        # entrance_allele2[4] == pattern stays the same
+                                        sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
+                                        patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
+                                        offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
+                                        offset += offsettemp
+                                    if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
+                                        shortTR_allele = SimiSTR_bedfile(bedfile_entry)  # entrance
+                                        shortTR_allele1 = SimiSTR_bedfile(bedfile_entry)  # entrance_allele1
 
-                                        #calculate new offset
-                                        oldSeqLen = (patternEnd - patternStart)
-                                        offset_allele2 = len(partOfSeq) - oldSeqLen
-                                        offset += offset_allele2
+                                        logger("Entrance: {0} from your bedfile couldn't be located in the given genome.".format(shortTR_allele), "warning")
+                                        logger(f'no fit, entrance: {entrance}', "warning")
 
-                                        entrance_allele2[5] = offset_allele2
-                                        #entrance_allele2[6] = snvs dont exist more than on allele 1 cause homozygous
-                                        bedfile_l_copy[bedfile_idx] = entrance_allele2
+                                        shortTR_allele1.chromosome = "NA" # -1 ???
+                                        shortTR_allele1.start = 0  # mark it as 0 later don't put it in new bedfile
+                                        shortTR_allele1.end = 0
                                     else:
-                                        # this is the first or first and only allele getting mutated
-                                        chrnr2 = chrnr
-                                        ps = shortTR[1]  #ps patternstart
-                                        # create entrance to safe the allele for second allele if necessary
-                                        homozygousity_d[chrnr2, ps] = ""
-                                        # find correct startpoit or if bedfile-entrance does not fit to sequence on that position
-                                        correctStart, correctEnd, noFit = self.findStartPoint(sequence2, patternStart, pattern,
-                                                                                         patternLen)  # seq,start,pattern,patternLen
-
-                                        if not noFit:  # it fits and has a start
-                                            # assign correct ends
-                                            patternStart = correctStart
-                                            patternEnd = correctEnd
-                                            patternEndNew = correctEnd
-                                            # general information
-                                            partOfSeq_4 = sequence2[patternStart:patternEnd]
-                                            numberOfRepeats = int(len(partOfSeq_4) / patternLen)
-                                            # region-sequence if no STR Expansion will occur
-                                            partOfSeqNew = pattern * numberOfRepeats
-
-                                            # missing default value for false
-                                            expBaseNrchange = 0
-
-                                            # STRs EXPANSION
-                                            chanceForExpansion = random.random()
-                                            if chanceForExpansion <= self.expansion_possibility:
-                                                # region-sequence get recalculated with new length
-                                                partOfSeqNew, expBaseNrchange = self.STRexpansion(numberOfRepeats,patternLen,pattern)
-
-                                            # mutate new sequence
-                                            partOfSeqNew, noOfSubstitution, nrOfIndels = self.snv_mutation(partOfSeqNew, self.snv_chance, self.less_indels)
-
-                                            sequence2 = sequence2[:patternStart] + partOfSeqNew + sequence2[patternEnd:]
-                                            patternEndNew = patternEnd + (len(partOfSeqNew) - (patternEnd - patternStart))
-                                            offsettemp = (len(partOfSeqNew) - (patternEnd - patternStart))
-                                            offset += offsettemp
-                                        if noFit:  # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
-                                            entrance = bedfile_l[bedfile_idx]
-
-                                            logger("Entrance: {0} from your bedfile couldn't be located in the given genome.".format(entrance), "warning")
-                                            logger(f'no fit, entrance: {entrance}', "warning")
-
-                                            entrance_allele1 = copy.deepcopy(entrance)
-                                            entrance_allele1[0] = -1
-                                            entrance_allele1[1] = 0  # mark it as 0 later don't put it in new bedfile
-                                            entrance_allele1[2] = 0
-                                            # NOT FOUND SO NOT MANIPULATED
-                                            # entrance_allele1[3] == patternlength does not exist
-                                            # entrance_allele1[4] == pattern does not exist
-                                            # entrance_allele1[5] = offset does not exist
-                                            # entrance_allele1[6] = snvs dont exist
+                                        if allele == 1:
+                                            homozygousity_d[chrnr2, ps] = partOfSeqNew
+                                        # preparation to change bedfile
+                                        shortTR_allele = SimiSTR_bedfile(bedfile_entry)  # entrance
+                                        shortTR_allele1 = SimiSTR_bedfile(bedfile_entry)  # entrance_allele1
+                                        shortTR_allele1.chromosome = chrnr_w
+                                        if self.gangstr_flag:
+                                            shortTR_allele1. start = patternStart + 1 # when working with one-based files
                                         else:
-                                            if allele == 1:
-                                                homozygousity_d[chrnr2, ps] = partOfSeqNew
-                                            # preparation to change bedfile
-                                            entrance = bedfile_l[bedfile_idx]
-                                            entrance_allele1 = copy.deepcopy(entrance)  # only change the copy
-                                            entrance_allele1[0] = chrnr_w
-                                            if self.gangstr_flag:
-                                                entrance_allele1[1] = patternStart + 1 # when working with one-based files
-                                            else:
-                                                entrance_allele1[1] = patternStart
-                                            entrance_allele1[2] = patternEndNew
+                                            shortTR_allele1.start = patternStart
+                                        shortTR_allele1.end = patternEndNew
+                                        shortTR_allele1.expansion_length = expBaseNrchange #nr of bases changed through expansion change
+                                        shortTR_allele1.nSNV = noOfSubstitution
+                                        shortTR_allele1.nINDEL = nrOfIndels #insertion, deletion
 
-                                            # entrance_allele1[3] == patternLen stays the same
-                                            # entrance_allele1[4] == pattern stays the same
-                                            entrance_allele1[5] = expBaseNrchange #nr of bases changed through expansion change
-                                            entrance_allele1[6] = noOfSubstitution
-                                            entrance_allele1[7] = nrOfIndels #insertion, deletion
+                                    # changes in bedfile
+                                    #if allele == 1:  # only change the first entrance of the copy (first chromosome)
+                                    bedfile_l_copy[bedfile_idx] = shortTR_allele1.stringBedline()
+                                    #else:  # append the entrances of the second chromosome
+                                    #    bedfile_l_copy.append(entrance_c)
 
-
-                                        # changes in bedfile
-                                        #if allele == 1:  # only change the first entrance of the copy (first chromosome)
-                                        bedfile_l_copy[bedfile_idx] = entrance_allele1
-                                        #else:  # append the entrances of the second chromosome
-                                        #    bedfile_l_copy.append(entrance_c)
-
-                                if allele == 1:  # will only be visited once
-                                    allele += 1
-                                record2.seq = sequence2
-                                record2.id = idOfChr
-                                record2.name = nameOfChr
-                                newrecordlen = len(sequence2)
-                                logger(f'new length sequence: {newrecordlen}', "info")
-                                writer.write_header()
-                                writer.write_record(record2)
-                                bedfile_total.append(bedfile_l_copy)
+                                    if allele == 1:  # will only be visited once
+                                        allele += 1
+                                    record2.seq = sequence2
+                                    newrecordlen = len(sequence2)
+                                    logger(f'new length sequence: {newrecordlen}', "info")
+                                    writer.write_header()
+                                    writer.write_record(record2)
+                                    bedfile_total.append(bedfile_l_copy)
+                                bedfile_idx += 1
                         else:
-                            logger(f'Check the first column in your assigned input bed file!', "error")
+                            logger(f'Check the first column in your assigned input bed file!', "warning")
 
             sWriter.printBedModifications(bedfile_total)
 
@@ -476,12 +430,10 @@ def get_args():
     parser.add_argument('-ma', '--max_add', type=int,  required=False,default=5, help="[int] How many repeats per STR can maximum be added [default: 5]")
     parser.add_argument('-mr', '--max_reduction', type=int, required=False,default=-1, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
     parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),default=0,  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
-    args = parser.parse_args()
+    return(parser.parse_args())
 
 
 if __name__ == '__main__':
     args = get_args()
-    sim = SimiSTR(args.input_fasta, args.output_fasta, args.input_bedfile, args.output_bedfile,
-                  args.expansion_possibility, args.diploidity, args.snv_chance, args.less_indels,
-                  args.homozygousity, args.max_add, args.max_reduction, args.gangstr_flag)
+    sim = SimiSTR(args)
     sim.main_manipulation()
