@@ -16,9 +16,10 @@ def logger(msg, msgtype):
         sys.stdout.write(f'[INFO] {msg} \n')
 
 
-class SimiSTR_bedfile:
+class SimiSTR_bedline:
     def __init__(self, inputBedLine):
-        # bedfile entries: chr1	11100316	11100327	4	AAAC
+        # bedfile line entries: chr1	11100316	11100327	4	AAAC
+        # input is already a list
         [self.chromosome, start, end, motiflength, self.motif, self.expansion_length, self.nSNV, self.nINDEL] = inputBedLine
         self.start = int(start)
         self.end = int(end)
@@ -26,6 +27,9 @@ class SimiSTR_bedfile:
 
     def stringBedline(self):
         return f'{self.chromosome}\t{self.start}\t{self.end}\t{self.motiflength}\t{self.motif}\t{self.expansion_length}\t{self.nSNV}\t{str(self.nINDEL)}\t'
+
+    def listBedline(self):
+        return [self.chromosome, self.start, self.end, self.motiflength, self.motif, self.expansion_length, self.nSNV, str(self.nINDEL)]
 
 
 class SimiSTR_Reader:
