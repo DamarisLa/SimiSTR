@@ -16,6 +16,22 @@ def logger(msg, msgtype):
         sys.stdout.write(f'[INFO] {msg} \n')
 
 
+class SimiSTR_bedline:
+    def __init__(self, inputBedLine):
+        # bedfile line entries: chr1	11100316	11100327	4	AAAC
+        # input is already a list
+        [self.chromosome, start, end, motiflength, self.motif, self.expansion_length, self.nSNV, self.nINDEL] = inputBedLine
+        self.start = int(start)
+        self.end = int(end)
+        self.motiflength = int(motiflength)
+
+    def stringBedline(self):
+        return f'{self.chromosome}\t{self.start}\t{self.end}\t{self.motiflength}\t{self.motif}\t{self.expansion_length}\t{self.nSNV}\t{str(self.nINDEL)}\t'
+
+    def listBedline(self):
+        return [self.chromosome, self.start, self.end, self.motiflength, self.motif, self.expansion_length, self.nSNV, str(self.nINDEL)]
+
+
 class SimiSTR_Reader:
     def __init__(self,inputBedFile):
         self.inputBedFile = inputBedFile
@@ -31,7 +47,7 @@ class SimiSTR_Reader:
                 '#', 'track' or 'browser' (http://genome.cse.ucsc.edu/FAQ/FAQformat.html#format1)
                 """
                 if not self.__isBedHeader(bedline):
-                    bedElements = bedline.split("\t")
+                    bedElements = bedline.rstrip("\n").split("\t")
                     # First three are mandatory, fourth is the sequence (name), we need at least 4
                     if len(bedElements) >= 5:
                         [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:5]
