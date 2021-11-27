@@ -72,7 +72,7 @@ class SimiSTR:
 
     # certain amount of snv are transisitons
     def transition(self, sequence, base_idx, nrOfSubstitutions):
-        base = sequence[base_idx]
+        base = sequence[base_idx].upper() #here upper for comparison
         replacementBase = ''
         if base == 'A':
             replacementBase = 'G'
@@ -88,7 +88,7 @@ class SimiSTR:
 
     def transversion(self, sequence, base_idx, nrOfSubstitutions):
         rand_num = random.random()
-        base = sequence[base_idx]
+        base = sequence[base_idx].upper() # here upper for comparison
         replacementBase = ''
         if base == 'A':
             replacementBase = 'T' if rand_num < 0.5 else 'C'
@@ -271,7 +271,7 @@ class SimiSTR:
         writer = SeqIO.FastaIO.FastaWriter(outFastaFile)
 
         for record in SeqIO.parse(inFastaFile, "fasta"):  # every Record. 1 .... 2 .... 3..... .... 22 .... x...
-        # @Damaris the original is in 'record' so 'sequence' can modified wirh no need of new
+        # @Damaris the original is in 'record' so 'sequence' can modified with no need of new @luis ??
             recordLen = len(record.seq)  # old length
 
             logger(f'{record.id}', "info")
@@ -281,7 +281,7 @@ class SimiSTR:
             allele = 1 # defaul is haploid
             while allele <= self.ploidy:
                 # FIXME: time consuming ??
-                sequence = (record.seq).upper()
+                sequence = record.seq ##.upper() @Luis fixed alright?
                 record2 = copy.deepcopy(record)
 
                 # have an offset, that tells how much all following coordinates will be later or earlier
@@ -328,9 +328,15 @@ class SimiSTR:
                             homozygousity_d[chrnr2, ps] = ""
                             # find correct startpoit or if bedfile-entrance does not fit to sequence on that position
                             # seq,start,pattern,patternLen
-                            # @Damaris why patternStart and not ps
-                            # FIXMI: passing the whole sequence is an overkill ??
-                            correctStart, correctEnd, noFit = self.findStartPoint(sequence, patternStart, pattern, patternLen)
+                            # @Damaris why patternStart and not ps => ==fixed?!
+                            # FIXMI: passing the whole sequence is an overkill ??  @Luis this should have fixed it. Is it readable? ==fixed ?!
+                            start_toCheck = allowed_offset = 20
+                            region_toCheck = sequence[patternStart-allowed_offset:patternEnd+allowed_offset].upper() #and now just the "toCheck region
+                            correctStart, correctEnd, noFit = self.findStartPoint(region_toCheck, start_toCheck, pattern.upper(), patternLen)  #@luis pattern.upper() for comparison function
+                            start_offset = correctStart-start_toCheck
+                            correctLength = correctEnd-correctStart
+                            correctStart = patternStart+start_offset
+                            correctEnd = patternStart+correctLength
 
                             # no fit didnot match in 10 positions or is no STR anymore therefore is not a good coordinate for a STR
                             if noFit:

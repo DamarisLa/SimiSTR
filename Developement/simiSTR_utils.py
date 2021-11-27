@@ -52,7 +52,7 @@ class SimiSTR_Reader:
                     if len(bedElements) >= 5:
                         [chromosome, startPosition, endPosition, motifLength, motif] = bedElements[:5]
                         # sequence in CAPs
-                        motif = motif.strip().upper() #this is needed as motif should be a string without "\n" or else
+                        motif = motif.strip() #this is needed as motif should be a string without "\n" or else #@Luis, I removed .upper() as I think it needs only be changed for the comparison function
                         #chromosomeNr = self.__getChromosomeNumber(chromosome) # no need?
                         expBaseNrchange = 0  # nr of bases changed through expansion change
                         noOfSubstitution = 0
