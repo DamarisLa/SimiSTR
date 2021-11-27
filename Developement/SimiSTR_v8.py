@@ -433,7 +433,7 @@ class SimiSTR:
 
                 record2.seq = sequence
                 writer.write_header()
-                writer.write_record(record2)
+                writer.write_record(record2) 
                 bedfile_total.append(bedfile_l_output)
                 allele += 1 # next allele for diplod/polyploids
 

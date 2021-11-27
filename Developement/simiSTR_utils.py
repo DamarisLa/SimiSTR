@@ -89,7 +89,7 @@ class SimiSTR_Reader:
                         chrNr = "Y"
                 else:
                     chrNr = chr[0]
-                print(chrNr)
+                #print(chrNr)
             else:
                 logger("Check the first column in your assigned input bed file!", "warning")
         else:
