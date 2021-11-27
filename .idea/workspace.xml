@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b3cbce-f4e8-4956-ac8e-23608dbb2447" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Developement/simiSTR_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/simiSTR_utils.py" afterDir="false" />
-    </list>
+    <list default="true" id="84b3cbce-f4e8-4956-ac8e-23608dbb2447" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -278,13 +274,13 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.SimiSTR_v8" />
+      <item itemvalue="Python.simiSTR_utils" />
+      <item itemvalue="Python.simulator_homozygous2" />
       <item itemvalue="Python.test2" />
       <item itemvalue="Python.test3" />
       <item itemvalue="Python.test4" />
       <item itemvalue="Python.test_h" />
-      <item itemvalue="Python.SimiSTR_v8" />
-      <item itemvalue="Python.simiSTR_utils" />
-      <item itemvalue="Python.simulator_homozygous2" />
       <item itemvalue="Python.test.sh" />
       <item itemvalue="Shell Script.test.sh" />
     </list>
@@ -406,14 +402,7 @@
       <workItem from="1636211575414" duration="1630000" />
       <workItem from="1636718647991" duration="18102000" />
       <workItem from="1638026602595" duration="1548000" />
-      <workItem from="1638029129438" duration="11089000" />
-    </task>
-    <task id="LOCAL-00051" summary="Old versions corrections">
-      <created>1629660491876</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1629660491876</updated>
+      <workItem from="1638029129438" duration="11547000" />
     </task>
     <task id="LOCAL-00052" summary="Old versions corrections">
       <created>1629662013043</created>
@@ -751,7 +740,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638036798212</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="Testruns.">
+      <created>1638051135562</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1638051135562</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -797,7 +793,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Usage Update" />
     <MESSAGE value="Old versions added" />
     <MESSAGE value="Old versions corrections" />
     <MESSAGE value="Redevelopment" />
@@ -822,7 +817,8 @@
     <MESSAGE value="error correction in default values" />
     <MESSAGE value="error correction.&#10;Including X and Y chromosomes into id- possibilities." />
     <MESSAGE value="Testruns" />
-    <option name="LAST_COMMIT_MESSAGE" value="Testruns" />
+    <MESSAGE value="Testruns." />
+    <option name="LAST_COMMIT_MESSAGE" value="Testruns." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
