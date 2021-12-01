@@ -1,5 +1,6 @@
-.idea
+.idea/*
 .rsync-ignore
 deplyCluster.sh
 resultadoRsync.txt
 Developement/__pycache__/*
+Testcase/output*
