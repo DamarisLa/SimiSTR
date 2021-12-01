@@ -281,7 +281,7 @@ class SimiSTR:
             allele = 1 # defaul is haploid
             while allele <= self.ploidy:
                 # FIXME: time consuming ??
-                sequence = record.seq ##.upper() @Luis fixed alright?
+                sequence = record.seq ##.upper() @Luis fixed! -> see mutation substitution functions and findStartPos function call
                 record2 = copy.deepcopy(record)
 
                 # have an offset, that tells how much all following coordinates will be later or earlier
