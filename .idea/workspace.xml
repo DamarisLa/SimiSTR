@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="error correction.&#10;Including X and Y chromosomes into id- possibilities.">
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" beforeDir="false" afterPath="$PROJECT_DIR$/Developement/SimiSTR_v8.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +98,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/simiSTR_utils.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\SimiSTR\simiSTR_utils.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -165,7 +164,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/SimiSTR_v8.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\SimiSTR\SimiSTR_v8.py" />
       <option name="PARAMETERS" value="-outf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38.rand_adapt.fa -inf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\grch38_minchrs.fa -obf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\grch38.adapt.bed -ibf D:\Uni_prog\InternshipFiles\FilteredViewed\Grch38\GangstrBedfiles\randomSubset.hg38_ver13.sorted_noXY.chr.testmod.bed -expp 1.0 -dip 2 -snv 0.5 -lid 10 -ho 0.5" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -187,7 +186,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/SimiSTR_v8.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\SimiSTR\SimiSTR_v8.py" />
       <option name="PARAMETERS" value="-outf  D:\Uni_prog\InternshipFiles\STRintern\Testcase\output_fasta1.fa -inf  D:\Uni_prog\InternshipFiles\STRintern\Testcase\hg38-22.fa  -obf  D:\Uni_prog\InternshipFiles\STRintern\Testcase\output_bedfile.bed -ibf D:\Uni_prog\InternshipFiles\STRintern\Testcase\input_bedfile.bed -expp 1.0 -dip 2 -snv 0.5 -lid 10 -ho 0.5" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -209,7 +208,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/SimiSTR_v8.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\SimiSTR\SimiSTR_v8.py" />
       <option name="PARAMETERS" value="-outf D:\Uni_prog\InternshipFiles\STRintern\Testcase\output_fastachr22.fa -inf D:\Uni_prog\InternshipFiles\STRintern\Testcase\hg38-chr22.fa -obf D:\Uni_prog\InternshipFiles\STRintern\Testcase\output_bedfile.bed -ibf D:\Uni_prog\InternshipFiles\STRintern\Testcase\input_bedfile.bed -expp 1.0 -dip 2 -snv 0.5 -lid 10 -ho 0.5 -ma 4 -mr 3 -g 0" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -231,7 +230,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Developement/SimiSTR_v8.py" />
+      <option name="SCRIPT_NAME" value="D:\Uni_prog\InternshipFiles\SimiSTR\SimiSTR_v8.py" />
       <option name="PARAMETERS" value="-h" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -405,13 +404,7 @@
       <workItem from="1636113245130" duration="279000" />
       <workItem from="1636211575414" duration="1630000" />
       <workItem from="1636718647991" duration="18102000" />
-    </task>
-    <task id="LOCAL-00050" summary="Old versions added">
-      <created>1629650290357</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1629650290357</updated>
+      <workItem from="1638460514713" duration="398000" />
     </task>
     <task id="LOCAL-00051" summary="Old versions corrections">
       <created>1629660491876</created>
@@ -749,7 +742,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636743691929</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="error correction.">
+      <created>1638378880717</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1638378880717</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -795,7 +795,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Name Update" />
     <MESSAGE value="Usage Update" />
     <MESSAGE value="Old versions added" />
     <MESSAGE value="Old versions corrections" />
@@ -820,7 +819,8 @@
     <MESSAGE value="commented condtitions for reductions" />
     <MESSAGE value="error correction in default values" />
     <MESSAGE value="error correction.&#10;Including X and Y chromosomes into id- possibilities." />
-    <option name="LAST_COMMIT_MESSAGE" value="error correction.&#10;Including X and Y chromosomes into id- possibilities." />
+    <MESSAGE value="error correction." />
+    <option name="LAST_COMMIT_MESSAGE" value="error correction." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
