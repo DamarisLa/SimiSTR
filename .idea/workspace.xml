@@ -55,11 +55,11 @@
       <recent name="D:\Uni_prog\InternshipFiles\STRintern" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Uni_prog\InternshipFiles\SimiSTR" />
+      <recent name="D:\Uni_prog\InternshipFiles\SimiSTR\OldVersions" />
       <recent name="D:\Uni_prog\InternshipFiles\STRintern\Testcase" />
       <recent name="D:\Uni_prog\InternshipFiles\STRintern\OldVersions" />
       <recent name="D:\Uni_prog\InternshipFiles\STRintern\Developement" />
-      <recent name="D:\Uni_prog\InternshipFiles\STRintern" />
-      <recent name="D:\Uni_prog\InternshipFiles\STRintern\BedFileParser" />
     </key>
   </component>
   <component name="RunManager" selected="Python.test_h">
@@ -404,14 +404,7 @@
       <workItem from="1636113245130" duration="279000" />
       <workItem from="1636211575414" duration="1630000" />
       <workItem from="1636718647991" duration="18102000" />
-      <workItem from="1638460514713" duration="398000" />
-    </task>
-    <task id="LOCAL-00051" summary="Old versions corrections">
-      <created>1629660491876</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1629660491876</updated>
+      <workItem from="1638460514713" duration="3136000" />
     </task>
     <task id="LOCAL-00052" summary="Old versions corrections">
       <created>1629662013043</created>
@@ -749,7 +742,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638378880717</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="moved STRsimulator_v7 into OldVersions">
+      <created>1638460988496</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1638460988496</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -795,7 +795,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Usage Update" />
     <MESSAGE value="Old versions added" />
     <MESSAGE value="Old versions corrections" />
     <MESSAGE value="Redevelopment" />
@@ -820,7 +819,8 @@
     <MESSAGE value="error correction in default values" />
     <MESSAGE value="error correction.&#10;Including X and Y chromosomes into id- possibilities." />
     <MESSAGE value="error correction." />
-    <option name="LAST_COMMIT_MESSAGE" value="error correction." />
+    <MESSAGE value="moved STRsimulator_v7 into OldVersions" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved STRsimulator_v7 into OldVersions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -861,32 +861,32 @@
           <option name="timeStamp" value="200" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
           <line>459</line>
           <option name="timeStamp" value="230" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
           <line>236</line>
           <option name="timeStamp" value="233" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
           <line>21</line>
           <option name="timeStamp" value="234" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
           <line>288</line>
           <option name="timeStamp" value="242" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Developement/simiSTR_utils.py</url>
+          <url>file://$PROJECT_DIR$/simiSTR_utils.py</url>
           <line>54</line>
           <option name="timeStamp" value="251" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Developement/SimiSTR_v8.py</url>
+          <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
           <line>292</line>
           <option name="timeStamp" value="252" />
         </line-breakpoint>
