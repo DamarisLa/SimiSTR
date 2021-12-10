@@ -3,6 +3,7 @@
 
 import copy
 import random
+import numpy
 from Bio import SeqIO
 import re
 import argparse
@@ -27,8 +28,18 @@ class SimiSTR:
         self.input_bedfile = user_args.input_bedfile
         self.output_bedfile = user_args.output_bedfile
         self.expansion_possibility = user_args.expansion_possibility
+        # we use either the max add/reduction which gives a 1..n uniform distr or the
+        # binomial distr centered in the mean (p=0.5) to get the number of times the
+        # motif will be expanded. The hierarchy is:
+        #  1) default max_add = 5, max_red = -1
+        #  2) binom over max-add/red
+        #  3) max_add/red if given (and not binom)
         self.max_add = user_args.max_add
         self.max_reduction = user_args.max_reduction
+        self.binom_chance = 0.5 # TODO: @Luis to have a nice bell-shaped distribution centered on the mean
+        self.binom_mean = user_args.binom_mean # TODO: @Luis
+        self.binom_trials = float(user_args.binom_mean)/self.binom_chance
+
         self.snv_chance = user_args.snv_chance
         # Luis: I changed it to a probability
         self.indels_chance = self.calculateChanceForIndels(user_args.snv_chance, user_args.less_indels)
@@ -241,7 +252,13 @@ class SimiSTR:
 
 
         # here the expansion length gets randomly calculated.
-        manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (random.randint(0, expansion_factor_minus))
+        if self.binom_mean != 0:
+            # use binomial distr to get the expanssion/reduction of the STR
+            binom_expansion = int(numpy.random.binomial(n=self.binom_trials, p=self.binom_chance, size=1))
+            manipulation = binom_expansion if random.random() < 0.5 else -min(binom_expansion, numberOfRepeats)
+        else:
+            # use uniform distr to get the expanssion/reduction of the STR
+            manipulation = random.randint(0, self.max_add) if random.random() < 0.5 else (-1) * (random.randint(0, expansion_factor_minus))
 
         numberOfRepeatsNew = numberOfRepeats + manipulation  # total new number of repeats
         baseNrchange = (manipulation * patternLen)
@@ -435,11 +452,11 @@ class SimiSTR:
                         logger(f'Current sequence length: {newrecordlen}\n', "info")
                         bedfile_idx += 1
                 else:
-                    logger(f'Check the first column in your assigned input bed file!', "warning")
+                    logger(f'Check the first column in your assigned input bed file!. Current chromosome ID: {id}', "warning")
 
                 record2.seq = sequence
                 writer.write_header()
-                writer.write_record(record2) 
+                writer.write_record(record2)
                 bedfile_total.append(bedfile_l_output)
                 allele += 1 # next allele for diplod/polyploids
 
@@ -461,7 +478,8 @@ def get_args():
     parser.add_argument('-ho', '--homozygousity', type=float,  required=True, help="[0.000-1.000] How many regions should be homzygous. The rest will be heterozygous.")
     parser.add_argument('-ma', '--max_add', type=int,  required=False,default=5, help="[int] How many repeats per STR can maximum be added [default: 5]")
     parser.add_argument('-mr', '--max_reduction', type=int, required=False,default=-1, help="[int] How many repeats per STR can maximum be removed. [default: full length]")
-    parser.add_argument('-g', '--gangstr_flag', type=int, choices=range(0, 2),default=0,  required=False, help="[0-1] GangstrFile=1, else=0 [default: 0]")
+    parser.add_argument('-g', '--gangstr_flag', action='store_true', required=False, help="If added it means the bed file is a GangstrFile [default: False]")
+    parser.add_argument('-b', '--binom_mean', type=float, required=False, default = 0.0, help="Uses the mean of the binomial distribution to produce the number of success trials with p=0.5 [default: 0, not used]")
     return(parser.parse_args())
 
 
