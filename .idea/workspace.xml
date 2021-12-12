@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="moved STRsimulator_v7 into OldVersions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,7 +62,7 @@
       <recent name="D:\Uni_prog\InternshipFiles\STRintern\Developement" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test_h">
+  <component name="RunManager" selected="Python.test2">
     <configuration name="SimiSTR_v8" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="STRintern" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -404,14 +404,11 @@
       <workItem from="1636113245130" duration="279000" />
       <workItem from="1636211575414" duration="1630000" />
       <workItem from="1636718647991" duration="18102000" />
-      <workItem from="1638460514713" duration="3136000" />
-    </task>
-    <task id="LOCAL-00052" summary="Old versions corrections">
-      <created>1629662013043</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1629662013043</updated>
+      <workItem from="1638460514713" duration="4196000" />
+      <workItem from="1638979828838" duration="23000" />
+      <workItem from="1639155299024" duration="688000" />
+      <workItem from="1639171044547" duration="843000" />
+      <workItem from="1639322153398" duration="299000" />
     </task>
     <task id="LOCAL-00053" summary="Old versions corrections">
       <created>1634072651504</created>
@@ -749,7 +746,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638460988496</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="moved STRsimulator_v7 into OldVersions">
+      <created>1638473935182</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1638473935182</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -862,22 +866,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
-          <line>459</line>
+          <line>476</line>
           <option name="timeStamp" value="230" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
-          <line>236</line>
+          <line>247</line>
           <option name="timeStamp" value="233" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
-          <line>21</line>
+          <line>22</line>
           <option name="timeStamp" value="234" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
-          <line>288</line>
+          <line>305</line>
           <option name="timeStamp" value="242" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -887,7 +891,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/SimiSTR_v8.py</url>
-          <line>292</line>
+          <line>309</line>
           <option name="timeStamp" value="252" />
         </line-breakpoint>
       </breakpoints>
@@ -916,8 +920,8 @@
     <SUITE FILE_PATH="coverage/STRintern$bedFileRefReaderForensic.coverage" NAME="bedFileRefReaderForensic Coverage Results" MODIFIED="1624284323075" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$splitFasta.coverage" NAME="splitFasta Coverage Results" MODIFIED="1629383231465" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/STRintern$test3.coverage" NAME="test3 Coverage Results" MODIFIED="1634929856911" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
-    <SUITE FILE_PATH="coverage/SimiSTR$test_h.coverage" NAME="test_h Coverage Results" MODIFIED="1638378869401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
-    <SUITE FILE_PATH="coverage/SimiSTR$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1638365983139" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/SimiSTR$test_h.coverage" NAME="test_h Coverage Results" MODIFIED="1639171274090" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
+    <SUITE FILE_PATH="coverage/SimiSTR$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1639171294148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$simiSTR_utils.coverage" NAME="simiSTR_utils Coverage Results" MODIFIED="1634854099439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$test_h.coverage" NAME="test_h Coverage Results" MODIFIED="1636719091177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Developement" />
     <SUITE FILE_PATH="coverage/STRintern$simulator_homozygous.coverage" NAME="simulator_homozygous Coverage Results" MODIFIED="1626791123298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
