@@ -401,10 +401,10 @@ class SimiSTR:
                                 shortTR_allele = SimiSTR_bedline(bedfile_entry)  # entrance
                                 shortTR_allele1 = SimiSTR_bedline(bedfile_entry)  # entrance_allele1
                                 shortTR_allele1.chromosome = chrnr_w
-                                if self.gangstr_flag:
-                                    shortTR_allele1. start = patternStart + 1 # when working with one-based files
-                                else:
-                                    shortTR_allele1.start = patternStart
+                                #if self.gangstr_flag:
+                                #    shortTR_allele1. start = patternStart + 1 # when working with one-based files
+                                #else:
+                                shortTR_allele1.start = patternStart
                                 shortTR_allele1.end = patternEndNew
                                 shortTR_allele1.expansion_length = expBaseNrchange #nr of bases changed through expansion change
                                 shortTR_allele1.nSNV = noOfSubstitution

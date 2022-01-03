@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="moved STRsimulator_v7 into OldVersions">
+    <list default="true" id="d6a11223-9e09-44c5-a803-09b98136b0fa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -408,14 +408,10 @@
       <workItem from="1638979828838" duration="23000" />
       <workItem from="1639155299024" duration="688000" />
       <workItem from="1639171044547" duration="843000" />
-      <workItem from="1639322153398" duration="299000" />
-    </task>
-    <task id="LOCAL-00053" summary="Old versions corrections">
-      <created>1634072651504</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1634072651504</updated>
+      <workItem from="1639322153398" duration="391000" />
+      <workItem from="1639480433365" duration="8000" />
+      <workItem from="1639518883355" duration="25000" />
+      <workItem from="1641244822201" duration="709000" />
     </task>
     <task id="LOCAL-00054" summary="Old versions corrections">
       <created>1634306083600</created>
@@ -753,7 +749,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638473935182</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="updated">
+      <created>1639322535302</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1639322535303</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -799,7 +802,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Old versions added" />
     <MESSAGE value="Old versions corrections" />
     <MESSAGE value="Redevelopment" />
     <MESSAGE value="Re- Development" />
@@ -824,7 +826,8 @@
     <MESSAGE value="error correction.&#10;Including X and Y chromosomes into id- possibilities." />
     <MESSAGE value="error correction." />
     <MESSAGE value="moved STRsimulator_v7 into OldVersions" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved STRsimulator_v7 into OldVersions" />
+    <MESSAGE value="updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
